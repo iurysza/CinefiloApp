@@ -11,7 +11,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.data.entities.MovieEntity;
+import site.iurysouza.cinefilo.data.entities.MovieRealm;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.home.HomePresenter;
 import site.iurysouza.cinefilo.presentation.home.HomeView;
@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity implements HomeView {
   }
 
   @OnClick(R.id.fab) public void onClick(View view) {
-    homePresenter.getMovieById("25");
+    homePresenter.getMovieById(25);
   }
 
   @Override public void showLoadingIndicator() {
@@ -75,8 +75,8 @@ public class MainActivity extends BaseActivity implements HomeView {
 
   }
 
-  @Override public void showRetrievedMovie(MovieEntity movieEntity) {
-    textView.setText(movieEntity.getTitle());
-    Timber.d("movie shown on main activity: %s", movieEntity.getTitle());
+  @Override public void showRetrievedMovie(MovieRealm movieRealm) {
+    textView.setText(movieRealm.getTitle());
+    Timber.d("movie shown on main activity: %s", movieRealm.getTitle());
   }
 }

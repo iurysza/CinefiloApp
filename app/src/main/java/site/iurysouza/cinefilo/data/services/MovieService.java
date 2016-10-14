@@ -9,6 +9,6 @@ import site.iurysouza.cinefilo.data.entities.MovieEntity;
 public interface MovieService {
   @GET("movie/{movie_id}")
   Observable<MovieEntity> getMovieById(
-      @Path("movie_id") String movieId,
+      @Path("movie_id") int movieId,
       @Query("api_key") String apiKey);
 }

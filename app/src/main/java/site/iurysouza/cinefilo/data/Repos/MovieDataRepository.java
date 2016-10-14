@@ -1,10 +1,12 @@
 package site.iurysouza.cinefilo.data.Repos;
 
+import android.support.annotation.UiThread;
+import io.realm.Realm;
 import javax.inject.Inject;
 import rx.Observable;
-import site.iurysouza.cinefilo.data.Repos.DataStore.MovieDataStore;
-import site.iurysouza.cinefilo.data.Repos.DataStore.MovieDataStoreFactory;
-import site.iurysouza.cinefilo.data.entities.MovieEntity;
+import site.iurysouza.cinefilo.data.Repos.DataStore.CloudMovieDataStore;
+import site.iurysouza.cinefilo.data.Repos.DataStore.LocalMovieDataStore;
+import site.iurysouza.cinefilo.data.entities.MovieRealm;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -12,15 +14,37 @@ import site.iurysouza.cinefilo.data.entities.MovieEntity;
 
 public class MovieDataRepository implements MovieRepository {
 
-  private MovieDataStoreFactory dataStoreFactory;
+  private LocalMovieDataStore localDataStore;
+  private CloudMovieDataStore cloudDataStore;
+  private Realm realm;
 
   @Inject
-  public MovieDataRepository(MovieDataStoreFactory dataStoreFactory) {
-    this.dataStoreFactory = dataStoreFactory;
+  @UiThread
+  public MovieDataRepository(LocalMovieDataStore localDataStore,
+      CloudMovieDataStore cloudDataStore, Realm realm) {
+    this.localDataStore = localDataStore;
+    this.cloudDataStore = cloudDataStore;
+    this.realm = realm;
   }
 
-  @Override public Observable<MovieEntity> getMovieById(String id) {
-    MovieDataStore movieDataStore = dataStoreFactory.create(id);
-    return movieDataStore.movieById(id);
+  @UiThread
+  @Override public Observable<MovieRealm> getMovieById(int movieId) {
+    if (!isMovieDataValid(movieId)) {
+      cloudDataStore.movieById(movieId);
+    }
+
+    return localDataStore.movieById(movieId);
+  }
+
+  @UiThread
+  private boolean isMovieDataValid(int movieId) {
+    return realm
+        .where(MovieRealm.class)
+        .equalTo(MovieRealm.ID, movieId)
+        .count() > 0;
+  }
+
+  @Override public void close() {
+    realm.close();
   }
 }

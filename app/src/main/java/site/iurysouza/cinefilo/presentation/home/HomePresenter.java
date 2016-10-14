@@ -2,8 +2,6 @@ package site.iurysouza.cinefilo.presentation.home;
 
 import javax.inject.Inject;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import site.iurysouza.cinefilo.data.Repos.MovieDataRepository;
 import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
 import timber.log.Timber;
@@ -22,15 +20,13 @@ public class HomePresenter extends BasePresenter<HomeView> {
     this.movieRepository = movieRepository;
   }
 
-  public void getMovieById(String movieId) {
+  public void getMovieById(int movieId) {
     subscription = movieRepository
         .getMovieById(movieId)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(movieEntity ->
+        .subscribe(movieRealm ->
             {
-              Timber.d("movie fetched: %s", movieEntity.getTitle());
-              getBaseView().showRetrievedMovie(movieEntity);
+              Timber.i("movie fetched: %s", movieRealm.getTitle());
+              getBaseView().showRetrievedMovie(movieRealm);
             },
             throwable -> {
               Timber.e("Failed to fetch movie: %s", throwable.getMessage());

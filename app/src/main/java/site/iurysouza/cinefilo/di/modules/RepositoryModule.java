@@ -5,8 +5,7 @@ import dagger.Provides;
 import io.realm.Realm;
 import retrofit2.Retrofit;
 import site.iurysouza.cinefilo.data.Repos.DataStore.CloudMovieDataStore;
-import site.iurysouza.cinefilo.data.Repos.DataStore.MovieDataStore;
-import site.iurysouza.cinefilo.data.Repos.DataStore.MovieDataStoreFactory;
+import site.iurysouza.cinefilo.data.Repos.DataStore.LocalMovieDataStore;
 import site.iurysouza.cinefilo.data.Repos.MovieDataRepository;
 import site.iurysouza.cinefilo.data.services.MovieService;
 import site.iurysouza.cinefilo.presentation.home.HomePresenter;
@@ -21,18 +20,17 @@ public class RepositoryModule {
   MovieService providesMovieService(Retrofit retrofit) {
     return retrofit.create(MovieService.class);
   }
-
-  @Provides MovieDataStore providesMovieDataStore(MovieService movieService, Realm realm) {
+  @Provides CloudMovieDataStore providesCloudMovieDataStore(MovieService movieService, Realm realm) {
     return new CloudMovieDataStore(movieService, realm);
   }
 
-  @Provides MovieDataStoreFactory providesMovieDataStoreFactory(MovieService movieService,
-      Realm realm) {
-    return new MovieDataStoreFactory(movieService, realm);
+  @Provides LocalMovieDataStore providesLocalMovieDataStore(Realm realm) {
+    return new LocalMovieDataStore(realm);
   }
 
-  @Provides MovieDataRepository providesMovieDataRepository(MovieDataStoreFactory storeFactory) {
-    return new MovieDataRepository(storeFactory);
+  @Provides MovieDataRepository providesMovieDataRepository(LocalMovieDataStore localMovieDataStore,
+      CloudMovieDataStore cloudMovieDataStore, Realm realm) {
+    return new MovieDataRepository(localMovieDataStore, cloudMovieDataStore, realm);
   }
 
   @Provides HomePresenter providesHomePresenter(MovieDataRepository dataRepository) {

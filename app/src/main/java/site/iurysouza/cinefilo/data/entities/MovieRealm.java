@@ -1,12 +1,14 @@
 package site.iurysouza.cinefilo.data.entities;
 
-import io.realm.RealmObject;
+import io.realm.RealmModel;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmClass;
 
 /**
  * Created by Iury Souza on 12/10/2016.
  */
-
-public class MovieRealm extends RealmObject {
+@RealmClass
+public class MovieRealm implements RealmModel {
   public static final String ID = "id";
   private Boolean adult;
 
@@ -20,6 +22,7 @@ public class MovieRealm extends RealmObject {
 
   private String homepage;
 
+  @PrimaryKey
   private Integer id;
 
   private String imdbId;
