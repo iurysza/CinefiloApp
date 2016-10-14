@@ -32,7 +32,6 @@ public class MovieDataRepository implements MovieRepository {
     if (!isMovieDataValid(movieId)) {
       cloudDataStore.movieById(movieId);
     }
-
     return localDataStore.movieById(movieId);
   }
 
