@@ -12,7 +12,7 @@ import timber.log.Timber;
 
 public class HomePresenter extends BasePresenter<HomeView> {
 
-  Subscription subscription;
+  private Subscription subscription;
   private MovieDataRepository movieRepository;
 
   @Inject

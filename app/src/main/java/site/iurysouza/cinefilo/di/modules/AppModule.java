@@ -31,22 +31,4 @@ public class AppModule {
     return realm;
   }
 
-  //@Provides
-  //@Singleton
-  //static RealmConfiguration provideRealmConfiguration(Context context) {
-  //  Realm.init(context);
-  //  RealmConfiguration.Builder builder = new RealmConfiguration.Builder();
-  //  if (BuildConfig.DEBUG) {
-  //    builder = builder.deleteRealmIfMigrationNeeded();
-  //  }
-  //  return builder.build();
-  //}
-  //
-  //@Provides
-  //@Singleton
-  //static Realm provideRealm(RealmConfiguration realmConfiguration) {
-  //  Realm.setDefaultConfiguration(realmConfiguration);
-  //  return Realm.getDefaultInstance();
-  //}
-
 }

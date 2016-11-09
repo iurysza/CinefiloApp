@@ -15,7 +15,6 @@ import site.iurysouza.cinefilo.presentation.home.HomePresenter;
  */
 @Module
 public class RepositoryModule {
-
   @Provides
   MovieService providesMovieService(Retrofit retrofit) {
     return retrofit.create(MovieService.class);
@@ -23,16 +22,13 @@ public class RepositoryModule {
   @Provides CloudMovieDataStore providesCloudMovieDataStore(MovieService movieService, Realm realm) {
     return new CloudMovieDataStore(movieService, realm);
   }
-
   @Provides LocalMovieDataStore providesLocalMovieDataStore(Realm realm) {
     return new LocalMovieDataStore(realm);
   }
-
   @Provides MovieDataRepository providesMovieDataRepository(LocalMovieDataStore localMovieDataStore,
       CloudMovieDataStore cloudMovieDataStore, Realm realm) {
     return new MovieDataRepository(localMovieDataStore, cloudMovieDataStore, realm);
   }
-
   @Provides HomePresenter providesHomePresenter(MovieDataRepository dataRepository) {
     return new HomePresenter(dataRepository);
   }

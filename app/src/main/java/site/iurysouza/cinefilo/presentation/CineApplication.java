@@ -10,6 +10,7 @@ import site.iurysouza.cinefilo.di.components.RepositoryComponent;
 import site.iurysouza.cinefilo.di.modules.AppModule;
 import site.iurysouza.cinefilo.di.modules.MoviesApiModule;
 import site.iurysouza.cinefilo.di.modules.RepositoryModule;
+import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import timber.log.Timber;
 
 /**
@@ -68,12 +69,16 @@ public class CineApplication extends Application {
         .build();
   }
 
-  public RepositoryComponent createRepositoryComponent() {
-    return repositoryComponent = getAppComponent().plus(new RepositoryModule());
+  public RepositoryComponent createRepositoryComponent(RepositoryModule repositoryModule, UtilityModule utilityModule) {
+    repositoryComponent = getAppComponent().plus(repositoryModule, utilityModule);
+    return repositoryComponent;
   }
 
   public AppComponent getAppComponent() {
     return appComponent;
+  }
+  public RepositoryComponent getRepositoryComponent() {
+    return repositoryComponent;
   }
 
   public void releaseAppComponent() {

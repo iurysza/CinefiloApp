@@ -76,6 +76,10 @@ dependencies {
   compile 'com.jakewharton:butterknife:8.1.0'
   apt 'com.jakewharton:butterknife-compiler:8.1.0'
 
+  //UI Goodies
+  compile 'de.hdodenhof:circleimageview:2.1.0'
+
+
 
   testCompile 'junit:junit:4.12'
 }

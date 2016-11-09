@@ -1,39 +1,49 @@
 package site.iurysouza.cinefilo.presentation;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.data.entities.MovieRealm;
+import site.iurysouza.cinefilo.di.modules.RepositoryModule;
+import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
+import site.iurysouza.cinefilo.presentation.home.HomeFragment;
 import site.iurysouza.cinefilo.presentation.home.HomePresenter;
-import site.iurysouza.cinefilo.presentation.home.HomeView;
 import timber.log.Timber;
 
-public class MainActivity extends BaseActivity implements HomeView {
+public class MainActivity extends BaseActivity
+    implements
+    OnNavigationItemSelectedListener {
 
-  @BindView(R.id.toolbar) Toolbar toolbar;
-  @BindView(R.id.text) TextView textView;
-  @Inject HomePresenter homePresenter;
+  @BindView(R.id.main_navigation_view) NavigationView navigationView;
+  @BindView(R.id.main_drawer_layout) DrawerLayout mainDrawerLayout;
+
+  @Inject
+  NavigationManager navigationManager;
+  @Inject
+  HomePresenter homePresenter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
-    setSupportActionBar(toolbar);
-    homePresenter.attachView(this);
+
+    navigationView.setNavigationItemSelectedListener(this);
+    navigationManager.openHomeFragment(HomeFragment.newInstance());
   }
 
   @Override protected void setupActivityComponent() {
-    appInstance.createRepositoryComponent().inject(this);
+    appInstance.createRepositoryComponent(new RepositoryModule(), new UtilityModule(this))
+        .inject(this);
   }
 
   @Override
@@ -56,27 +66,24 @@ public class MainActivity extends BaseActivity implements HomeView {
   @Override protected void onDestroy() {
     super.onDestroy();
     appInstance.releaseRepositoryComponent();
-    homePresenter.dettachView();
   }
 
-  @OnClick(R.id.fab) public void onClick(View view) {
-    homePresenter.getMovieById(25);
-  }
+  @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    switch (item.getItemId()) {
 
-  @Override public void showLoadingIndicator() {
+      case R.id.drawer_home:
+        navigationManager.openHomeFragment(HomeFragment.newInstance());
+        break;
 
-  }
+      case R.id.drawer_movies:
+        Timber.d("movies");
+        break;
 
-  @Override public void hideLoadingIndicator() {
+      default:
+        break;
+    }
 
-  }
-
-  @Override public void showErrorIndicator() {
-
-  }
-
-  @Override public void showRetrievedMovie(MovieRealm movieRealm) {
-    textView.setText(movieRealm.getTitle());
-    Timber.d("movie shown on main activity: %s", movieRealm.getTitle());
+    mainDrawerLayout.closeDrawer(GravityCompat.START, true);
+    return true;
   }
 }
