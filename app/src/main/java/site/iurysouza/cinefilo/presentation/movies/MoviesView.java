@@ -1,6 +1,6 @@
 package site.iurysouza.cinefilo.presentation.movies;
 
-import site.iurysouza.cinefilo.data.entities.realm.RealmPopularMovies;
+import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
 import site.iurysouza.cinefilo.presentation.base.mvp.BaseView;
 
 /**

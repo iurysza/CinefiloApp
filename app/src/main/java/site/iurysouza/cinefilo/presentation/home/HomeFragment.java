@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.data.entities.realm.RealmMovie;
+import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.presentation.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
 import timber.log.Timber;

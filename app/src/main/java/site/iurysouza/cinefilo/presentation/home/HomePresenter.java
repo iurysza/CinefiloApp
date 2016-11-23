@@ -2,7 +2,7 @@ package site.iurysouza.cinefilo.presentation.home;
 
 import javax.inject.Inject;
 import rx.Subscription;
-import site.iurysouza.cinefilo.data.Repos.MovieDataRepository;
+import site.iurysouza.cinefilo.model.data.MovieDataRepository;
 import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
 import timber.log.Timber;
 
