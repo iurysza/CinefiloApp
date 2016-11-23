@@ -56,16 +56,17 @@ public class MoviesApiModule {
       if (!NetworkUtil.isNetworkConnected(context)) {
         CacheControl cacheControl =
             new CacheControl.Builder()
-            .maxAge(7, TimeUnit.DAYS)
-            .build();
+                .maxAge(7, TimeUnit.DAYS)
+                .build();
 
         response = response.newBuilder()
-                .header(Constants.CACHE_CONTROL, cacheControl.toString())
-                .build();
+            .header(Constants.CACHE_CONTROL, cacheControl.toString())
+            .build();
       }
       return response;
     };
   }
+
 
   @Provides @Singleton public OkHttpClient providesLoggingCapableHttpClient(Cache cache,
       @Named(Constants.CACHE_CONTROL) Interceptor cacheInterceptor,
@@ -83,8 +84,8 @@ public class MoviesApiModule {
         .build();
   }
 
-
-  @Provides @Singleton public Retrofit providesRetrofit(OkHttpClient okHttpClient) {
+  @Provides @Singleton public Retrofit providesRetrofit(OkHttpClient okHttpClient
+      ) {
     return new Retrofit.Builder()
         .baseUrl(Constants.MOVIE_DB_API.BASE_URL)
         .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))

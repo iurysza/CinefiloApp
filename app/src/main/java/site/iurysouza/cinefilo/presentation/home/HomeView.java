@@ -1,6 +1,6 @@
 package site.iurysouza.cinefilo.presentation.home;
 
-import site.iurysouza.cinefilo.data.entities.MovieRealm;
+import site.iurysouza.cinefilo.data.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.presentation.base.mvp.BaseView;
 
 /**
@@ -13,5 +13,5 @@ public interface HomeView extends BaseView {
 
   void showErrorIndicator();
 
-  void showRetrievedMovie(MovieRealm movieRealm);
+  void showRetrievedMovie(RealmMovie realmMovie);
 }

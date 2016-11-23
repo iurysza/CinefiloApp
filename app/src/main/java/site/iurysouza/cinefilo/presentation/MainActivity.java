@@ -17,6 +17,7 @@ import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.home.HomeFragment;
 import site.iurysouza.cinefilo.presentation.home.HomePresenter;
+import site.iurysouza.cinefilo.presentation.movies.MoviesFragment;
 import timber.log.Timber;
 
 public class MainActivity extends BaseActivity
@@ -38,7 +39,7 @@ public class MainActivity extends BaseActivity
     ButterKnife.bind(this);
 
     navigationView.setNavigationItemSelectedListener(this);
-    navigationManager.openHomeFragment(HomeFragment.newInstance());
+    navigationManager.openFragmentFromDrawer(HomeFragment.newInstance());
   }
 
   @Override protected void setupActivityComponent() {
@@ -72,11 +73,13 @@ public class MainActivity extends BaseActivity
     switch (item.getItemId()) {
 
       case R.id.drawer_home:
-        navigationManager.openHomeFragment(HomeFragment.newInstance());
+        navigationManager.openFragmentFromDrawer(HomeFragment.newInstance());
+        Timber.d("homeFragment");
         break;
 
       case R.id.drawer_movies:
-        Timber.d("movies");
+        navigationManager.openFragmentFromDrawer(MoviesFragment.newInstance());
+        Timber.d("moviesFragment");
         break;
 
       default:

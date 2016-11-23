@@ -6,12 +6,14 @@ import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.data.Repos.DataStore.CloudMovieDataStore;
 import site.iurysouza.cinefilo.data.Repos.DataStore.LocalMovieDataStore;
-import site.iurysouza.cinefilo.data.entities.MovieRealm;
+import site.iurysouza.cinefilo.data.entities.realm.RealmMovie;
+import site.iurysouza.cinefilo.data.entities.realm.RealmPopularMovies;
 
 /**
  * Created by Iury Souza on 12/10/2016.
  */
 
+@UiThread
 public class MovieDataRepository implements MovieRepository {
 
   private LocalMovieDataStore localDataStore;
@@ -19,7 +21,6 @@ public class MovieDataRepository implements MovieRepository {
   private Realm realm;
 
   @Inject
-  @UiThread
   public MovieDataRepository(LocalMovieDataStore localDataStore,
       CloudMovieDataStore cloudDataStore, Realm realm) {
     this.localDataStore = localDataStore;
@@ -27,19 +28,31 @@ public class MovieDataRepository implements MovieRepository {
     this.realm = realm;
   }
 
-  @UiThread
-  @Override public Observable<MovieRealm> getMovieById(int movieId) {
+  @Override public Observable<RealmMovie> getMovieById(int movieId) {
     if (!isMovieDataValid(movieId)) {
       cloudDataStore.movieById(movieId);
     }
     return localDataStore.movieById(movieId);
   }
 
-  @UiThread
+  @Override public Observable<RealmPopularMovies> getMoviesByPopulariy(int page) {
+    if (!isPopularListAvailable(page)) {
+      cloudDataStore.getMostPopularMovies(page);
+    }
+    return localDataStore.getMostPopularMovies();
+  }
+
   private boolean isMovieDataValid(int movieId) {
     return realm
-        .where(MovieRealm.class)
-        .equalTo(MovieRealm.ID, movieId)
+        .where(RealmMovie.class)
+        .equalTo(RealmMovie.ID, movieId)
+        .count() > 0;
+  }
+
+  private boolean isPopularListAvailable(int page) {
+    return realm
+        .where(RealmPopularMovies.class)
+        .equalTo(RealmPopularMovies.PAGE, page)
         .count() > 0;
   }
 

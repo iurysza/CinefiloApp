@@ -8,7 +8,9 @@ import site.iurysouza.cinefilo.data.Repos.DataStore.CloudMovieDataStore;
 import site.iurysouza.cinefilo.data.Repos.DataStore.LocalMovieDataStore;
 import site.iurysouza.cinefilo.data.Repos.MovieDataRepository;
 import site.iurysouza.cinefilo.data.services.MovieService;
+import site.iurysouza.cinefilo.domain.MoviesUseCase;
 import site.iurysouza.cinefilo.presentation.home.HomePresenter;
+import site.iurysouza.cinefilo.presentation.movies.MoviesPresenter;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -19,17 +21,30 @@ public class RepositoryModule {
   MovieService providesMovieService(Retrofit retrofit) {
     return retrofit.create(MovieService.class);
   }
-  @Provides CloudMovieDataStore providesCloudMovieDataStore(MovieService movieService, Realm realm) {
+
+  @Provides CloudMovieDataStore providesCloudMovieDataStore(MovieService movieService,
+      Realm realm) {
     return new CloudMovieDataStore(movieService, realm);
   }
+
   @Provides LocalMovieDataStore providesLocalMovieDataStore(Realm realm) {
     return new LocalMovieDataStore(realm);
   }
+
   @Provides MovieDataRepository providesMovieDataRepository(LocalMovieDataStore localMovieDataStore,
       CloudMovieDataStore cloudMovieDataStore, Realm realm) {
     return new MovieDataRepository(localMovieDataStore, cloudMovieDataStore, realm);
   }
+
   @Provides HomePresenter providesHomePresenter(MovieDataRepository dataRepository) {
     return new HomePresenter(dataRepository);
+  }
+
+  @Provides MoviesUseCase providesMovieUseCase(MovieDataRepository dataRepository) {
+    return new MoviesUseCase(dataRepository);
+  }
+
+  @Provides MoviesPresenter providesMoviePresenter(MoviesUseCase useCase) {
+    return new MoviesPresenter(useCase);
   }
 }

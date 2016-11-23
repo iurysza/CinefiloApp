@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.home;
+package site.iurysouza.cinefilo.presentation.movies;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.data.entities.realm.RealmMovie;
+import site.iurysouza.cinefilo.data.entities.realm.RealmPopularMovies;
 import site.iurysouza.cinefilo.presentation.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
 import timber.log.Timber;
@@ -21,18 +21,19 @@ import timber.log.Timber;
  * Created by Iury Souza on 09/11/2016.
  */
 
-public class HomeFragment extends BaseFragment implements HomeView {
+public class MoviesFragment extends BaseFragment implements MoviesView {
 
   @BindView(R.id.main_toolbar) Toolbar toolbar;
   @BindView(R.id.text) TextView text;
 
-  @Inject HomePresenter homePresenter;
+  @Inject MoviesPresenter moviesPresenter;
 
-  public static HomeFragment newInstance() {
-    HomeFragment homeFragment = new HomeFragment();
+  public static MoviesFragment newInstance() {
+    MoviesFragment moviesFragment = new MoviesFragment();
+
     Bundle args = new Bundle();
-    homeFragment.setArguments(args);
-    return homeFragment;
+    moviesFragment.setArguments(args);
+    return moviesFragment;
   }
 
   @Nullable @Override
@@ -42,16 +43,14 @@ public class HomeFragment extends BaseFragment implements HomeView {
     ButterKnife.bind(this, view);
 
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-    homePresenter.attachView(this);
-    homePresenter.getMovieById(25);
-
+    moviesPresenter.attachView(this);
+    moviesPresenter.loadMovies();
     return view;
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    homePresenter.dettachView();
+    moviesPresenter.dettachView();
   }
 
   @Override public void showLoadingIndicator() {
@@ -66,10 +65,12 @@ public class HomeFragment extends BaseFragment implements HomeView {
 
   }
 
-  @Override public void showRetrievedMovie(RealmMovie realmMovie) {
-    text.setText(realmMovie.getOriginalTitle());
-    Timber.e("GOT MOVIE: %s", realmMovie.getOriginalTitle());
+  @Override public void showPopularMovieList(RealmPopularMovies popularMovieList) {
+    int size = popularMovieList.getMovieList().size();
+    Timber.e("GOT %s MOVIES", size);
+    text.setText(String.valueOf(size));
   }
+
 
   @Override protected void setupFragmentComponent() {
     ((CineApplication) getContext().getApplicationContext()).getRepositoryComponent().inject(this);
