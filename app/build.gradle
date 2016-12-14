@@ -6,7 +6,7 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
   compileSdkVersion 25
-  buildToolsVersion "25.0.0"
+  buildToolsVersion "25.0.1"
   defaultConfig {
     applicationId "site.iurysouza.cinefilo"
     minSdkVersion 22
@@ -36,10 +36,12 @@ dependencies {
   androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  androidTestCompile 'com.android.support:support-annotations:25.0.0'
+  androidTestCompile 'com.android.support:support-annotations:25.0.1'
 
-  compile 'com.android.support:appcompat-v7:25.0.0'
-  compile 'com.android.support:design:25.0.0'
+  compile 'com.android.support:appcompat-v7:25.0.1'
+  compile 'com.android.support:design:25.0.1'
+  compile 'com.github.armcha:SpaceNavigationView:1.5.0'
+
   //dagger - di
   apt 'com.google.dagger:dagger-compiler:2.7'
   compile 'com.google.dagger:dagger:2.7'

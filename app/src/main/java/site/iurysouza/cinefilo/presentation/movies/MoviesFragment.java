@@ -39,7 +39,7 @@ public class MoviesFragment extends BaseFragment implements MoviesView {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.content_main, container, false);
+    View view = inflater.inflate(R.layout.content_movies_fragment, container, false);
     ButterKnife.bind(this, view);
 
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);

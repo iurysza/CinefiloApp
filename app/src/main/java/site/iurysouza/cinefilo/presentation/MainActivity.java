@@ -1,15 +1,15 @@
 package site.iurysouza.cinefilo.presentation;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.luseen.spacenavigation.SpaceItem;
+import com.luseen.spacenavigation.SpaceNavigationView;
+import com.luseen.spacenavigation.SpaceOnClickListener;
 import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.di.modules.RepositoryModule;
@@ -18,14 +18,12 @@ import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.home.HomeFragment;
 import site.iurysouza.cinefilo.presentation.home.HomePresenter;
 import site.iurysouza.cinefilo.presentation.movies.MoviesFragment;
-import timber.log.Timber;
 
 public class MainActivity extends BaseActivity
     implements
-    OnNavigationItemSelectedListener {
+    SpaceOnClickListener {
 
-  @BindView(R.id.main_navigation_view) NavigationView navigationView;
-  @BindView(R.id.main_drawer_layout) DrawerLayout mainDrawerLayout;
+  @BindView(R.id.space) SpaceNavigationView bottomBar;
 
   @Inject
   NavigationManager navigationManager;
@@ -38,7 +36,12 @@ public class MainActivity extends BaseActivity
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
 
-    navigationView.setNavigationItemSelectedListener(this);
+    bottomBar.initWithSaveInstanceState(savedInstanceState);
+    bottomBar.addSpaceItem(new SpaceItem(getString(R.string.bottombar_title_home), R.drawable.ic_drawer_home_24dp));
+    bottomBar.addSpaceItem(new SpaceItem(getString(R.string.bottombar_title_movies), R.drawable.ic_drawer_movies));
+    bottomBar.setActiveCentreButtonIconColor(ContextCompat.getColor(this,R.color.colorAccent));
+    bottomBar.setInActiveCentreButtonIconColor(ContextCompat.getColor(this,R.color.colorWhite));
+    bottomBar.setSpaceOnClickListener(this);
     navigationManager.openFragmentFromDrawer(HomeFragment.newInstance());
   }
 
@@ -69,24 +72,23 @@ public class MainActivity extends BaseActivity
     appInstance.releaseRepositoryComponent();
   }
 
-  @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-    switch (item.getItemId()) {
 
-      case R.id.drawer_home:
+  @Override public void onCentreButtonClick() {
+    Toast.makeText(appInstance, "Search", Toast.LENGTH_SHORT).show();
+  }
+
+  @Override public void onItemClick(int itemIndex, String itemName) {
+    switch (itemIndex) {
+      case 0:
         navigationManager.openFragmentFromDrawer(HomeFragment.newInstance());
-        Timber.d("homeFragment");
         break;
-
-      case R.id.drawer_movies:
+      case 1:
         navigationManager.openFragmentFromDrawer(MoviesFragment.newInstance());
-        Timber.d("moviesFragment");
-        break;
-
-      default:
         break;
     }
+  }
 
-    mainDrawerLayout.closeDrawer(GravityCompat.START, true);
-    return true;
+  @Override public void onItemReselected(int itemIndex, String itemName) {
+    Toast.makeText(appInstance, "Reselected", Toast.LENGTH_SHORT).show();
   }
 }

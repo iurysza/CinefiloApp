@@ -28,7 +28,8 @@ public class MoviesPresenter extends BasePresenter<MoviesView> {
 
   void loadMovies() {
     getBaseView().showLoadingIndicator();
-    subscription = moviesUseCase.buildUseCaseObservable()
+    subscription = moviesUseCase
+        .buildUseCaseObservable()
         .compose(rxLifecycle.bindToLifecycle())
         .subscribe(popularMoviesRealm -> {
           getBaseView().hideLoadingIndicator();
@@ -37,12 +38,5 @@ public class MoviesPresenter extends BasePresenter<MoviesView> {
           getBaseView().showErrorIndicator();
           throwable.printStackTrace();
         });
-  }
-
-  @Override public void dettachView() {
-    super.dettachView();
-    if (subscription != null && !subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
-    }
   }
 }

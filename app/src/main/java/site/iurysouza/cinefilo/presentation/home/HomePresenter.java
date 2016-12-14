@@ -35,8 +35,5 @@ public class HomePresenter extends BasePresenter<HomeView> {
 
   @Override public void dettachView() {
     super.dettachView();
-    if (subscription != null && !subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
-    }
   }
 }
