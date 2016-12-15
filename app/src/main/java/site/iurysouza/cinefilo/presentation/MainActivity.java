@@ -17,7 +17,7 @@ import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.home.HomeFragment;
 import site.iurysouza.cinefilo.presentation.home.HomePresenter;
-import site.iurysouza.cinefilo.presentation.movies.MoviesFragment;
+import site.iurysouza.cinefilo.presentation.movies.pager.MoviesFragment;
 
 public class MainActivity extends BaseActivity
     implements
@@ -39,8 +39,8 @@ public class MainActivity extends BaseActivity
     bottomBar.initWithSaveInstanceState(savedInstanceState);
     bottomBar.addSpaceItem(new SpaceItem(getString(R.string.bottombar_title_home), R.drawable.ic_drawer_home_24dp));
     bottomBar.addSpaceItem(new SpaceItem(getString(R.string.bottombar_title_movies), R.drawable.ic_drawer_movies));
-    bottomBar.setActiveCentreButtonIconColor(ContextCompat.getColor(this,R.color.colorWhite));
-    bottomBar.setInActiveCentreButtonIconColor(ContextCompat.getColor(this,R.color.colorWhite));
+    bottomBar.setActiveCentreButtonIconColor(ContextCompat.getColor(this,R.color.appWhite));
+    bottomBar.setInActiveCentreButtonIconColor(ContextCompat.getColor(this,R.color.appWhite));
     bottomBar.setSpaceOnClickListener(this);
     navigationManager.openFragment(HomeFragment.newInstance());
   }

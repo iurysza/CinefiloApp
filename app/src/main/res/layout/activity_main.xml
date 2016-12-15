@@ -12,7 +12,6 @@
     <FrameLayout
         android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
-        android:layout_marginBottom="56dp"
         android:layout_height="match_parent"
         >
 
@@ -25,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:centre_button_icon="@drawable/ic_drawer_search_24dp"
-        app:active_item_color="@color/colorWhite"
+        app:active_item_color="@color/appWhite"
         app:centre_button_color="@color/colorPrimary"
         app:inactive_item_color="@color/white_with_alpha"
         app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior" />

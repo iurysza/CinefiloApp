@@ -8,6 +8,7 @@ import site.iurysouza.cinefilo.model.data.storage.CloudMovieDataStore;
 import site.iurysouza.cinefilo.model.data.storage.LocalMovieDataStore;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
+import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -42,6 +43,14 @@ public class MovieDataRepository implements MovieRepository {
     return localDataStore.getMostPopularMovies();
   }
 
+  @Override public Observable<RealmTopMovies> getTopRatedMovies(int page) {
+    if (!isTopRatedListAvailable(page)) {
+      cloudDataStore.getTopRatedMovies(page);
+    }
+    return localDataStore.getTopRatedMovies();
+  }
+
+
   private boolean isMovieDataValid(int movieId) {
     return realm
         .where(RealmMovie.class)
@@ -53,6 +62,13 @@ public class MovieDataRepository implements MovieRepository {
     return realm
         .where(RealmPopularMovies.class)
         .equalTo(RealmPopularMovies.PAGE, page)
+        .count() > 0;
+  }
+
+  private boolean isTopRatedListAvailable(int page) {
+    return realm
+        .where(RealmTopMovies.class)
+        .equalTo(RealmTopMovies.PAGE, page)
         .count() > 0;
   }
 

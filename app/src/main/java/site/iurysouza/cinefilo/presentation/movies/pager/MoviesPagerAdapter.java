@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.movies;
+package site.iurysouza.cinefilo.presentation.movies.pager;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -6,6 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.presentation.movies.MovieListFragment;
+
+import static site.iurysouza.cinefilo.util.Constants.Movies.POP_MOVIES;
+import static site.iurysouza.cinefilo.util.Constants.Movies.REC_MOVIES;
+import static site.iurysouza.cinefilo.util.Constants.Movies.TOP_MOVIES;
 
 /**
  * Created by Iury Souza on 14/12/2016.
@@ -13,9 +18,7 @@ import site.iurysouza.cinefilo.R;
 
 public class MoviesPagerAdapter extends FragmentPagerAdapter {
   private static final int NUM_FRAGMENTS = 3;
-  public static final int REC_MOVIES = 0;
-  public static final int POP_MOVIES = 1;
-  public static final int TOP_MOVIES = 2;
+
 
   private MovieListFragment popularMoviesFrag;
   private MovieListFragment topMoviesFrag;

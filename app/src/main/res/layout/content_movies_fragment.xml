@@ -16,6 +16,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:fitsSystemWindows="true"
+      app:layout_scrollFlags="scroll|snap"
       android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
   >
     <android.support.v7.widget.Toolbar
@@ -58,7 +59,7 @@
         android:layout_height="wrap_content"
         app:layout_scrollFlags="scroll|enterAlways"
         app:tabIndicatorColor="@color/colorAccent"
-        app:tabTextColor="@color/colorWhite"
+        app:tabTextColor="@color/appWhite"
     />
   </android.support.design.widget.AppBarLayout>
 

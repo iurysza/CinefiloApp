@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
+import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -42,6 +43,18 @@ public class LocalMovieDataStore {
         .findFirstAsync();
 
      return RealmObject
+        .asObservable(movieRealm)
+        .filter(RealmObject::isLoaded)
+        .filter(RealmObject::isValid);
+  }
+
+  public Observable<RealmTopMovies> getTopRatedMovies() {
+
+    RealmTopMovies movieRealm = realm
+        .where(RealmTopMovies.class)
+        .findFirstAsync();
+
+    return RealmObject
         .asObservable(movieRealm)
         .filter(RealmObject::isLoaded)
         .filter(RealmObject::isValid);

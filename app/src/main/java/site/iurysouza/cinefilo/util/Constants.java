@@ -11,6 +11,14 @@ public class Constants {
 
   public class MOVIE_DB_API {
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
+    public static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w500";
     public static final String API_KEY = "7ea8abd52d3a0236a7ae2d2c0d986483";
   }
+
+  public class Movies {
+    public static final int REC_MOVIES = 0;
+    public static final int POP_MOVIES = 1;
+    public static final int TOP_MOVIES = 2;
+  }
+
 }

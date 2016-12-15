@@ -2,7 +2,7 @@ package site.iurysouza.cinefilo.presentation.movies;
 
 import com.trello.rxlifecycle.components.support.RxFragment;
 import javax.inject.Inject;
-import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 import site.iurysouza.cinefilo.domain.MoviesUseCase;
 import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
 
@@ -12,7 +12,7 @@ import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
 
 public class MoviesPresenter extends BasePresenter<MoviesView> {
 
-  private Subscription subscription;
+  private CompositeSubscription subscription = new CompositeSubscription();
   private RxFragment rxLifecycle;
   private MoviesUseCase moviesUseCase;
 
@@ -26,10 +26,10 @@ public class MoviesPresenter extends BasePresenter<MoviesView> {
     rxLifecycle = ((MovieListFragment) view);
   }
 
-  void loadMovies() {
+  void loadMostPopularMovies() {
     getBaseView().showLoadingIndicator();
-    subscription = moviesUseCase
-        .buildUseCaseObservable()
+    subscription.add(moviesUseCase
+        .getPopMoviesObservable()
         .compose(rxLifecycle.bindToLifecycle())
         .subscribe(popularMoviesRealm -> {
           getBaseView().hideLoadingIndicator();
@@ -37,6 +37,25 @@ public class MoviesPresenter extends BasePresenter<MoviesView> {
         }, (throwable) -> {
           getBaseView().showErrorIndicator();
           throwable.printStackTrace();
-        });
+        }));
+  }
+
+  @Override public void dettachView() {
+    super.dettachView();
+    subscription.clear();
+  }
+
+  void loadTopMovies() {
+    getBaseView().showLoadingIndicator();
+    subscription.add(moviesUseCase
+        .getTopRatedMoviesObservable()
+        .compose(rxLifecycle.bindToLifecycle())
+        .subscribe(topMoviesRealm -> {
+          getBaseView().hideLoadingIndicator();
+          getBaseView().showPopularMovieList(topMoviesRealm);
+        }, (throwable) -> {
+          getBaseView().showErrorIndicator();
+          throwable.printStackTrace();
+        }));
   }
 }

@@ -5,6 +5,7 @@ import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 import site.iurysouza.cinefilo.model.entities.pojo.Results;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
+import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
 
 public class MovieDataMapper {
 
@@ -35,7 +36,7 @@ public class MovieDataMapper {
     return realmMovie;
   }
 
-  public static RealmPopularMovies mapResults(Results results) {
+  public static RealmPopularMovies mapPopResults(Results results) {
     RealmList<RealmMovie> realmMovieList = new RealmList<>();
     for (Movie movie : results.getMovieList()) {
       realmMovieList.add(mapMovieResult(movie));
@@ -44,6 +45,17 @@ public class MovieDataMapper {
     realmPopularMovies.setMovieList(realmMovieList);
     realmPopularMovies.setPage(results.getPage());
     return realmPopularMovies;
+  }
+
+  public static RealmTopMovies mapTopResults(Results results) {
+    RealmList<RealmMovie> realmMovieList = new RealmList<>();
+    for (Movie movie : results.getMovieList()) {
+      realmMovieList.add(mapMovieResult(movie));
+    }
+    RealmTopMovies realmTopMovies = new RealmTopMovies();
+    realmTopMovies.setMovieList(realmMovieList);
+    realmTopMovies.setPage(results.getPage());
+    return realmTopMovies;
   }
 
   public static RealmMovie mapMovieResult(Movie movie) {

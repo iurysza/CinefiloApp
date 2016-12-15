@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.movies;
+package site.iurysouza.cinefilo.presentation.movies.pager;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.RealmModel;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
 import site.iurysouza.cinefilo.presentation.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
-import timber.log.Timber;
+import site.iurysouza.cinefilo.presentation.movies.MoviesView;
 
 /**
  * Created by Iury Souza on 09/11/2016.
@@ -70,10 +70,11 @@ public class MoviesFragment extends BaseFragment implements MoviesView {
 
   }
 
-  @Override public void showPopularMovieList(RealmPopularMovies popularMovieList) {
-    int size = popularMovieList.getMovieList().size();
-    Timber.e("GOT %s MOVIES", size);
+  @Override public void showPopularMovieList(RealmModel popularMovieList) {
+
   }
+
+
 
   @Override protected void setupFragmentComponent() {
     ((CineApplication) getContext().getApplicationContext()).getRepositoryComponent().inject(this);
