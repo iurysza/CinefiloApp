@@ -39,10 +39,10 @@ public class MainActivity extends BaseActivity
     bottomBar.initWithSaveInstanceState(savedInstanceState);
     bottomBar.addSpaceItem(new SpaceItem(getString(R.string.bottombar_title_home), R.drawable.ic_drawer_home_24dp));
     bottomBar.addSpaceItem(new SpaceItem(getString(R.string.bottombar_title_movies), R.drawable.ic_drawer_movies));
-    bottomBar.setActiveCentreButtonIconColor(ContextCompat.getColor(this,R.color.colorAccent));
+    bottomBar.setActiveCentreButtonIconColor(ContextCompat.getColor(this,R.color.colorWhite));
     bottomBar.setInActiveCentreButtonIconColor(ContextCompat.getColor(this,R.color.colorWhite));
     bottomBar.setSpaceOnClickListener(this);
-    navigationManager.openFragmentFromDrawer(HomeFragment.newInstance());
+    navigationManager.openFragment(HomeFragment.newInstance());
   }
 
   @Override protected void setupActivityComponent() {
@@ -80,10 +80,10 @@ public class MainActivity extends BaseActivity
   @Override public void onItemClick(int itemIndex, String itemName) {
     switch (itemIndex) {
       case 0:
-        navigationManager.openFragmentFromDrawer(HomeFragment.newInstance());
+        navigationManager.openFragment(HomeFragment.newInstance());
         break;
       case 1:
-        navigationManager.openFragmentFromDrawer(MoviesFragment.newInstance());
+        navigationManager.openFragment(MoviesFragment.newInstance());
         break;
     }
   }

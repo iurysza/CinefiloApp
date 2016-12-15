@@ -5,4 +5,5 @@
     <string name="drawer_movies">Movies</string>
     <string name="bottombar_title_home">HOME</string>
     <string name="bottombar_title_movies">MOVIES</string>
+    <string name="top_movies_title">Best</string>
 </resources>

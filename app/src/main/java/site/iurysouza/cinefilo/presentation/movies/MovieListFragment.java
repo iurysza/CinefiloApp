@@ -2,19 +2,13 @@ package site.iurysouza.cinefilo.presentation.movies;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
 import site.iurysouza.cinefilo.presentation.CineApplication;
@@ -25,20 +19,18 @@ import timber.log.Timber;
  * Created by Iury Souza on 09/11/2016.
  */
 
-public class MoviesFragment extends BaseFragment implements MoviesView {
+public class MovieListFragment extends BaseFragment implements MoviesView {
 
-  @BindView(R.id.appbar_fragment_movies) AppBarLayout appbar;
-  @BindView(R.id.collapsing_fragment_movies) CollapsingToolbarLayout collapsing;
-  @BindView(R.id.toolbar_fragment_movies) Toolbar toolbar;
-  @BindView(R.id.tablayout_fragment_movies) TabLayout tabLayout;
-  @BindView(R.id.viewpager_fragment_movies) ViewPager viewPager;
-  @BindView(R.id.image_backdrop_fragment_movies) ImageView imageBackdrop;
-  @BindView(R.id.container_fragment_movies) LinearLayout container;
+  public static final String LIST_TYPE = "LIST_TYPE";
+  @Inject MoviesPresenter moviesPresenter;
+  @BindView(R.id.container_movie_list) LinearLayout container;
+  private CharSequence pageTitle;
+  private int lisType;
 
-
-  public static MoviesFragment newInstance() {
-    MoviesFragment moviesFragment = new MoviesFragment();
+  public static MovieListFragment newInstance(int movieListType) {
+    MovieListFragment moviesFragment = new MovieListFragment();
     Bundle args = new Bundle();
+    args.putInt(LIST_TYPE, movieListType);
     moviesFragment.setArguments(args);
     return moviesFragment;
   }
@@ -46,17 +38,18 @@ public class MoviesFragment extends BaseFragment implements MoviesView {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.content_movies_fragment, container, false);
+    View view = inflater.inflate(R.layout.movie_list_fragment, container, false);
     ButterKnife.bind(this, view);
-
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-    MoviesPagerAdapter adapter = new MoviesPagerAdapter(getFragmentManager(), getContext());
-    viewPager.setAdapter(adapter);
-    tabLayout.setupWithViewPager(viewPager);
+    lisType = getArguments().getInt(LIST_TYPE);
+    moviesPresenter.attachView(this);
+    moviesPresenter.loadMovies();
     return view;
   }
 
-
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    moviesPresenter.dettachView();
+  }
 
   @Override public void showLoadingIndicator() {
 
@@ -78,4 +71,6 @@ public class MoviesFragment extends BaseFragment implements MoviesView {
   @Override protected void setupFragmentComponent() {
     ((CineApplication) getContext().getApplicationContext()).getRepositoryComponent().inject(this);
   }
+
+
 }

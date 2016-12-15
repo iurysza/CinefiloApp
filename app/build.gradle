@@ -58,7 +58,7 @@ dependencies {
   compile 'io.realm:android-adapters:1.3.0'
   // realm auto-generated __Fields
   compile 'dk.ilios:realmfieldnameshelper:1.0.0'
-  
+
   //json parsing
   compile 'com.google.code.gson:gson:2.4'
 

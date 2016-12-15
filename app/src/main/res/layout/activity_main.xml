@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:centre_button_icon="@drawable/ic_drawer_search_24dp"
-        app:active_item_color="@color/colorAccent"
+        app:active_item_color="@color/colorWhite"
         app:centre_button_color="@color/colorPrimary"
         app:inactive_item_color="@color/white_with_alpha"
         app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior" />

@@ -1,5 +1,6 @@
 package site.iurysouza.cinefilo.presentation;
 
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,15 +17,27 @@ public class NavigationManager {
   private final FragmentManager fragmentManager;
   private AppCompatActivity activity;
 
+  @IdRes
+  private int fragmentContainer;
+
   @Inject
   public NavigationManager(AppCompatActivity activity, FragmentManager fragmentManager) {
     this.activity = activity;
     this.fragmentManager = fragmentManager;
+    fragmentContainer = R.id.main_fragment_container;
   }
 
-  public void openFragmentFromDrawer(Fragment homeFragment) {
+  public void setFragmentContainer(@IdRes int fragmentContainer) {
+    this.fragmentContainer = fragmentContainer;
+  }
+
+  public void openFragment(Fragment fragment) {
     FragmentTransaction transaction = fragmentManager.beginTransaction();
-    transaction.replace(R.id.main_fragment_container, homeFragment);
+    transaction.replace(fragmentContainer, fragment);
     transaction.commit();
+  }
+
+  public FragmentManager getFragManager() {
+    return fragmentManager;
   }
 }

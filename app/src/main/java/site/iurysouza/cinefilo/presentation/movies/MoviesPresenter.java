@@ -23,7 +23,7 @@ public class MoviesPresenter extends BasePresenter<MoviesView> {
 
   @Override public void attachView(MoviesView view) {
     super.attachView(view);
-    rxLifecycle = ((MoviesFragment) view);
+    rxLifecycle = ((MovieListFragment) view);
   }
 
   void loadMovies() {
