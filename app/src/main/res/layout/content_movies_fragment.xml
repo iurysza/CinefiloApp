@@ -1,74 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container_fragment_movies"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAppBackground"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="site.iurysouza.cinefilo.presentation.MainActivity"
+    tools:context="site.iurysouza.cinefilo.presentation.main.MainActivity"
 >
 
-  <android.support.design.widget.AppBarLayout
-      android:id="@+id/appbar_fragment_movies"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:fitsSystemWindows="true"
-      app:layout_scrollFlags="scroll|snap"
-      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-  >
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_fragment_movies"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:layout_collapseMode="pin"
-        android:background="@color/space_transparent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/app_name"
-    />
 
-
-    <android.support.design.widget.CollapsingToolbarLayout
-        android:id="@+id/collapsing_fragment_movies"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:fitsSystemWindows="true"
-        app:contentScrim="?attr/colorPrimary"
-        app:expandedTitleMarginEnd="64dp"
-        app:expandedTitleMarginStart="48dp"
-        app:layout_scrollFlags="scroll|snap"
-    >
-
-      <ImageView
-          android:id="@+id/image_backdrop_fragment_movies"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:fitsSystemWindows="true"
-          android:scaleType="centerCrop"
-          app:layout_collapseMode="parallax"
-      />
-
-    </android.support.design.widget.CollapsingToolbarLayout>
-
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tablayout_fragment_movies"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_scrollFlags="scroll|enterAlways"
-        app:tabIndicatorColor="@color/colorAccent"
-        app:tabTextColor="@color/appWhite"
-    />
-  </android.support.design.widget.AppBarLayout>
-
-  <android.support.v4.view.ViewPager
+  <com.github.florent37.materialviewpager.MaterialViewPager
       android:id="@+id/viewpager_fragment_movies"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      app:viewpager_logo="@layout/header_logo"
+      app:viewpager_logoMarginTop="100dp"
+      app:viewpager_color="@color/colorPrimary"
+      app:viewpager_headerHeight="200dp"
+      app:viewpager_headerAlpha=".7"
+      app:viewpager_hideLogoWithFade="false"
+      app:viewpager_hideToolbarAndTitle="true"
+      app:viewpager_enableToolbarElevation="true"
+      app:viewpager_parallaxHeaderFactor="1.5"
+      app:viewpager_headerAdditionalHeight="20dp"
+      app:viewpager_displayToolbarWhenSwipe="true"
+      app:viewpager_transparentToolbar="true"
+      app:viewpager_animatedHeaderImage="true"
+      app:viewpager_disableToolbar="false"
+
   />
 
-
-</LinearLayout>
+</FrameLayout>

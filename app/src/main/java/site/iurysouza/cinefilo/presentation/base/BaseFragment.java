@@ -11,4 +11,7 @@ public abstract class BaseFragment extends RxFragment {
   }
 
   protected abstract void setupFragmentComponent();
+
+
+
 }

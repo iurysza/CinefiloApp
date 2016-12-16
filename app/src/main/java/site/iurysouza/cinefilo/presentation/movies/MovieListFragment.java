@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.squareup.picasso.Picasso;
 import io.realm.RealmList;
@@ -69,6 +70,7 @@ public class MovieListFragment extends BaseFragment
   private void setupRecyclerView() {
     movieList.getRecyclerView().setHasFixedSize(true);
     movieList.setLayoutManager(new LinearLayoutManager(getContext()));
+    movieList.addItemDecoration(new MaterialViewPagerHeaderDecorator());
     movieAdapter = new MovieAdapter(Picasso.with(getContext()), this);
     movieList.setAdapter(movieAdapter);
   }

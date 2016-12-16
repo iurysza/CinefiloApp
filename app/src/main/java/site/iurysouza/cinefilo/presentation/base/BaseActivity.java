@@ -12,10 +12,10 @@ public abstract class BaseActivity extends RxAppCompatActivity  {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getCineApplication();
-    setupActivityComponent();
+    setupActivityComponent(savedInstanceState);
   }
 
-  protected abstract void setupActivityComponent();
+  protected abstract void setupActivityComponent(Bundle savedInstanceState);
 
   protected CineApplication getCineApplication() {
     return appInstance = CineApplication.getAppInstance();

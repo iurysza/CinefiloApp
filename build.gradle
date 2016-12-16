@@ -26,6 +26,7 @@ ext {
   supportLibrary = '25.0.1'
   SpaceNavigationViewVersion = '1.5.0'
   SuperRecyclerViewVersion = '1.1.4'
+  MaterialViewPager = '1.2.0@aar'
   guavaVersion = '18.0'
   glideVersion = '3.6.1'
   junitVersion = '4.12'

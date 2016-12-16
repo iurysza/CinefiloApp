@@ -4,7 +4,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import dagger.Module;
 import dagger.Provides;
-import site.iurysouza.cinefilo.presentation.NavigationManager;
+import site.iurysouza.cinefilo.presentation.main.NavigationManager;
 
 /**
  * Created by Iury Souza on 09/11/2016.
@@ -30,6 +30,6 @@ public class UtilityModule {
 
   @Provides
   NavigationManager providesNavigationManager(AppCompatActivity activity, FragmentManager manager) {
-    return new NavigationManager(activity, manager);
+    return new NavigationManager(activity, manager );
   }
 }
