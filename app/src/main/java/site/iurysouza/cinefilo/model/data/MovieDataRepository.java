@@ -3,6 +3,7 @@ package site.iurysouza.cinefilo.model.data;
 import android.support.annotation.UiThread;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.data.storage.CloudMovieDataStore;
@@ -41,6 +42,10 @@ public class MovieDataRepository implements MovieRepository {
   @Override public Observable<RealmResults<RealmMovie>> getTopRatedMovies(int page) {
     cloudDataStore.getTopRatedMovies(page);
     return localDataStore.getTopRatedMovies();
+  }
+
+  public Observable<List<RealmMovie>> getShowCaseMovies(){
+    return localDataStore.getShowCaseMovies();
   }
 
   public Observable<RealmResults<RealmMovie>> getNowPlayingMovies(int page) {

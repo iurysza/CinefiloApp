@@ -1,6 +1,7 @@
 package site.iurysouza.cinefilo.domain;
 
 import io.realm.RealmResults;
+import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.data.MovieDataRepository;
@@ -30,6 +31,12 @@ public class MoviesUseCase implements UseCase {
     topPage = 1;
     return movieRepository.getTopRatedMovies(topPage);
   }
+
+   public Observable<List<RealmMovie>> getMoviewBackDrops() {
+
+    return movieRepository.getShowCaseMovies();
+  }
+
   public Observable<RealmResults<RealmMovie>> getNowPlayingMovies() {
     recPage = 1;
     return movieRepository.getNowPlayingMovies(recPage);

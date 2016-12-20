@@ -1,12 +1,17 @@
 package site.iurysouza.cinefilo.model.data.storage;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.functions.Func3;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 
 /**
@@ -66,5 +71,33 @@ public class LocalMovieDataStore {
     return movieRealm.asObservable()
         .filter(RealmResults::isLoaded)
         .filter(RealmResults::isValid);
+  }
+
+  public Observable<List<RealmMovie>> getShowCaseMovies() {
+    return Observable.zip(getNowPlayingMovies(), getTopRatedMovies(), getMostPopularMovies(),
+        (Func3<RealmResults<RealmMovie>, RealmResults<RealmMovie>, RealmResults<RealmMovie>, List<RealmMovie>>)
+            (nowMovies, topMovies, popMovies) -> {
+              if (!topMovies.isEmpty() && !topMovies.isEmpty() && !topMovies.isEmpty()) {
+                return getShowCaseMovieList(nowMovies, topMovies, popMovies);
+              }
+              return null;
+            });
+  }
+
+  @SuppressWarnings("unchecked") @NonNull
+  private List getShowCaseMovieList(RealmResults<RealmMovie> nowMovies,
+      RealmResults<RealmMovie> topMovies, RealmResults<RealmMovie> popMovies) {
+    List results = new ArrayList<RealmMovie>();
+    results.add(topMovies.get(getRandomItemPosition(topMovies)));
+    results.add(nowMovies.get(getRandomItemPosition(nowMovies)));
+    results.add(popMovies.get(getRandomItemPosition(popMovies)));
+    return results;
+  }
+
+  private int getRandomItemPosition(RealmResults<RealmMovie> movieList) {
+    int min = 0;
+    int max = movieList.size() - 1;
+    Random r = new Random();
+    return r.nextInt(max - min + 1) + min;
   }
 }

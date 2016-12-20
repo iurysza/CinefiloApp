@@ -15,7 +15,7 @@ import io.realm.RealmList;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.model.entities.realm.RealmGenre;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
-import site.iurysouza.cinefilo.util.Constants;
+import site.iurysouza.cinefilo.util.ImageUtils;
 
 /**
  * Created by Iury Souza on 15/12/2016.
@@ -45,7 +45,7 @@ public final class MovieItemView extends RelativeLayout {
   public void bindTo(RealmMovie realmMovie, Picasso picasso) {
     String posterPath = realmMovie.getPosterPath();
     if (posterPath != null) {
-      String posterUrl = Constants.MOVIE_DB_API.BASE_IMAGE_URL + posterPath;
+      String posterUrl = ImageUtils.getPosterUrl(posterPath);
       picasso.load(posterUrl)
           .fit()
           .into(movieImage);

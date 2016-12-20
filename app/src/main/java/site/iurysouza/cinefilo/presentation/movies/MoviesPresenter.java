@@ -40,10 +40,6 @@ public class MoviesPresenter extends BasePresenter<MoviesView> {
         }));
   }
 
-  @Override public void dettachView() {
-    super.dettachView();
-    subscription.clear();
-  }
 
   void loadTopRatedMovies() {
     getBaseView().showLoadingIndicator();
