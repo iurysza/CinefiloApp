@@ -12,7 +12,9 @@ import butterknife.ButterKnife;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import io.realm.RealmModel;
+import io.realm.RealmResults;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.presentation.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
 import site.iurysouza.cinefilo.presentation.movies.MoviesView;
@@ -90,7 +92,9 @@ public class MoviesFragment extends BaseFragment implements MoviesView {
 
   }
 
+  @Override public void showPopularMovieListNew(RealmResults<RealmMovie> topMoviesRealm) {
 
+  }
 
   @Override protected void setupFragmentComponent() {
     ((CineApplication) getContext().getApplicationContext()).getRepositoryComponent().inject(this);

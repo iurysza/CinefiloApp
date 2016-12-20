@@ -2,6 +2,7 @@ package site.iurysouza.cinefilo.model.data;
 
 import android.support.annotation.UiThread;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.data.storage.CloudMovieDataStore;
@@ -48,6 +49,11 @@ public class MovieDataRepository implements MovieRepository {
       cloudDataStore.getTopRatedMovies(page);
     }
     return localDataStore.getTopRatedMovies();
+  }
+
+  public Observable<RealmResults<RealmMovie>> getPopMoviesNew(int page) {
+      cloudDataStore.getMostPopularMovies(page);
+    return localDataStore.getPopularMoviesNew();
   }
 
 

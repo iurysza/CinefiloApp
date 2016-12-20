@@ -14,6 +14,7 @@ import lombok.Data;
 public class RealmMovie implements RealmModel {
 
   public static final String ID = "id";
+  public static final String POPULARITY = "popularity";
 
   @PrimaryKey
   private Integer id;

@@ -15,6 +15,7 @@ import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.squareup.picasso.Picasso;
 import io.realm.RealmList;
 import io.realm.RealmModel;
+import io.realm.RealmResults;
 import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
@@ -62,8 +63,8 @@ public class MovieListFragment extends BaseFragment
     listType = getArguments().getInt(LIST_TYPE);
     moviesPresenter.attachView(this);
 
-    loadData(listType);
     setupRecyclerView();
+    loadData(listType);
     return view;
   }
 
@@ -78,6 +79,7 @@ public class MovieListFragment extends BaseFragment
   private void loadData(int lisType) {
     switch (lisType) {
       case REC_MOVIES:
+        moviesPresenter.loadPopMoviesNew();
         break;
       case POP_MOVIES:
         moviesPresenter.loadMostPopularMovies();
@@ -119,6 +121,13 @@ public class MovieListFragment extends BaseFragment
     movieAdapter.addMovies(movieList);
     Timber.e("GOT %s MOVIES", movieList.size());
 
+  }
+
+  @Override public void showPopularMovieListNew(RealmResults<RealmMovie> topMoviesRealm) {
+    RealmList <RealmMovie> movieList = new RealmList<>();
+    movieList.addAll(topMoviesRealm.subList(0, topMoviesRealm.size()));
+    movieAdapter.addMovies(movieList);
+    Timber.e("NEW WAY GOT %s MOVIES", movieList.size());
   }
 
   @Override protected void setupFragmentComponent() {

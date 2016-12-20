@@ -1,8 +1,10 @@
 package site.iurysouza.cinefilo.domain;
 
+import io.realm.RealmResults;
 import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.data.MovieDataRepository;
+import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
 import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
 
@@ -29,6 +31,10 @@ public class MoviesUseCase implements UseCase {
   @Override public Observable<RealmTopMovies> getTopRatedMoviesObservable() {
     topPage = 1;
     return movieRepository.getTopRatedMovies(topPage);
+  }
+  public Observable<RealmResults<RealmMovie>> getPopMoviesObservableNew() {
+    topPage = 1;
+    return movieRepository.getPopMoviesNew(topPage);
   }
 
   public Observable getNextPopularPage() {

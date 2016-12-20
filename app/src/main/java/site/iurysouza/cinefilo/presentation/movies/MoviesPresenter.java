@@ -58,4 +58,17 @@ public class MoviesPresenter extends BasePresenter<MoviesView> {
           throwable.printStackTrace();
         }));
   }
+  void loadPopMoviesNew() {
+    getBaseView().showLoadingIndicator();
+    subscription.add(moviesUseCase
+        .getPopMoviesObservableNew()
+        .compose(rxLifecycle.bindToLifecycle())
+        .subscribe(topMoviesRealm -> {
+          getBaseView().hideLoadingIndicator();
+          getBaseView().showPopularMovieListNew(topMoviesRealm);
+        }, (throwable) -> {
+          getBaseView().showErrorIndicator();
+          throwable.printStackTrace();
+        }));
+  }
 }

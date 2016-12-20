@@ -3,6 +3,8 @@ package site.iurysouza.cinefilo.model.data.storage;
 import android.support.annotation.UiThread;
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
@@ -58,5 +60,16 @@ public class LocalMovieDataStore {
         .asObservable(movieRealm)
         .filter(RealmObject::isLoaded)
         .filter(RealmObject::isValid);
+  }
+
+  public Observable<RealmResults<RealmMovie>> getPopularMoviesNew() {
+
+    RealmResults<RealmMovie> movieRealm = realm
+        .where(RealmMovie.class)
+        .findAllSorted(RealmMovie.POPULARITY, Sort.ASCENDING);
+
+    return movieRealm.asObservable()
+        .filter(RealmResults::isLoaded)
+        .filter(RealmResults::isValid);
   }
 }

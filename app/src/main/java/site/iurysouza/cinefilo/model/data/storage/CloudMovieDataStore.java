@@ -57,7 +57,12 @@ public class CloudMovieDataStore {
   }
 
   private void savePopularMovieListToRealm(RealmPopularMovies popularListRealm) {
-    realm.executeTransactionAsync(realm -> realm.insert(popularListRealm),
+    realm.executeTransactionAsync(realm1 -> {
+          try {
+            realm1.insert(popularListRealm);
+          } catch (RealmPrimaryKeyConstraintException e) {
+          }
+        },
         throwable -> {
           Timber.e(throwable, "Could not save data");
         });
