@@ -8,8 +8,6 @@ import rx.Observable;
 import site.iurysouza.cinefilo.model.data.storage.CloudMovieDataStore;
 import site.iurysouza.cinefilo.model.data.storage.LocalMovieDataStore;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
-import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
-import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -31,51 +29,23 @@ public class MovieDataRepository implements MovieRepository {
   }
 
   @Override public Observable<RealmMovie> getMovieById(int movieId) {
-    if (!isMovieDataValid(movieId)) {
-      cloudDataStore.movieById(movieId);
-    }
+    cloudDataStore.movieById(movieId);
     return localDataStore.movieById(movieId);
   }
 
-  @Override public Observable<RealmPopularMovies> getMoviesByPopulariy(int page) {
-    if (!isPopularListAvailable(page)) {
-      cloudDataStore.getMostPopularMovies(page);
-    }
+  @Override public Observable<RealmResults<RealmMovie>> getMoviesByPopulariy(int page) {
+    cloudDataStore.getMostPopularMovies(page);
     return localDataStore.getMostPopularMovies();
   }
 
-  @Override public Observable<RealmTopMovies> getTopRatedMovies(int page) {
-    if (!isTopRatedListAvailable(page)) {
-      cloudDataStore.getTopRatedMovies(page);
-    }
+  @Override public Observable<RealmResults<RealmMovie>> getTopRatedMovies(int page) {
+    cloudDataStore.getTopRatedMovies(page);
     return localDataStore.getTopRatedMovies();
   }
 
-  public Observable<RealmResults<RealmMovie>> getPopMoviesNew(int page) {
-      cloudDataStore.getMostPopularMovies(page);
-    return localDataStore.getPopularMoviesNew();
-  }
-
-
-  private boolean isMovieDataValid(int movieId) {
-    return realm
-        .where(RealmMovie.class)
-        .equalTo(RealmMovie.ID, movieId)
-        .count() > 0;
-  }
-
-  private boolean isPopularListAvailable(int page) {
-    return realm
-        .where(RealmPopularMovies.class)
-        .equalTo(RealmPopularMovies.PAGE, page)
-        .count() > 0;
-  }
-
-  private boolean isTopRatedListAvailable(int page) {
-    return realm
-        .where(RealmTopMovies.class)
-        .equalTo(RealmTopMovies.PAGE, page)
-        .count() > 0;
+  public Observable<RealmResults<RealmMovie>> getNowPlayingMovies(int page) {
+    cloudDataStore.getNowPlayingMovies(page);
+    return localDataStore.getNowPlayingMovies();
   }
 
   @Override public void close() {

@@ -4,6 +4,7 @@ import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
+import java.util.Date;
 import lombok.Data;
 
 /**
@@ -15,6 +16,8 @@ public class RealmMovie implements RealmModel {
 
   public static final String ID = "id";
   public static final String POPULARITY = "popularity";
+  public static final String RATING = "voteAverage";
+  public static final String RELEASE_DATE = "releaseDate";
 
   @PrimaryKey
   private Integer id;
@@ -39,7 +42,7 @@ public class RealmMovie implements RealmModel {
 
   private String posterPath;
 
-  private String releaseDate;
+  private Date releaseDate;
 
   private Integer revenue;
 
@@ -56,6 +59,8 @@ public class RealmMovie implements RealmModel {
   private Double voteAverage;
 
   private Long voteCount;
+
+  private Long queryDate;
 
   private RealmList<RealmInteger> genreIds = new RealmList<>();
 

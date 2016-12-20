@@ -4,8 +4,7 @@ import io.realm.RealmList;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 import site.iurysouza.cinefilo.model.entities.pojo.Results;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
-import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
-import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
+import site.iurysouza.cinefilo.model.entities.realm.RealmMoviesResults;
 
 public class MovieDataMapper {
 
@@ -29,6 +28,7 @@ public class MovieDataMapper {
     realmMovie.setTitle(movie.getTitle());
     realmMovie.setRevenue(movie.getRevenue().intValue());
     realmMovie.setGenreList(GenreDataMapper.map(movie.getGenreList()));
+    realmMovie.setQueryDate(System.currentTimeMillis());
     realmMovie.setProductionCompanyList(
         ProdCompanyDataMapper.map(movie.getProductionCompanyList()));
     realmMovie.setProductionCountryList(ProdCountryDataMapper.map(movie.getProductionCountryList()));
@@ -36,27 +36,18 @@ public class MovieDataMapper {
     return realmMovie;
   }
 
-  public static RealmPopularMovies mapPopResults(Results results) {
+  public static RealmMoviesResults mapResultsToRealmResults(Results results) {
     RealmList<RealmMovie> realmMovieList = new RealmList<>();
     for (Movie movie : results.getMovieList()) {
       realmMovieList.add(mapMovieResult(movie));
     }
-    RealmPopularMovies realmPopularMovies = new RealmPopularMovies();
-    realmPopularMovies.setMovieList(realmMovieList);
-    realmPopularMovies.setPage(results.getPage());
-    return realmPopularMovies;
+    RealmMoviesResults realmMoviesResults = new RealmMoviesResults();
+    realmMoviesResults.setMovieList(realmMovieList);
+    realmMoviesResults.setPage(results.getPage());
+    return realmMoviesResults;
   }
 
-  public static RealmTopMovies mapTopResults(Results results) {
-    RealmList<RealmMovie> realmMovieList = new RealmList<>();
-    for (Movie movie : results.getMovieList()) {
-      realmMovieList.add(mapMovieResult(movie));
-    }
-    RealmTopMovies realmTopMovies = new RealmTopMovies();
-    realmTopMovies.setMovieList(realmMovieList);
-    realmTopMovies.setPage(results.getPage());
-    return realmTopMovies;
-  }
+
 
   public static RealmMovie mapMovieResult(Movie movie) {
     RealmMovie realmMovie = new RealmMovie();
@@ -73,6 +64,7 @@ public class MovieDataMapper {
     realmMovie.setVoteCount(movie.getVoteCount());
     realmMovie.setReleaseDate(movie.getReleaseDate());
     realmMovie.setGenreIds(RealmIntegerMapper.map(movie.getGenreIds()));
+    realmMovie.setQueryDate(System.currentTimeMillis());
     return realmMovie;
   }
 }

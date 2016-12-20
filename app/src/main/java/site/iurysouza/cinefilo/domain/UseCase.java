@@ -1,7 +1,8 @@
 package site.iurysouza.cinefilo.domain;
 
+import io.realm.RealmResults;
 import rx.Observable;
-import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
+import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
 
 /**
@@ -9,7 +10,7 @@ import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
  */
 
 public interface UseCase {
-  Observable getPopMoviesObservable();
+  Observable<RealmResults<RealmMovie>> getPopMoviesObservable();
 
-  Observable<RealmTopMovies> getTopRatedMoviesObservable();
+  Observable<RealmResults<RealmMovie>> getTopRatedMoviesObservable();
 }

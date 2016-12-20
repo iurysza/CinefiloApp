@@ -1,10 +1,9 @@
 package site.iurysouza.cinefilo.model.data;
 
+import io.realm.RealmResults;
 import java.io.Closeable;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
-import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
-import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -13,7 +12,7 @@ import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
 public interface MovieRepository extends Closeable {
   Observable<RealmMovie> getMovieById(int id);
 
-  Observable<RealmPopularMovies> getMoviesByPopulariy(int page);
+  Observable<RealmResults<RealmMovie>> getMoviesByPopulariy(int page);
 
-  Observable<RealmTopMovies> getTopRatedMovies(int page);
+  Observable<RealmResults<RealmMovie>> getTopRatedMovies(int page);
 }

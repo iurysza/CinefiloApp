@@ -11,7 +11,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
-import io.realm.RealmModel;
 import io.realm.RealmResults;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
@@ -88,11 +87,9 @@ public class MoviesFragment extends BaseFragment implements MoviesView {
 
   }
 
-  @Override public void showPopularMovieList(RealmModel popularMovieList) {
 
-  }
 
-  @Override public void showPopularMovieListNew(RealmResults<RealmMovie> topMoviesRealm) {
+  @Override public void showMoviesOnAdapter(RealmResults<RealmMovie> topMoviesRealm) {
 
   }
 

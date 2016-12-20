@@ -7,8 +7,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import site.iurysouza.cinefilo.model.entities.mapper.MovieDataMapper;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
-import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
-import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
+import site.iurysouza.cinefilo.model.entities.realm.RealmMoviesResults;
 import site.iurysouza.cinefilo.model.services.MovieService;
 import site.iurysouza.cinefilo.util.Constants;
 import timber.log.Timber;
@@ -40,26 +39,37 @@ public class CloudMovieDataStore {
             });
   }
 
-  private void saveToRealm(RealmMovie realmMovie) {
-    realm.executeTransactionAsync(realm -> realm.insertOrUpdate(realmMovie),
-        throwable -> {
-          Timber.e(throwable, "Could not save data");
-        });
+  public void getTopRatedMovies(int page) {
+    movieService
+        .getTopRatedMovies(Constants.MOVIE_DB_API.API_KEY, page)
+        .subscribeOn(Schedulers.io())
+        .map(MovieDataMapper::mapResultsToRealmResults)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(this::saveToRealm, Throwable::printStackTrace);
+  }
+
+  public void getNowPlayingMovies(int page) {
+    movieService
+        .getNowPlayingMovies(Constants.MOVIE_DB_API.API_KEY, page)
+        .subscribeOn(Schedulers.io())
+        .map(MovieDataMapper::mapResultsToRealmResults)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(this::saveToRealm, Throwable::printStackTrace);
   }
 
   public void getMostPopularMovies(int page) {
     movieService
         .getMostPopularMovies(Constants.MOVIE_DB_API.API_KEY, page)
         .subscribeOn(Schedulers.io())
-        .map(MovieDataMapper::mapPopResults)
+        .map(MovieDataMapper::mapResultsToRealmResults)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(this::savePopularMovieListToRealm, Throwable::printStackTrace);
+        .subscribe(this::saveToRealm, Throwable::printStackTrace);
   }
 
-  private void savePopularMovieListToRealm(RealmPopularMovies popularListRealm) {
+  private void saveToRealm(RealmMoviesResults realmMoviesResults) {
     realm.executeTransactionAsync(realm1 -> {
           try {
-            realm1.insert(popularListRealm);
+            realm1.insert(realmMoviesResults);
           } catch (RealmPrimaryKeyConstraintException e) {
           }
         },
@@ -68,22 +78,8 @@ public class CloudMovieDataStore {
         });
   }
 
-  public void getTopRatedMovies(int page) {
-    movieService
-        .getTopRatedMovies(Constants.MOVIE_DB_API.API_KEY, page)
-        .subscribeOn(Schedulers.io())
-        .map(MovieDataMapper::mapTopResults)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(this::saveTopRatedMovies, Throwable::printStackTrace);
-  }
-
-  private void saveTopRatedMovies(RealmTopMovies topMovieListRealm) {
-    realm.executeTransactionAsync(realm1 -> {
-      try {
-        realm1.insert(topMovieListRealm);
-      } catch (RealmPrimaryKeyConstraintException e) {
-      }
-    },
+  private void saveToRealm(RealmMovie realmMovie) {
+    realm.executeTransactionAsync(realm -> realm.insertOrUpdate(realmMovie),
         throwable -> {
           Timber.e(throwable, "Could not save data");
         });

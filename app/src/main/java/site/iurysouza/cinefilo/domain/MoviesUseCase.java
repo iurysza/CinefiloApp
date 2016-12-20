@@ -5,8 +5,6 @@ import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.data.MovieDataRepository;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
-import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
-import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
 
 /**
  * Created by Iury Souza on 09/11/2016.
@@ -24,17 +22,17 @@ public class MoviesUseCase implements UseCase {
     this.movieRepository = movieRepository;
   }
 
-  @Override public Observable<RealmPopularMovies> getPopMoviesObservable() {
+  @Override public Observable<RealmResults<RealmMovie>> getPopMoviesObservable() {
     popPage = 1;
     return movieRepository.getMoviesByPopulariy(popPage);
   }
-  @Override public Observable<RealmTopMovies> getTopRatedMoviesObservable() {
+  @Override public Observable<RealmResults<RealmMovie>> getTopRatedMoviesObservable() {
     topPage = 1;
     return movieRepository.getTopRatedMovies(topPage);
   }
-  public Observable<RealmResults<RealmMovie>> getPopMoviesObservableNew() {
-    topPage = 1;
-    return movieRepository.getPopMoviesNew(topPage);
+  public Observable<RealmResults<RealmMovie>> getNowPlayingMovies() {
+    recPage = 1;
+    return movieRepository.getNowPlayingMovies(recPage);
   }
 
   public Observable getNextPopularPage() {
@@ -44,5 +42,9 @@ public class MoviesUseCase implements UseCase {
   public Observable getNextTopPage() {
     topPage++;
     return movieRepository.getTopRatedMovies(topPage);
+  }
+  public Observable getNextRecentPage() {
+    recPage++;
+    return movieRepository.getNowPlayingMovies(recPage);
   }
 }

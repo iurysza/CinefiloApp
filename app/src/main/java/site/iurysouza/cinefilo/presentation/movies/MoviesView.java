@@ -1,6 +1,5 @@
 package site.iurysouza.cinefilo.presentation.movies;
 
-import io.realm.RealmModel;
 import io.realm.RealmResults;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.presentation.base.mvp.BaseView;
@@ -15,7 +14,5 @@ public interface MoviesView extends BaseView {
 
   void showErrorIndicator();
 
-  void showPopularMovieList(RealmModel popularMovieList);
-
-  void showPopularMovieListNew(RealmResults<RealmMovie> topMoviesRealm);
+  void showMoviesOnAdapter(RealmResults<RealmMovie> topMoviesRealm);
 }

@@ -28,4 +28,9 @@ public interface MovieService {
   Observable<Results> getTopRatedMovies(
       @Query("api_key") String apiKey,
       @Query("page") int page);
+
+  @GET("movie/now_playing")
+  Observable<Results> getNowPlayingMovies(
+      @Query("api_key") String apiKey,
+      @Query("page") int page);
 }

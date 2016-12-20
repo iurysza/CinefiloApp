@@ -8,8 +8,6 @@ import io.realm.Sort;
 import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
-import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
-import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -38,35 +36,32 @@ public class LocalMovieDataStore {
         .filter(RealmObject::isValid);
   }
 
-  public Observable<RealmPopularMovies> getMostPopularMovies() {
+  public Observable<RealmResults<RealmMovie>> getNowPlayingMovies() {
+    RealmResults<RealmMovie> movieRealm = realm
+        .where(RealmMovie.class)
+        .findAllSorted(RealmMovie.RELEASE_DATE, Sort.DESCENDING);
 
-    RealmPopularMovies movieRealm = realm
-        .where(RealmPopularMovies.class)
-        .findFirstAsync();
-
-     return RealmObject
-        .asObservable(movieRealm)
-        .filter(RealmObject::isLoaded)
-        .filter(RealmObject::isValid);
+    return movieRealm.asObservable()
+        .filter(RealmResults::isLoaded)
+        .filter(RealmResults::isValid);
   }
 
-  public Observable<RealmTopMovies> getTopRatedMovies() {
-
-    RealmTopMovies movieRealm = realm
-        .where(RealmTopMovies.class)
-        .findFirstAsync();
-
-    return RealmObject
-        .asObservable(movieRealm)
-        .filter(RealmObject::isLoaded)
-        .filter(RealmObject::isValid);
-  }
-
-  public Observable<RealmResults<RealmMovie>> getPopularMoviesNew() {
+  public Observable<RealmResults<RealmMovie>> getTopRatedMovies() {
 
     RealmResults<RealmMovie> movieRealm = realm
         .where(RealmMovie.class)
-        .findAllSorted(RealmMovie.POPULARITY, Sort.ASCENDING);
+        .findAllSorted(RealmMovie.RATING, Sort.DESCENDING);
+
+    return movieRealm.asObservable()
+        .filter(RealmResults::isLoaded)
+        .filter(RealmResults::isValid);
+  }
+
+  public Observable<RealmResults<RealmMovie>> getMostPopularMovies() {
+
+    RealmResults<RealmMovie> movieRealm = realm
+        .where(RealmMovie.class)
+        .findAllSorted(RealmMovie.POPULARITY, Sort.DESCENDING);
 
     return movieRealm.asObservable()
         .filter(RealmResults::isLoaded)

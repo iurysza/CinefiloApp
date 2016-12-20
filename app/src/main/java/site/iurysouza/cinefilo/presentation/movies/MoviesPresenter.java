@@ -33,7 +33,7 @@ public class MoviesPresenter extends BasePresenter<MoviesView> {
         .compose(rxLifecycle.bindToLifecycle())
         .subscribe(popularMoviesRealm -> {
           getBaseView().hideLoadingIndicator();
-          getBaseView().showPopularMovieList(popularMoviesRealm);
+          getBaseView().showMoviesOnAdapter(popularMoviesRealm);
         }, (throwable) -> {
           getBaseView().showErrorIndicator();
           throwable.printStackTrace();
@@ -45,27 +45,27 @@ public class MoviesPresenter extends BasePresenter<MoviesView> {
     subscription.clear();
   }
 
-  void loadTopMovies() {
+  void loadTopRatedMovies() {
     getBaseView().showLoadingIndicator();
     subscription.add(moviesUseCase
         .getTopRatedMoviesObservable()
         .compose(rxLifecycle.bindToLifecycle())
         .subscribe(topMoviesRealm -> {
           getBaseView().hideLoadingIndicator();
-          getBaseView().showPopularMovieList(topMoviesRealm);
+          getBaseView().showMoviesOnAdapter(topMoviesRealm);
         }, (throwable) -> {
           getBaseView().showErrorIndicator();
           throwable.printStackTrace();
         }));
   }
-  void loadPopMoviesNew() {
+  void LoadNowPlayingMovies() {
     getBaseView().showLoadingIndicator();
     subscription.add(moviesUseCase
-        .getPopMoviesObservableNew()
+        .getNowPlayingMovies()
         .compose(rxLifecycle.bindToLifecycle())
         .subscribe(topMoviesRealm -> {
           getBaseView().hideLoadingIndicator();
-          getBaseView().showPopularMovieListNew(topMoviesRealm);
+          getBaseView().showMoviesOnAdapter(topMoviesRealm);
         }, (throwable) -> {
           getBaseView().showErrorIndicator();
           throwable.printStackTrace();

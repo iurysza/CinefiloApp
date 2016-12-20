@@ -2,7 +2,6 @@ package site.iurysouza.cinefilo.model.entities.realm;
 
 import io.realm.RealmList;
 import io.realm.RealmModel;
-import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 import lombok.Data;
 
@@ -11,9 +10,10 @@ import lombok.Data;
  */
 @Data
 @RealmClass
-public class RealmPopularMovies implements RealmModel {
+public class RealmMoviesResults implements RealmModel {
   public static final String PAGE = "page";
-  @PrimaryKey
   private Long page;
+  private Long totalPages;
+  private Long totalResults;
   private RealmList<RealmMovie> movieList;
 }

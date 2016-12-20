@@ -14,13 +14,10 @@ import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDeco
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.squareup.picasso.Picasso;
 import io.realm.RealmList;
-import io.realm.RealmModel;
 import io.realm.RealmResults;
 import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
-import site.iurysouza.cinefilo.model.entities.realm.RealmPopularMovies;
-import site.iurysouza.cinefilo.model.entities.realm.RealmTopMovies;
 import site.iurysouza.cinefilo.presentation.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
 import timber.log.Timber;
@@ -79,16 +76,16 @@ public class MovieListFragment extends BaseFragment
   private void loadData(int lisType) {
     switch (lisType) {
       case REC_MOVIES:
-        moviesPresenter.loadPopMoviesNew();
+        moviesPresenter.LoadNowPlayingMovies();
         break;
       case POP_MOVIES:
         moviesPresenter.loadMostPopularMovies();
         break;
       case TOP_MOVIES:
-        moviesPresenter.loadTopMovies();
+        moviesPresenter.loadTopRatedMovies();
         break;
       default:
-        moviesPresenter.loadTopMovies();
+        moviesPresenter.LoadNowPlayingMovies();
     }
   }
 
@@ -109,21 +106,8 @@ public class MovieListFragment extends BaseFragment
 
   }
 
-  @Override public void showPopularMovieList(RealmModel popularMovieList) {
-    RealmList<RealmMovie> movieList = null;
-    if (popularMovieList instanceof RealmTopMovies) {
-      movieList = ((RealmTopMovies) popularMovieList).getMovieList();
-    }
-    if (popularMovieList instanceof RealmPopularMovies) {
-      movieList = ((RealmPopularMovies) popularMovieList).getMovieList();
-    }
 
-    movieAdapter.addMovies(movieList);
-    Timber.e("GOT %s MOVIES", movieList.size());
-
-  }
-
-  @Override public void showPopularMovieListNew(RealmResults<RealmMovie> topMoviesRealm) {
+  @Override public void showMoviesOnAdapter(RealmResults<RealmMovie> topMoviesRealm) {
     RealmList <RealmMovie> movieList = new RealmList<>();
     movieList.addAll(topMoviesRealm.subList(0, topMoviesRealm.size()));
     movieAdapter.addMovies(movieList);

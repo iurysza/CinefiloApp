@@ -1,6 +1,7 @@
 package site.iurysouza.cinefilo.model.entities.pojo;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Generated;
 import lombok.AccessLevel;
@@ -40,7 +41,7 @@ public class Movie {
   @SerializedName("poster_path")
   private String posterPath;
   @SerializedName("release_date")
-  private String releaseDate;
+  private Date releaseDate;
   @SerializedName("revenue")
   private Long revenue;
   @SerializedName("runtime")
@@ -57,7 +58,6 @@ public class Movie {
   private Double voteAverage;
   @SerializedName("vote_count")
   private Long voteCount;
-
   @SerializedName("genres")
   private List<Genre> genreList;
   @SerializedName("production_companies")
