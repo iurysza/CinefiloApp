@@ -3,6 +3,7 @@ package site.iurysouza.cinefilo.di.modules;
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
+import java.io.InputStream;
 import retrofit2.Retrofit;
 import site.iurysouza.cinefilo.model.data.storage.CloudMovieDataStore;
 import site.iurysouza.cinefilo.model.data.storage.LocalMovieDataStore;
@@ -32,8 +33,8 @@ public class RepositoryModule {
   }
 
   @Provides MovieDataRepository providesMovieDataRepository(LocalMovieDataStore localMovieDataStore,
-      CloudMovieDataStore cloudMovieDataStore, Realm realm) {
-    return new MovieDataRepository(localMovieDataStore, cloudMovieDataStore, realm);
+      CloudMovieDataStore cloudMovieDataStore, Realm realm, InputStream gendersFromJson) {
+    return new MovieDataRepository(localMovieDataStore, cloudMovieDataStore, realm, gendersFromJson);
   }
 
   @Provides HomePresenter providesHomePresenter(MovieDataRepository dataRepository) {

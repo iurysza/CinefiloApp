@@ -36,10 +36,10 @@ public class MovieDataMapper {
     return realmMovie;
   }
 
-  public static RealmMoviesResults mapResultsToRealmResults(Results results) {
+  public static RealmMoviesResults mapResultsToRealmResults(Results results, int queryType) {
     RealmList<RealmMovie> realmMovieList = new RealmList<>();
     for (Movie movie : results.getMovieList()) {
-      realmMovieList.add(mapMovieResult(movie));
+      realmMovieList.add(mapMovieResult(movie, queryType));
     }
     RealmMoviesResults realmMoviesResults = new RealmMoviesResults();
     realmMoviesResults.setMovieList(realmMovieList);
@@ -49,7 +49,7 @@ public class MovieDataMapper {
 
 
 
-  public static RealmMovie mapMovieResult(Movie movie) {
+  public static RealmMovie mapMovieResult(Movie movie, int queryType) {
     RealmMovie realmMovie = new RealmMovie();
     realmMovie.setAdult(movie.getAdult());
     realmMovie.setBackdropPath(movie.getBackdropPath());
@@ -65,6 +65,7 @@ public class MovieDataMapper {
     realmMovie.setReleaseDate(movie.getReleaseDate());
     realmMovie.setGenreIds(RealmIntegerMapper.map(movie.getGenreIds()));
     realmMovie.setQueryDate(System.currentTimeMillis());
+    realmMovie.setQueryType(queryType);
     return realmMovie;
   }
 }

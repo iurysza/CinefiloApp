@@ -17,7 +17,7 @@ import site.iurysouza.cinefilo.di.modules.RepositoryModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.home.HomeFragment;
-import site.iurysouza.cinefilo.presentation.movies.pager.MoviesFragment;
+import site.iurysouza.cinefilo.presentation.movies.pager.MoviesPagerFragment;
 
 public class MainActivity extends BaseActivity implements BottomBarListener {
 
@@ -44,7 +44,7 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
 
     List<Fragment> fragments = new ArrayList<>();
     fragments.add(HomeFragment.newInstance());
-    fragments.add(MoviesFragment.newInstance());
+    fragments.add(MoviesPagerFragment.newInstance());
 
     navigationManager.setupFragNavController(fragments, this);
     bottomBar.setSpaceOnClickListener(navigationManager);

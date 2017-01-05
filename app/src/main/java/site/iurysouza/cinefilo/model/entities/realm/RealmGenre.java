@@ -11,7 +11,10 @@ import lombok.Data;
 @Data
 @RealmClass
 public class RealmGenre implements RealmModel {
+  public static final String ID = "id";
+  public static final String QUERY_DATE = "queryDate";
   @PrimaryKey
   private Long id;
   private String name;
+  private Long queryDate;
 }

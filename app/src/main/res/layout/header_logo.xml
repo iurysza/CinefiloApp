@@ -2,7 +2,8 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/logo_white"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/materialviewpager_logoHeight"
-    android:text="Cinéfilo"
-    android:textSize="25sp"
-    android:textColor="@android:color/white"/>
+    android:layout_height="wrap_content"
+    android:alpha=".5"
+    android:textSize="16sp"
+    android:textStyle="italic"
+    android:textColor="@color/appLightYellow"/>

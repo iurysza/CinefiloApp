@@ -1,15 +1,15 @@
 package site.iurysouza.cinefilo.model.services;
 
-import java.util.List;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
-import site.iurysouza.cinefilo.model.entities.pojo.Genre;
+import site.iurysouza.cinefilo.model.entities.pojo.GenreResult;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 import site.iurysouza.cinefilo.model.entities.pojo.Results;
 
 public interface MovieService {
+
   @GET("movie/{movie_id}")
   Observable<Movie> getMovieById(
       @Path("movie_id") int movieId,
@@ -20,8 +20,8 @@ public interface MovieService {
       @Query("api_key") String apiKey,
       @Query("page") int page);
 
-  @GET("/genre/movie/list")
-  Observable<List<Genre>> getMovieGenreList(
+  @GET("genre/movie/list")
+  Observable<GenreResult> getMovieGenreList(
       @Query("api_key") String apiKey);
 
   @GET("movie/top_rated")

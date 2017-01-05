@@ -7,7 +7,7 @@ import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import site.iurysouza.cinefilo.presentation.main.MainActivity;
 import site.iurysouza.cinefilo.presentation.home.HomeFragment;
 import site.iurysouza.cinefilo.presentation.movies.MovieListFragment;
-import site.iurysouza.cinefilo.presentation.movies.pager.MoviesFragment;
+import site.iurysouza.cinefilo.presentation.movies.pager.MoviesPagerFragment;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -20,7 +20,7 @@ import site.iurysouza.cinefilo.presentation.movies.pager.MoviesFragment;
 
 public interface RepositoryComponent {
     void inject(MainActivity mainActivity);
-    void inject(MoviesFragment target);
+    void inject(MoviesPagerFragment target);
     void inject(MovieListFragment target);
     void inject(HomeFragment target);
 }

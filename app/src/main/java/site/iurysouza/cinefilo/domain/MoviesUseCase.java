@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.data.MovieDataRepository;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
+import site.iurysouza.cinefilo.util.Constants;
 
 /**
  * Created by Iury Souza on 09/11/2016.
@@ -25,33 +26,42 @@ public class MoviesUseCase implements UseCase {
 
   @Override public Observable<RealmResults<RealmMovie>> getPopMoviesObservable() {
     popPage = 1;
-    return movieRepository.getMoviesByPopulariy(popPage);
+    return movieRepository.getMoviesByPopulariy(popPage,true);
   }
   @Override public Observable<RealmResults<RealmMovie>> getTopRatedMoviesObservable() {
     topPage = 1;
-    return movieRepository.getTopRatedMovies(topPage);
-  }
-
-   public Observable<List<RealmMovie>> getMoviewBackDrops() {
-
-    return movieRepository.getShowCaseMovies();
+    return movieRepository.getTopRatedMovies(topPage, true);
   }
 
   public Observable<RealmResults<RealmMovie>> getNowPlayingMovies() {
     recPage = 1;
-    return movieRepository.getNowPlayingMovies(recPage);
+    return movieRepository.getNowPlayingMovies(recPage, true);
   }
 
-  public Observable getNextPopularPage() {
-    popPage++;
-    return movieRepository.getMoviesByPopulariy(popPage);
+
+  public Observable<List<RealmMovie>> getMoviewBackDrops() {
+    updateGenres();
+    return movieRepository.getShowCaseMovies();
   }
-  public Observable getNextTopPage() {
-    topPage++;
-    return movieRepository.getTopRatedMovies(topPage);
+
+  private void updateGenres() {
+    movieRepository.getGenreList();
   }
-  public Observable getNextRecentPage() {
-    recPage++;
-    return movieRepository.getNowPlayingMovies(recPage);
+
+
+
+  public Observable<RealmResults<RealmMovie>> getNextPopularPage(int page) {
+    return movieRepository.getMoviesByPopulariy(page, true);
+  }
+
+  private int getNextPageBasedOnListSize(int page) {
+    return Math.round(page / Constants.Movies.PAGE_SIZE)+1;
+  }
+
+  public Observable<RealmResults<RealmMovie>> getNextTopPage(int page) {
+    return movieRepository.getTopRatedMovies(page, true);
+  }
+  public Observable<RealmResults<RealmMovie>> getNextRecentPage(int page) {
+    return movieRepository.getNowPlayingMovies(page, true);
   }
 }

@@ -16,4 +16,5 @@ public interface MoviesView extends BaseView {
 
   void showMoviesOnAdapter(RealmResults<RealmMovie> topMoviesRealm);
 
+  void addMoreMoviesOnAdapter(RealmResults<RealmMovie> topMoviesRealm, int itemsBeforeMore);
 }

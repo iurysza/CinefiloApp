@@ -6,12 +6,15 @@
 
 
     <color name="appBrown">#855345</color>
+    <color name="appDarkBrown">#3e2723</color>
     <color name="appLightYellow">#faf7f2</color>
     <color name="appYellow">#e2c02b</color>
     <color name="appYellowBrown">#d3bca2</color>
     <color name="appRed">#f44336</color>
     <color name="appWhite">#ffffff</color>
     <color name="appGrey">#66615a</color>
+    <color name="appOrange">#F57C00</color>
+    <color name="appLightBlack">#212121</color>
 
 
     <color name="colorAppBackground">@color/appLightYellow</color>
@@ -19,4 +22,10 @@
     <color name="colorGenreText">@color/appYellow</color>
     <color name="colorRatingView">@color/appYellowBrown</color>
     <color name="colorMovieTitle">@color/appGrey</color>
+
+    <color name="colorGenreGroup1">@color/appDarkBrown</color>
+    <color name="colorGenreGroup2">@color/appBrown</color>
+    <color name="colorGenreGroup3">@color/appLightBlack</color>
+    <color name="colorGenreGroup4">@color/colorPrimary</color>
+
 </resources>

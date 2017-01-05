@@ -21,16 +21,14 @@
       app:viewpager_logoMarginTop="100dp"
       app:viewpager_color="@color/colorPrimary"
       app:viewpager_headerHeight="200dp"
-      app:viewpager_headerAlpha=".7"
       app:viewpager_hideLogoWithFade="true"
       app:viewpager_hideToolbarAndTitle="false"
       app:viewpager_enableToolbarElevation="true"
-      app:viewpager_parallaxHeaderFactor="1.5"
       app:viewpager_headerAdditionalHeight="20dp"
+      app:viewpager_imageHeaderDarkLayerAlpha="0"
       app:viewpager_displayToolbarWhenSwipe="false"
       app:viewpager_transparentToolbar="false"
       app:viewpager_animatedHeaderImage="true"
-      app:viewpager_imageHeaderDarkLayerAlpha=".2"
       app:viewpager_disableToolbar="false"
 
   />

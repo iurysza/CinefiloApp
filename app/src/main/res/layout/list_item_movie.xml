@@ -16,12 +16,16 @@
       android:layout_height="@dimen/movie_card_item_height"
       android:layout_gravity="center"
       android:layout_marginTop="32dp"
+      android:layout_marginBottom="4dp"
       card_view:cardElevation="@dimen/base_card_elevation"
       card_view:cardCornerRadius="@dimen/default_card_radius">
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="136dp"
+        android:layout_marginRight="4dp"
         android:orientation="vertical">
 
 
@@ -30,8 +34,6 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:textColor="@color/colorMovieTitle"
-          android:layout_marginLeft="150dp"
-          android:layout_marginTop="20dp"
           tools:text="Movie Name"
           android:textSize="@dimen/title_text_size"/>
       <RatingBar
@@ -39,11 +41,20 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:theme="@style/RatingBar"
-          android:layout_marginLeft="150dp"
           android:layout_marginTop="4dp"
           android:numStars="5"
-          style="@style/Base.Widget.AppCompat.RatingBar.Small"
-      />
+          style="@style/Base.Widget.AppCompat.RatingBar.Small"/>
+      <TextView
+          android:id="@+id/movie_item_overview_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textColor="@color/colorMovieTitle"
+          tools:text="A rather long movie description can take up a lot of space wich we do not want to actually happen atta all"
+          android:scrollHorizontally="true"
+          android:ellipsize="end"
+          android:maxLines="3"
+          android:layout_marginTop="2dp"
+          android:textSize="@dimen/overview_text_size"/>
     </LinearLayout>
   </android.support.v7.widget.CardView>
 
@@ -52,10 +63,9 @@
       android:id="@+id/movie_item_picture_card"
       android:layout_width="@dimen/movie_picture_card_width"
       android:layout_height="@dimen/movie_picture_card_height"
-      android:layout_gravity="center"
       android:layout_marginLeft="16dp"
-      card_view:cardElevation="@dimen/base_card_elevation"
-      android:layout_marginTop="8dp"
+      card_view:cardElevation="@dimen/mid_card_elevation"
+      android:layout_marginTop="16dp"
       card_view:cardCornerRadius="@dimen/small_card_radius">
 
     <ImageView
@@ -66,14 +76,14 @@
 
   <android.support.v7.widget.CardView
       android:id="@+id/movie_item_genre"
-      android:layout_width="70dp"
-      android:layout_height="20dp"
-      android:layout_gravity="center"
+      android:layout_width="60dp"
+      android:layout_height="18dp"
+      android:layout_marginLeft="95dp"
+      android:layout_marginTop="38dp"
       card_view:cardElevation="@dimen/mid_card_elevation"
       card_view:cardBackgroundColor="@color/colorGenreView"
-      android:layout_marginLeft="100dp"
-      android:layout_marginTop="21dp"
-      card_view:cardCornerRadius="@dimen/small_card_radius">
+      card_view:cardCornerRadius="@dimen/small_card_radius"
+  >
 
     <TextView
         android:id="@+id/movie_item_genre_text"

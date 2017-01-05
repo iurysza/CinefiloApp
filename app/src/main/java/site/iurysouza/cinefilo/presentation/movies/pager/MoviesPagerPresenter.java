@@ -23,7 +23,7 @@ public class MoviesPagerPresenter extends BasePresenter<MoviesPagerView> {
 
   @Override public void attachView(MoviesPagerView view) {
     super.attachView(view);
-    rxLifecycle = ((MoviesFragment) view);
+    rxLifecycle = ((MoviesPagerFragment) view);
   }
 
   void loadShowCaseMovies() {

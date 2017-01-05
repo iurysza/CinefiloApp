@@ -61,6 +61,8 @@ public class CineApplication extends Application {
     return Realm.getDefaultInstance();
   }
 
+
+
   private void createAppComponent() {
     appComponent = DaggerAppComponent
         .builder()

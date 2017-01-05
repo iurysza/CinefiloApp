@@ -26,7 +26,7 @@ public class HomePresenter extends BasePresenter<HomeView> {
         .subscribe(movieRealm ->
             {
               Timber.i("movie fetched: %s", movieRealm.getTitle());
-              getBaseView().showRetrievedMovie(movieRealm);
+              //getBaseView().showRetrievedMovie(movieRealm);
             },
             throwable -> {
               Timber.e("Failed to fetch movie: %s", throwable.getMessage());

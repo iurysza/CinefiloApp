@@ -4,6 +4,7 @@ import android.content.Context;
 import dagger.Module;
 import dagger.Provides;
 import java.io.File;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -18,6 +19,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.schedulers.Schedulers;
 import site.iurysouza.cinefilo.BuildConfig;
+import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.util.Constants;
 import site.iurysouza.cinefilo.util.NetworkUtil;
 import timber.log.Timber;
@@ -67,6 +69,10 @@ public class MoviesApiModule {
     };
   }
 
+  @Provides @Singleton
+  public InputStream providesLocalGenres(Context context) {
+     return context.getResources().openRawResource(R.raw.cinefilo_genre_list);
+  }
 
   @Provides @Singleton public OkHttpClient providesLoggingCapableHttpClient(Cache cache,
       @Named(Constants.CACHE_CONTROL) Interceptor cacheInterceptor,

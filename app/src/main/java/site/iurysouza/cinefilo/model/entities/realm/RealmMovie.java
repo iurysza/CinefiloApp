@@ -16,8 +16,13 @@ public class RealmMovie implements RealmModel {
 
   public static final String ID = "id";
   public static final String POPULARITY = "popularity";
-  public static final String RATING = "voteAverage";
+  public static final String VOTE_AVG = "voteAverage";
   public static final String RELEASE_DATE = "releaseDate";
+  public static final String VOTE_COUNT = "voteCount";
+  public static final int NOW_QUERY = 2;
+  public static final int POP_QUERY = 1;
+  public static final int TOP_QUERY = 0;
+  public static final String QUERY_TYPE = "queryType";
 
   @PrimaryKey
   private Integer id;
@@ -25,6 +30,8 @@ public class RealmMovie implements RealmModel {
   private Boolean adult;
 
   private String backdropPath;
+
+  private int queryType;
 
   private Integer budget;
 
