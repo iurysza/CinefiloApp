@@ -8,26 +8,21 @@ import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.ncapdevi.fragnav.FragNavController;
 import java.util.List;
 import javax.inject.Inject;
+import org.greenrobot.eventbus.EventBus;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.presentation.movies.ItemReselectedEvent;
 
 /**
  * Created by Iury Souza on 09/11/2016.
  */
 
 public class NavigationManager implements
-    SpaceOnClickListener{
-
-  private static final int HOME_TAB = 0;
-  private static final int MOVIES_TAB = 1;
-  private static final int SEARCH_TAB = 2;
-
-  private static final int START_INDEX = HOME_TAB;
+    SpaceOnClickListener {
 
   private final FragmentManager fragManager;
+  private final AppCompatActivity activity;
   private FragNavController fragNavController;
   private BottomBarListener bottomBarListener;
-
-  private AppCompatActivity activity;
 
   @IdRes
   private int fragContainer;
@@ -47,7 +42,7 @@ public class NavigationManager implements
   public void setupFragNavController(List<Fragment> fragList, BottomBarListener bottomBarListener) {
     this.bottomBarListener = bottomBarListener;
     fragNavController =
-        new FragNavController(null, fragManager, fragContainer, fragList, START_INDEX);
+        new FragNavController(null, fragManager, fragContainer, fragList, FragNavController.TAB1);
   }
 
   @Override public void onCentreButtonClick() {
@@ -57,18 +52,18 @@ public class NavigationManager implements
 
   @Override public void onItemClick(int itemIndex, String itemName) {
     switch (itemIndex) {
-      case HOME_TAB:
-        fragNavController.switchTab(HOME_TAB);
+      case FragNavController.TAB1:
+        fragNavController.switchTab(FragNavController.TAB1);
         bottomBarListener.onTabSelected(fragNavController.getCurrentFrag());
         break;
-      case MOVIES_TAB:
-        fragNavController.switchTab(MOVIES_TAB);
+      case FragNavController.TAB2:
+        fragNavController.switchTab(FragNavController.TAB2);
         bottomBarListener.onTabSelected(fragNavController.getCurrentFrag());
         break;
     }
   }
 
   @Override public void onItemReselected(int itemIndex, String itemName) {
-
+    EventBus.getDefault().post(new ItemReselectedEvent(itemIndex));
   }
 }

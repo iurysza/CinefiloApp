@@ -1,29 +1,27 @@
 package site.iurysouza.cinefilo.presentation.movies;
 
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import com.squareup.picasso.Picasso;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
-import site.iurysouza.cinefilo.util.Constants;
+import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 
 /**
  * Created by Iury Souza on 15/12/2016.
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
+class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
   private final Picasso picasso;
-  private final RealmMovieClickListener movieClickListener;
-  private List<RealmMovie> realmMovieList = Collections.emptyList();
+  private final OnAdapterClickListener movieClickListener;
+  private List<WatchMediaValue> mediaValueList = Collections.emptyList();
 
-  public MovieAdapter(Picasso picasso, RealmMovieClickListener movieClickListener) {
+  MovieAdapter(Picasso picasso, OnAdapterClickListener movieClickListener) {
     this.picasso = picasso;
     this.movieClickListener = movieClickListener;
     setHasStableIds(true);
@@ -36,7 +34,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
   }
 
   @Override public void onBindViewHolder(ViewHolder viewHolder, int i) {
-    viewHolder.bindTo(realmMovieList.get(i));
+    viewHolder.bindTo(mediaValueList.get(i));
   }
 
   @Override public long getItemId(int position) {
@@ -44,31 +42,51 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
   }
 
   @Override public int getItemCount() {
-    return realmMovieList.size();
+    return mediaValueList.size();
   }
 
-  void addMovies(RealmList<RealmMovie> movieList) {
-    realmMovieList = movieList;
-    notifyDataSetChanged();
-  }
+  void addAllMedia(List<WatchMediaValue> mediaValues) {
 
-  void addAllAt(RealmResults<RealmMovie> movieList, int position) {
-    if (position > 0) {
-      position = (position * Constants.Movies.PAGE_SIZE) - 1;
+    if (mediaValueList.isEmpty()) {
+      mediaValueList = mediaValues;
+      notifyDataSetChanged();
+      return;
     }
-    realmMovieList.addAll(position,
-        movieList.subList(realmMovieList.size() - 1, movieList.size() - 1));
 
-    int finalPosition = position;
-    View view = ((MovieListFragment) movieClickListener).getView();
-    if (view != null) {
-      view.post(
-          () -> notifyItemRangeInserted(finalPosition, movieList.size()));
+    appendMedia(mediaValues);
+  }
+
+  private void appendMedia(List<WatchMediaValue> mediaList) {
+    int positionStart = mediaValueList.size() - 1;
+    mediaValueList.addAll(mediaList);
+    notifyItemRangeInserted(positionStart, mediaList.size());
+  //    Handler handler = new Handler(Looper.getMainLooper());
+  //    handler.post(() -> notifyItemRangeInserted(positionStart, mediaList.size()));
+  }
+
+  private void swapItems(List<WatchMediaValue> mediaValues) {
+    final MovieDiffCallBack diffCallback = new MovieDiffCallBack(mediaValueList, mediaValues);
+    final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+    this.mediaValueList.clear();
+    this.mediaValueList.addAll(mediaValues);
+    diffResult.dispatchUpdatesTo(this);
+  }
+
+  WatchMediaValue getFeauturedMovie() {
+    return getRandomMovieWithBackDrop(mediaValueList);
+  }
+
+  private WatchMediaValue getRandomMovieWithBackDrop(List<WatchMediaValue> movieList) {
+    WatchMediaValue movie = mediaValueList.get((new Random()).nextInt(mediaValueList.size()));
+    if (movie.backdropPath() == null) {
+      return getRandomMovieWithBackDrop(movieList);
+    } else {
+      return movie;
     }
   }
 
-  interface RealmMovieClickListener {
-    void onRealmMovieClick(RealmMovie movie);
+  interface OnAdapterClickListener {
+    void onRealmMovieClick(WatchMediaValue mediaValue);
   }
 
   final class ViewHolder extends RecyclerView.ViewHolder {
@@ -78,12 +96,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
       super(itemView);
       this.itemView = itemView;
       this.itemView.setOnClickListener(v -> {
-        RealmMovie movie = realmMovieList.get(getAdapterPosition());
+        WatchMediaValue movie = mediaValueList.get(getAdapterPosition());
         movieClickListener.onRealmMovieClick(movie);
       });
     }
 
-    public void bindTo(RealmMovie movie) {
+    void bindTo(WatchMediaValue movie) {
       itemView.bindTo(movie, picasso);
     }
   }

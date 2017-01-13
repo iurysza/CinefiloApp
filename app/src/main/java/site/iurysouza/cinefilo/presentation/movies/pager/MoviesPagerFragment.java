@@ -16,12 +16,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import java.util.List;
-import javax.inject.Inject;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.presentation.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
+import site.iurysouza.cinefilo.presentation.movies.BackDropChangedEvent;
 import site.iurysouza.cinefilo.util.ImageUtils;
+import site.iurysouza.cinefilo.util.Utils;
 
 /**
  * Created by Iury Souza on 09/11/2016.
@@ -30,15 +34,15 @@ import site.iurysouza.cinefilo.util.ImageUtils;
 public class MoviesPagerFragment extends BaseFragment implements MoviesPagerView {
 
   private static final int FRAGS_IN_MEMORY = 3;
+  public static final String MEDIA_TYPE = "MEDIA_TYPE";
 
   @BindView(R.id.viewpager_fragment_movies) MaterialViewPager materialViewPager;
   @BindView(R.id.logo_white) TextView headerText;
 
-  @Inject MoviesPagerPresenter moviesPresenter;
-
-  public static MoviesPagerFragment newInstance() {
+  public static MoviesPagerFragment newInstance(int mediaType) {
     MoviesPagerFragment moviesPagerFragment = new MoviesPagerFragment();
     Bundle args = new Bundle();
+    args.putInt(MEDIA_TYPE, mediaType);
     moviesPagerFragment.setArguments(args);
     return moviesPagerFragment;
   }
@@ -48,17 +52,17 @@ public class MoviesPagerFragment extends BaseFragment implements MoviesPagerView
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.content_movies_fragment, container, false);
     ButterKnife.bind(this, view);
+    Utils.safeRegisterEventBus(this);
 
-    MoviesPagerAdapter adapter = new MoviesPagerAdapter(getFragmentManager(), getContext());
+    int mediaType = getArguments().getInt(MEDIA_TYPE);
+
+    MoviesPagerAdapter adapter = new MoviesPagerAdapter(getFragmentManager(), getContext(), mediaType);
+
     ViewPager viewPager = materialViewPager.getViewPager();
     viewPager.setAdapter(adapter);
-
-    materialViewPager.getPagerTitleStrip().setViewPager(materialViewPager.getViewPager());
-    materialViewPager.getViewPager().setOffscreenPageLimit(FRAGS_IN_MEMORY);
-
+    viewPager.setOffscreenPageLimit(FRAGS_IN_MEMORY);
+    materialViewPager.getPagerTitleStrip().setViewPager(viewPager);
     handleToolbar(materialViewPager.getToolbar());
-    moviesPresenter.attachView(this);
-    moviesPresenter.loadShowCaseMovies();
     return view;
   }
 
@@ -81,38 +85,19 @@ public class MoviesPagerFragment extends BaseFragment implements MoviesPagerView
     }
   }
 
-  //@NonNull
-  //private MaterialViewPager.Listener createHeaderListener(List<RealmMovie> showCaseMovies) {
-  //  return new MaterialViewPager.Listener() {
-  //    @Override public HeaderDesign getHeaderDesign(int page) {
-  //      int randomNumber = new Random().nextInt(showCaseMovies.size());
-  //      Pair<String, String> popMovieHeader =
-  //          new Pair<>(ImageUtils.getBackDropUrl(showCaseMovies.get(randomNumber).getBackdropPath()),
-  //              showCaseMovies.get(randomNumber).getOriginalTitle());
-  //
-  //      switch (page) {
-  //        case 0:
-  //          headerText.setText(popMovieHeader.second);
-  //          return HeaderDesign.fromColorResAndUrl(
-  //              R.color.colorPrimaryDark,
-  //              popMovieHeader.first);
-  //      }
-  //
-  //      return null;
-  //    }
-  //  };
-  //}
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onBackDropChanged(BackDropChangedEvent event) {
+    WatchMediaValue featuredMovie = event.featuredMovie;
+    String backDropUrl = ImageUtils.getBackDropUrl(featuredMovie.backdropPath());
+    materialViewPager.setImageUrl(backDropUrl, 200);
+    headerText.setText(featuredMovie.name());
+  }
 
   @Override protected void setupFragmentComponent() {
     ((CineApplication) getContext().getApplicationContext()).getRepositoryComponent().inject(this);
   }
 
   @OnClick(R.id.logo_white) public void onClick() {
-    moviesPresenter.loadShowCaseMovies();
     Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-  }
-
-  public void refreshHeader() {
-    moviesPresenter.loadShowCaseMovies();
   }
 }

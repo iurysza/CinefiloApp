@@ -16,12 +16,14 @@ import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.di.modules.RepositoryModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
-import site.iurysouza.cinefilo.presentation.home.HomeFragment;
 import site.iurysouza.cinefilo.presentation.movies.pager.MoviesPagerFragment;
+
+import static com.ncapdevi.fragnav.FragNavController.TAB1;
+import static com.ncapdevi.fragnav.FragNavController.TAB2;
 
 public class MainActivity extends BaseActivity implements BottomBarListener {
 
-  @BindView(R.id.space) SpaceNavigationView bottomBar;
+  @BindView(R.id.space_bottom_bar) SpaceNavigationView bottomBar;
 
   @Inject
   NavigationManager navigationManager;
@@ -36,15 +38,15 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
 
     bottomBar.initWithSaveInstanceState(savedInstanceState);
     bottomBar.addSpaceItem(
-        new SpaceItem(getString(R.string.bottombar_title_home), R.drawable.ic_drawer_home_24dp));
-    bottomBar.addSpaceItem(
         new SpaceItem(getString(R.string.bottombar_title_movies), R.drawable.ic_drawer_movies));
+    bottomBar.addSpaceItem(
+        new SpaceItem(getString(R.string.bottombar_title_series), R.drawable.ic_tv_series));
     bottomBar.setActiveCentreButtonIconColor(ContextCompat.getColor(this, R.color.appWhite));
     bottomBar.setInActiveCentreButtonIconColor(ContextCompat.getColor(this, R.color.appWhite));
 
     List<Fragment> fragments = new ArrayList<>();
-    fragments.add(HomeFragment.newInstance());
-    fragments.add(MoviesPagerFragment.newInstance());
+    fragments.add(MoviesPagerFragment.newInstance(TAB1));
+    fragments.add(MoviesPagerFragment.newInstance(TAB2));
 
     navigationManager.setupFragNavController(fragments, this);
     bottomBar.setSpaceOnClickListener(navigationManager);

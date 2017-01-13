@@ -26,16 +26,5 @@ public class MoviesPagerPresenter extends BasePresenter<MoviesPagerView> {
     rxLifecycle = ((MoviesPagerFragment) view);
   }
 
-  void loadShowCaseMovies() {
-    subscription.add(moviesUseCase
-        .getMoviewBackDrops()
-        .compose(rxLifecycle.bindToLifecycle())
-        .subscribe(showCaseMovies -> {
-          getBaseView().createHeaderChangeListener(showCaseMovies);
-        }, (throwable) -> {
-          throwable.printStackTrace();
-        }));
-  }
-
 
 }

@@ -1,12 +1,12 @@
 package site.iurysouza.cinefilo.domain;
 
-import io.realm.RealmResults;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
-import site.iurysouza.cinefilo.model.data.MovieDataRepository;
-import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
-import site.iurysouza.cinefilo.util.Constants;
+import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.domain.entity.WatchMediaValueMapper;
+import site.iurysouza.cinefilo.model.data.movies.MoviesRepository;
+import site.iurysouza.cinefilo.presentation.UseCase;
 
 /**
  * Created by Iury Souza on 09/11/2016.
@@ -14,54 +14,66 @@ import site.iurysouza.cinefilo.util.Constants;
 
 public class MoviesUseCase implements UseCase {
 
-  private MovieDataRepository movieRepository;
-  private int popPage;
-  private int topPage;
-  private int recPage;
+  private static final int FIRST_PAGE = 1;
+  private MoviesRepository movieRepository;
 
   @Inject
-  public MoviesUseCase(MovieDataRepository movieRepository) {
+  public MoviesUseCase(MoviesRepository movieRepository) {
     this.movieRepository = movieRepository;
+    //movieRepository.getGenreList();
   }
 
-  @Override public Observable<RealmResults<RealmMovie>> getPopMoviesObservable() {
-    popPage = 1;
-    return movieRepository.getMoviesByPopulariy(popPage,true);
-  }
-  @Override public Observable<RealmResults<RealmMovie>> getTopRatedMoviesObservable() {
-    topPage = 1;
-    return movieRepository.getTopRatedMovies(topPage, true);
-  }
+  @Override
+  public Observable<List<WatchMediaValue>> getMostPopular() {
+    movieRepository.getMostPopular(FIRST_PAGE, false);
 
-  public Observable<RealmResults<RealmMovie>> getNowPlayingMovies() {
-    recPage = 1;
-    return movieRepository.getNowPlayingMovies(recPage, true);
+    return movieRepository
+        .getMostPopularSubject()
+        .map(WatchMediaValueMapper::mapToValueMedia);
   }
 
+  @Override
+  public Observable<List<WatchMediaValue>> getNextPopular(int nextPage) {
+    movieRepository.getMostPopular(nextPage, false);
 
-  public Observable<List<RealmMovie>> getMoviewBackDrops() {
-    updateGenres();
-    return movieRepository.getShowCaseMovies();
+    return movieRepository
+        .getMostPopularSubject()
+        .map(WatchMediaValueMapper::mapToValueMedia);
   }
 
-  private void updateGenres() {
-    movieRepository.getGenreList();
+  @Override
+  public Observable<List<WatchMediaValue>> getTopRated() {
+    movieRepository.getTopRated(FIRST_PAGE, false);
+
+    return movieRepository
+        .getTopRatedSubject()
+        .map(WatchMediaValueMapper::mapToValueMedia);
   }
 
+  @Override
+  public Observable<List<WatchMediaValue>> getNextTopRated(int nextPage) {
+    movieRepository.getTopRated(nextPage, true);
 
-
-  public Observable<RealmResults<RealmMovie>> getNextPopularPage(int page) {
-    return movieRepository.getMoviesByPopulariy(page, true);
+    return movieRepository
+        .getTopRatedSubject()
+        .map(WatchMediaValueMapper::mapToValueMedia);
   }
 
-  private int getNextPageBasedOnListSize(int page) {
-    return Math.round(page / Constants.Movies.PAGE_SIZE)+1;
+  @Override
+  public Observable<List<WatchMediaValue>> getNowPlaying() {
+    movieRepository.getNowPlaying(FIRST_PAGE, false);
+
+    return movieRepository
+        .getNowPlayingSubject()
+        .map(WatchMediaValueMapper::mapToValueMedia);
   }
 
-  public Observable<RealmResults<RealmMovie>> getNextTopPage(int page) {
-    return movieRepository.getTopRatedMovies(page, true);
-  }
-  public Observable<RealmResults<RealmMovie>> getNextRecentPage(int page) {
-    return movieRepository.getNowPlayingMovies(page, true);
+  @Override
+  public Observable<List<WatchMediaValue>> getNextNowPlaying(int nextPage) {
+    movieRepository.getNowPlaying(nextPage, true);
+
+    return movieRepository
+        .getNowPlayingSubject()
+        .map(WatchMediaValueMapper::mapToValueMedia);
   }
 }

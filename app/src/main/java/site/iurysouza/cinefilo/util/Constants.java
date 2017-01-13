@@ -19,13 +19,12 @@ public class Constants {
     public static final String API_KEY = "7ea8abd52d3a0236a7ae2d2c0d986483";
   }
 
-  public class Movies {
-    public static final int REC_MOVIES = 0;
-    public static final int POP_MOVIES = 1;
-    public static final int TOP_MOVIES = 2;
+  public class Media {
+    public static final int REC_MEDIA = 0;
+    public static final int POP_MEDIA = 1;
+    public static final int TOP_MEDIA = 2;
     public static final int PAGE_SIZE = 20;
-    public static final long MIN_VOTE_COUNT = 500;
+    public static final long MIN_VOTE_COUNT = 100;
     public static final double MIN_VOTE_AVG = 5;
   }
-
 }

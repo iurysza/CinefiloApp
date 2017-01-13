@@ -2,4 +2,5 @@
 <resources>
   <string name="recent_movies_title">Recent</string>
   <string name="pop_movies_title">Popular</string>
+  <string name="top_movies_title">Best</string>
 </resources>

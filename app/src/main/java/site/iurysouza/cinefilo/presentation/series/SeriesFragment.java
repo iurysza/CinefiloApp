@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.home;
+package site.iurysouza.cinefilo.presentation.series;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,17 +19,17 @@ import timber.log.Timber;
  * Created by Iury Souza on 09/11/2016.
  */
 
-public class HomeFragment extends BaseFragment implements HomeView {
+public class SeriesFragment extends BaseFragment implements SeriesView {
 
   @BindView(R.id.text) TextView text;
 
-  @Inject HomePresenter homePresenter;
+  @Inject SeriesPresenter seriesPresenter;
 
-  public static HomeFragment newInstance() {
-    HomeFragment homeFragment = new HomeFragment();
+  public static SeriesFragment newInstance() {
+    SeriesFragment seriesFragment = new SeriesFragment();
     Bundle args = new Bundle();
-    homeFragment.setArguments(args);
-    return homeFragment;
+    seriesFragment.setArguments(args);
+    return seriesFragment;
   }
 
   @Nullable @Override
@@ -38,8 +38,8 @@ public class HomeFragment extends BaseFragment implements HomeView {
     View view = inflater.inflate(R.layout.content_home_fragment, container, false);
     ButterKnife.bind(this, view);
 
-    homePresenter.attachView(this);
-    homePresenter.getMovieById(25);
+    seriesPresenter.attachView(this);
+    //seriesPresenter.getById(25);
 
     return view;
   }
@@ -47,7 +47,7 @@ public class HomeFragment extends BaseFragment implements HomeView {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    homePresenter.dettachView();
+    seriesPresenter.dettachView();
   }
 
   @Override public void showLoadingIndicator() {

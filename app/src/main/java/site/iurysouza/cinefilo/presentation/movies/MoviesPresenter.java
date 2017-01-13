@@ -1,28 +1,38 @@
 package site.iurysouza.cinefilo.presentation.movies;
 
-import android.support.annotation.NonNull;
 import com.trello.rxlifecycle.components.support.RxFragment;
-import io.realm.RealmResults;
-import javax.inject.Inject;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import java.util.List;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import site.iurysouza.cinefilo.domain.MoviesUseCase;
-import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
+import site.iurysouza.cinefilo.domain.SeriesUseCase;
+import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.UseCase;
 import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
+import site.iurysouza.cinefilo.util.CineSubscriber;
 
 /**
  * Created by Iury Souza on 12/10/2016.
  */
 
 public class MoviesPresenter extends BasePresenter<MoviesView> {
-
-  private CompositeSubscription subscription = new CompositeSubscription();
+  private UseCase useCase;
+  private Subscription nowPlayingSubscription;
+  private Subscription topRatedSubscription;
+  private Subscription mostPopularSubscription;
   private RxFragment rxLifecycle;
-  private MoviesUseCase moviesUseCase;
 
-  @Inject
-  public MoviesPresenter(MoviesUseCase moviesUseCase) {
-    this.moviesUseCase = moviesUseCase;
+  MoviesPresenter() {
+  }
+
+  void createPresenter(MoviesUseCase moviesUseCase, SeriesUseCase seriesUseCase,
+      int mediaType) {
+    if (mediaType == 0) {
+      useCase = moviesUseCase;
+    } else {
+      useCase = seriesUseCase;
+    }
   }
 
   @Override public void attachView(MoviesView view) {
@@ -30,73 +40,136 @@ public class MoviesPresenter extends BasePresenter<MoviesView> {
     rxLifecycle = ((MovieListFragment) view);
   }
 
-  void loadMostPopularMovies() {
+  void loadNowPlaying() {
     getBaseView().showLoadingIndicator();
-    subscription.add(moviesUseCase
-        .getPopMoviesObservable()
-        .compose(rxLifecycle.bindToLifecycle())
-        .subscribe(handleLoadedMovies(), handleLoadedMoviesError()));
+    resetSubscription(nowPlayingSubscription);
+    nowPlayingSubscription = useCase
+        .getNowPlaying()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
+          @Override public void onNext(List<WatchMediaValue> watchMediaValues) {
+            super.onNext(watchMediaValues);
+            sendMediaToView(watchMediaValues);
+          }
+
+          @Override public void onError(Throwable e) {
+            super.onError(e);
+            getBaseView().showErrorIndicator();
+          }
+        });
   }
 
-  void loadTopRatedMovies() {
+  void loadMostPopular() {
     getBaseView().showLoadingIndicator();
-    subscription.add(moviesUseCase
-        .getTopRatedMoviesObservable()
+    resetSubscription(mostPopularSubscription);
+    mostPopularSubscription = useCase
+        .getMostPopular()
         .compose(rxLifecycle.bindToLifecycle())
-        .subscribe(handleLoadedMovies(), handleLoadedMoviesError()));
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
+          @Override public void onNext(List<WatchMediaValue> watchMediaValues) {
+            super.onNext(watchMediaValues);
+            sendMediaToView(watchMediaValues);
+          }
+
+          @Override public void onError(Throwable e) {
+            super.onError(e);
+            getBaseView().showErrorIndicator();
+          }
+        });
   }
 
-  void LoadNowPlayingMovies() {
+  void loadTopRated() {
     getBaseView().showLoadingIndicator();
-    subscription.add(moviesUseCase
-        .getNowPlayingMovies()
+    resetSubscription(topRatedSubscription);
+    topRatedSubscription = useCase
+        .getTopRated()
         .compose(rxLifecycle.bindToLifecycle())
-        .subscribe(handleLoadedMovies(), handleLoadedMoviesError()));
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
+          @Override public void onNext(List<WatchMediaValue> watchMediaValues) {
+            super.onNext(watchMediaValues);
+            sendMediaToView(watchMediaValues);
+          }
+
+          @Override public void onError(Throwable e) {
+            super.onError(e);
+            getBaseView().showErrorIndicator();
+          }
+        });
   }
 
-  void moreNowPlayingMovies(int itemsBeforeMore) {
-    subscription.add(moviesUseCase
-        .getNextRecentPage(itemsBeforeMore)
-        .compose(rxLifecycle.bindToLifecycle())
-        .subscribe(handleOnMoreMovies(itemsBeforeMore), handleLoadedMoviesError()));
+  void loadNextNowPlaying(int page) {
+    resetSubscription(nowPlayingSubscription);
+    nowPlayingSubscription = useCase
+        .getNextNowPlaying(page)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
+          @Override public void onNext(List<WatchMediaValue> watchMediaValues) {
+            super.onNext(watchMediaValues);
+            sendMediaToView(watchMediaValues);
+          }
+
+          @Override public void onError(Throwable e) {
+            super.onError(e);
+            getBaseView().showErrorIndicator();
+          }
+        });
   }
 
-  void moreMostPopularMovies(int itemsBeforeMore) {
-    subscription.add(moviesUseCase
-        .getNextPopularPage(itemsBeforeMore)
-        .compose(rxLifecycle.bindToLifecycle())
-        .subscribe(handleOnMoreMovies(itemsBeforeMore), handleLoadedMoviesError()));
+  void loadNextMostPopularPlaying(int page) {
+    resetSubscription(mostPopularSubscription);
+    mostPopularSubscription = useCase
+        .getNextPopular(page)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
+          @Override public void onNext(List<WatchMediaValue> watchMediaValues) {
+            super.onNext(watchMediaValues);
+            sendMediaToView(watchMediaValues);
+          }
+
+          @Override public void onError(Throwable e) {
+            super.onError(e);
+            getBaseView().showErrorIndicator();
+          }
+        });
   }
 
-  void moreTopRatedMovies(int itemsBeforeMore) {
-    subscription.add(moviesUseCase
-        .getNextTopPage(itemsBeforeMore)
-        .compose(rxLifecycle.bindToLifecycle())
-        .subscribe(handleOnMoreMovies(itemsBeforeMore), handleLoadedMoviesError()));
+  void loadNextTopRated(int page) {
+    resetSubscription(topRatedSubscription);
+    topRatedSubscription = useCase
+        .getNextTopRated(page)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
+          @Override public void onNext(List<WatchMediaValue> watchMediaValues) {
+            super.onNext(watchMediaValues);
+            sendMediaToView(watchMediaValues);
+          }
+
+          @Override public void onError(Throwable e) {
+            super.onError(e);
+            getBaseView().showErrorIndicator();
+          }
+        });
   }
 
-  @NonNull private Action1<Throwable> handleLoadedMoviesError() {
-    return throwable -> {
-      MoviesPresenter.this.getBaseView().showErrorIndicator();
-      throwable.printStackTrace();
-    };
+  private void sendMediaToView(List<WatchMediaValue> watchMediaValues) {
+    getBaseView().hideLoadingIndicator();
+    if (watchMediaValues.isEmpty()) {
+      return;
+    }
+    getBaseView().sendToListView(watchMediaValues);
   }
 
-  @NonNull private Action1<RealmResults<RealmMovie>> handleLoadedMovies() {
-    return realmMoviesList -> {
-      if (!realmMoviesList.isEmpty()) {
-        MoviesPresenter.this.getBaseView().hideLoadingIndicator();
-      }
-      MoviesPresenter.this.getBaseView().showMoviesOnAdapter(realmMoviesList);
-    };
-  }
-
-  @NonNull private Action1<RealmResults<RealmMovie>> handleOnMoreMovies(final int itemsBeforeMore) {
-    return realmMoviesList -> {
-      if (!realmMoviesList.isEmpty()) {
-        MoviesPresenter.this.getBaseView().hideLoadingIndicator();
-      }
-      MoviesPresenter.this.getBaseView().addMoreMoviesOnAdapter(realmMoviesList, itemsBeforeMore);
-    };
+  private void resetSubscription(Subscription subscription) {
+    if (subscription != null && !subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
+    }
   }
 }

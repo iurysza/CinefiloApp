@@ -12,7 +12,9 @@
       android:id="@+id/movie_list_recyclerview"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:recyclerClipToPadding="false"
+      app:recyclerClipToPadding="true"
+      app:layout_moreProgress="@layout/layout_more_progress"
+      app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
       tools:listitem="@layout/list_item_movie"
   />
   <com.wang.avi.AVLoadingIndicatorView

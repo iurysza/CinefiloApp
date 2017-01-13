@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/root_coord_layout"
     android:fitsSystemWindows="true"
     tools:context="site.iurysouza.cinefilo.presentation.main.MainActivity"
 >
@@ -21,7 +22,7 @@
 
 
   <com.luseen.spacenavigation.SpaceNavigationView
-      android:id="@+id/space"
+      android:id="@+id/space_bottom_bar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="bottom"

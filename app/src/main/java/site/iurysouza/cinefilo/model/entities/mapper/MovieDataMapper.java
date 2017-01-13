@@ -2,7 +2,7 @@ package site.iurysouza.cinefilo.model.entities.mapper;
 
 import io.realm.RealmList;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
-import site.iurysouza.cinefilo.model.entities.pojo.Results;
+import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMoviesResults;
 
@@ -36,14 +36,20 @@ public class MovieDataMapper {
     return realmMovie;
   }
 
-  public static RealmMoviesResults mapResultsToRealmResults(Results results, int queryType) {
+  public static RealmMoviesResults mapResultsToRealmResults(MovieResults movieResults, int queryType) {
     RealmList<RealmMovie> realmMovieList = new RealmList<>();
-    for (Movie movie : results.getMovieList()) {
+    RealmMoviesResults realmMoviesResults = new RealmMoviesResults();
+
+    if (movieResults.getMovieList().isEmpty()) {
+      return realmMoviesResults;
+    }
+
+    for (Movie movie : movieResults.getMovieList()) {
       realmMovieList.add(mapMovieResult(movie, queryType));
     }
-    RealmMoviesResults realmMoviesResults = new RealmMoviesResults();
+
     realmMoviesResults.setMovieList(realmMovieList);
-    realmMoviesResults.setPage(results.getPage());
+    realmMoviesResults.setPage(movieResults.getPage());
     return realmMoviesResults;
   }
 
@@ -52,7 +58,12 @@ public class MovieDataMapper {
   public static RealmMovie mapMovieResult(Movie movie, int queryType) {
     RealmMovie realmMovie = new RealmMovie();
     realmMovie.setAdult(movie.getAdult());
+    if (movie.getBackdropPath() == null) {
+      realmMovie.setBackdropPath("");
+    } else {
     realmMovie.setBackdropPath(movie.getBackdropPath());
+
+    }
     realmMovie.setId(movie.getId().intValue());
     realmMovie.setOriginalLanguage(movie.getOriginalLanguage());
     realmMovie.setOriginalTitle(movie.getOriginalTitle());

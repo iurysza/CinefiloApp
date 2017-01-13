@@ -1,7 +1,7 @@
 package site.iurysouza.cinefilo.presentation.movies;
 
-import io.realm.RealmResults;
-import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
+import java.util.List;
+import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.base.mvp.BaseView;
 
 /**
@@ -14,7 +14,5 @@ public interface MoviesView extends BaseView {
 
   void showErrorIndicator();
 
-  void showMoviesOnAdapter(RealmResults<RealmMovie> topMoviesRealm);
-
-  void addMoreMoviesOnAdapter(RealmResults<RealmMovie> topMoviesRealm, int itemsBeforeMore);
+  void sendToListView(List<WatchMediaValue> watchMediaValuesList);
 }

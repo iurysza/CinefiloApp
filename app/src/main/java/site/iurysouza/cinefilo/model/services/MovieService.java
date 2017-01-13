@@ -6,7 +6,7 @@ import retrofit2.http.Query;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.entities.pojo.GenreResult;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
-import site.iurysouza.cinefilo.model.entities.pojo.Results;
+import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
 
 public interface MovieService {
 
@@ -16,7 +16,7 @@ public interface MovieService {
       @Query("api_key") String apiKey);
 
   @GET("movie/popular")
-  Observable<Results> getMostPopularMovies(
+  Observable<MovieResults> getMostPopularMovies(
       @Query("api_key") String apiKey,
       @Query("page") int page);
 
@@ -25,12 +25,12 @@ public interface MovieService {
       @Query("api_key") String apiKey);
 
   @GET("movie/top_rated")
-  Observable<Results> getTopRatedMovies(
+  Observable<MovieResults> getTopRatedMovies(
       @Query("api_key") String apiKey,
       @Query("page") int page);
 
   @GET("movie/now_playing")
-  Observable<Results> getNowPlayingMovies(
+  Observable<MovieResults> getNowPlayingMovies(
       @Query("api_key") String apiKey,
       @Query("page") int page);
 }

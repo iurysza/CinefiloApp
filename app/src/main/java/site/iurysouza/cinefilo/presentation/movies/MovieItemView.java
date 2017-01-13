@@ -13,13 +13,9 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import rx.android.schedulers.AndroidSchedulers;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.model.entities.realm.RealmGenre;
-import site.iurysouza.cinefilo.model.entities.realm.RealmInteger;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.util.ImageUtils;
 
@@ -49,8 +45,19 @@ public final class MovieItemView extends FrameLayout {
     ButterKnife.bind(this);
   }
 
-  public void bindTo(RealmMovie realmMovie, Picasso picasso) {
-    String posterPath = realmMovie.getPosterPath();
+  private boolean isMovieValid(RealmMovie realmMovie) {
+    boolean hasTitle = realmMovie.getOriginalTitle() != null;
+    boolean hasPoster = realmMovie.getPosterPath() != null;
+    boolean hasOverview = realmMovie.getOverview() != null;
+    if (hasTitle && hasPoster && hasOverview) {
+      return true;
+    }
+    return false;
+  }
+
+  public void bindTo(WatchMediaValue realmMovie, Picasso picasso) {
+
+    String posterPath = realmMovie.posterPath();
     if (posterPath != null) {
       String posterUrl = ImageUtils.getPosterUrl(posterPath);
       picasso.load(posterUrl)
@@ -58,29 +65,27 @@ public final class MovieItemView extends FrameLayout {
           .into(movieImage);
     }
 
-    movieTitle.setText(realmMovie.getOriginalTitle());
+    movieTitle.setText(realmMovie.name());
 
-    float movieRating = (float) (realmMovie.getVoteAverage() / 2);
+    float movieRating = (float) (realmMovie.voteAverage() / 2);
     this.movieRating.setRating(movieRating);
 
-    overviewText.setText(realmMovie.getOverview());
-    RealmList<RealmInteger> genreList = realmMovie.getGenreIds();
+    overviewText.setText(realmMovie.overview());
+    Integer genre = realmMovie.genre();
 
-    if (genreList != null && !genreList.isEmpty()) {
-
-      RealmGenre genre = Realm.getDefaultInstance()
-          .where(RealmGenre.class)
-          .equalTo(RealmGenre.ID, Long.valueOf(genreList.first().getValue()))
-          .findFirstAsync();
-      RealmObject
-          .asObservable(genre)
-          .filter(RealmObject::isLoaded)
-          .filter(RealmObject::isValid)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(realmGenre -> {
-            genreCard.setCardBackgroundColor(getGenreColor(realmGenre.getId()));
-            setGenreText(realmGenre);
-          }, Throwable::printStackTrace);
+    if (genre != null) {
+      //RealmGenre realmGenre = Realm.getDefaultInstance()
+      //    .where(RealmGenre.class)
+      //    .equalTo(RealmGenre.ID, Long.valueOf(genre))
+      //    .findFirstAsync();
+      //RealmObject
+      //    .asObservable(realmGenre)
+      //    .filter(RealmObject::isLoaded)
+      //    .filter(RealmObject::isValid)
+      //    .subscribe(realmGenre1 -> {
+      //      genreCard.setCardBackgroundColor(getGenreColor(realmGenre1.getId()));
+      //      setGenreText(realmGenre1);
+      //    }, Throwable::printStackTrace);
     }
   }
 

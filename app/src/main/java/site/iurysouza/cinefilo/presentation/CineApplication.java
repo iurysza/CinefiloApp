@@ -50,7 +50,6 @@ public class CineApplication extends Application {
 
   private Realm initRealm() {
     Realm.init(getApplicationContext());
-
     RealmConfiguration.Builder realmConfig = new RealmConfiguration.Builder();
     if (BuildConfig.DEBUG) {
       realmConfig = realmConfig.deleteRealmIfMigrationNeeded();

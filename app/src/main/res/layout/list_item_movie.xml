@@ -71,7 +71,9 @@
     <ImageView
         android:id="@+id/movie_item_picture_imageview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+
+        android:src="@drawable/ic_movie_roll_icon"
+        android:layout_height="match_parent" android:scaleType="center"/>
   </android.support.v7.widget.CardView>
 
   <android.support.v7.widget.CardView

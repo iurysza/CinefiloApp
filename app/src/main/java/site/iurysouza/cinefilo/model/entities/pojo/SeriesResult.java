@@ -9,11 +9,11 @@ import lombok.Data;
 @Generated("net.hexar.json2pojo")
 @Data
 @SuppressWarnings("unused")
-public class Results {
+public class SeriesResult {
     @SerializedName("page")
-    private Long page;
+    private int page;
     @SerializedName("results")
-    private List<Movie> movieList;
+    private List<Series> seriesList;
     @SerializedName("total_pages")
     private Long totalPages;
     @SerializedName("total_results")
