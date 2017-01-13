@@ -56,7 +56,7 @@ public class MoviesPagerFragment extends BaseFragment implements MoviesPagerView
 
     int mediaType = getArguments().getInt(MEDIA_TYPE);
 
-    MoviesPagerAdapter adapter = new MoviesPagerAdapter(getFragmentManager(), getContext(), mediaType);
+    MoviesPagerAdapter adapter = new MoviesPagerAdapter(getChildFragmentManager(), getContext(), mediaType);
 
     ViewPager viewPager = materialViewPager.getViewPager();
     viewPager.setAdapter(adapter);
