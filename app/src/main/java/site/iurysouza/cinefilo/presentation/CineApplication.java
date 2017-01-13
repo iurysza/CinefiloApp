@@ -1,6 +1,8 @@
 package site.iurysouza.cinefilo.presentation;
 
 import android.app.Application;
+import com.facebook.stetho.Stetho;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import site.iurysouza.cinefilo.BuildConfig;
@@ -34,6 +36,7 @@ public class CineApplication extends Application {
     realm = initRealm();
     initTimber();
     createAppComponent();
+
   }
 
   private void initTimber() {
@@ -53,6 +56,11 @@ public class CineApplication extends Application {
     RealmConfiguration.Builder realmConfig = new RealmConfiguration.Builder();
     if (BuildConfig.DEBUG) {
       realmConfig = realmConfig.deleteRealmIfMigrationNeeded();
+      Stetho.initialize(Stetho.newInitializerBuilder(this)
+          .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+          .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+          .build());
+
     }
     realmConfig.build();
 
