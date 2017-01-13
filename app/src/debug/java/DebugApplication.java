@@ -21,6 +21,7 @@ public class DebugApplication extends CineApplication {
         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
         .build());
 
+
     Timber.plant(new Timber.DebugTree() {
       @Override protected String createStackElementTag(StackTraceElement element) {
         return super.createStackElementTag(element)

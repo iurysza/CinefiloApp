@@ -25,6 +25,7 @@ public class AppModule {
     return context;
   }
 
+
   @Provides
   @Singleton
   public Realm provideRealm() {

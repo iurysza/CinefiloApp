@@ -1,43 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:id="@+id/root_coord_layout"
+    android:fitsSystemWindows="true"
+    tools:context="site.iurysouza.cinefilo.presentation.main.MainActivity"
+>
 
 
-  <android.support.design.widget.CoordinatorLayout
+
+
+  <FrameLayout
+      android:id="@+id/main_fragment_container"
       android:layout_width="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
       android:layout_height="match_parent"
-      android:fitsSystemWindows="true"
-      tools:context="site.iurysouza.cinefilo.presentation.MainActivity"
-      >
-
-    <FrameLayout
-        android:id="@+id/main_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-    </FrameLayout>
-
-    <!--<include layout="@layout/content_main"/>-->
+  />
 
 
-  </android.support.design.widget.CoordinatorLayout>
+  <com.luseen.spacenavigation.SpaceNavigationView
+      android:id="@+id/space_bottom_bar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom"
+      app:active_item_color="@color/appWhite"
+      app:centre_button_color="@color/colorPrimary"
+      app:centre_button_icon="@drawable/ic_drawer_search_24dp"
+      app:inactive_item_color="@color/white_with_alpha"
+      app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior"/>
 
-  <android.support.design.widget.NavigationView
-      android:id="@+id/main_navigation_view"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:layout_gravity="start"
-      app:headerLayout="@layout/layout_navigation_header"
-      app:itemIconTint="@color/colorPrimary"
-      app:itemTextColor="@color/colorPrimary"
-      app:menu="@menu/navigation_view_menu"
-      />
 
-</android.support.v4.widget.DrawerLayout>
+</android.support.design.widget.CoordinatorLayout>

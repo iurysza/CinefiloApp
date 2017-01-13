@@ -4,8 +4,9 @@ import dagger.Subcomponent;
 import site.iurysouza.cinefilo.di.ActivityScope;
 import site.iurysouza.cinefilo.di.modules.RepositoryModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
-import site.iurysouza.cinefilo.presentation.MainActivity;
-import site.iurysouza.cinefilo.presentation.home.HomeFragment;
+import site.iurysouza.cinefilo.presentation.main.MainActivity;
+import site.iurysouza.cinefilo.presentation.medias.MediaListFragment;
+import site.iurysouza.cinefilo.presentation.medias.pager.MediaPagerFragment;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -18,5 +19,6 @@ import site.iurysouza.cinefilo.presentation.home.HomeFragment;
 
 public interface RepositoryComponent {
     void inject(MainActivity mainActivity);
-    void inject(HomeFragment target);
+    void inject(MediaPagerFragment target);
+    void inject(MediaListFragment target);
 }

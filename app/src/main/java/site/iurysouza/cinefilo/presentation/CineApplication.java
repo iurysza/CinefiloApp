@@ -1,14 +1,16 @@
 package site.iurysouza.cinefilo.presentation;
 
 import android.app.Application;
+import com.facebook.stetho.Stetho;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import site.iurysouza.cinefilo.BuildConfig;
 import site.iurysouza.cinefilo.di.components.AppComponent;
 import site.iurysouza.cinefilo.di.components.DaggerAppComponent;
 import site.iurysouza.cinefilo.di.components.RepositoryComponent;
+import site.iurysouza.cinefilo.di.modules.ApiModule;
 import site.iurysouza.cinefilo.di.modules.AppModule;
-import site.iurysouza.cinefilo.di.modules.MoviesApiModule;
 import site.iurysouza.cinefilo.di.modules.RepositoryModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import timber.log.Timber;
@@ -34,6 +36,7 @@ public class CineApplication extends Application {
     realm = initRealm();
     initTimber();
     createAppComponent();
+
   }
 
   private void initTimber() {
@@ -50,10 +53,14 @@ public class CineApplication extends Application {
 
   private Realm initRealm() {
     Realm.init(getApplicationContext());
-
     RealmConfiguration.Builder realmConfig = new RealmConfiguration.Builder();
     if (BuildConfig.DEBUG) {
       realmConfig = realmConfig.deleteRealmIfMigrationNeeded();
+      Stetho.initialize(Stetho.newInitializerBuilder(this)
+          .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+          .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+          .build());
+
     }
     realmConfig.build();
 
@@ -61,11 +68,13 @@ public class CineApplication extends Application {
     return Realm.getDefaultInstance();
   }
 
+
+
   private void createAppComponent() {
     appComponent = DaggerAppComponent
         .builder()
         .appModule(new AppModule(this, realm))
-        .moviesApiModule(new MoviesApiModule())
+        .apiModule(new ApiModule())
         .build();
   }
 

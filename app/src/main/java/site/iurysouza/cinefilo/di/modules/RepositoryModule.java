@@ -2,13 +2,18 @@ package site.iurysouza.cinefilo.di.modules;
 
 import dagger.Module;
 import dagger.Provides;
-import io.realm.Realm;
+import java.io.InputStream;
 import retrofit2.Retrofit;
-import site.iurysouza.cinefilo.data.Repos.DataStore.CloudMovieDataStore;
-import site.iurysouza.cinefilo.data.Repos.DataStore.LocalMovieDataStore;
-import site.iurysouza.cinefilo.data.Repos.MovieDataRepository;
-import site.iurysouza.cinefilo.data.services.MovieService;
-import site.iurysouza.cinefilo.presentation.home.HomePresenter;
+import site.iurysouza.cinefilo.domain.MoviesUseCase;
+import site.iurysouza.cinefilo.domain.SeriesUseCase;
+import site.iurysouza.cinefilo.model.data.movies.MoviesRepository;
+import site.iurysouza.cinefilo.model.data.movies.storage.CloudMovieDataSource;
+import site.iurysouza.cinefilo.model.data.movies.storage.LocalMovieDataSource;
+import site.iurysouza.cinefilo.model.data.series.SeriesRepository;
+import site.iurysouza.cinefilo.model.data.series.storage.CloudSeriesDataSource;
+import site.iurysouza.cinefilo.model.data.series.storage.LocalSeriesDataSource;
+import site.iurysouza.cinefilo.model.services.MovieService;
+import site.iurysouza.cinefilo.model.services.SeriesService;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -19,17 +24,44 @@ public class RepositoryModule {
   MovieService providesMovieService(Retrofit retrofit) {
     return retrofit.create(MovieService.class);
   }
-  @Provides CloudMovieDataStore providesCloudMovieDataStore(MovieService movieService, Realm realm) {
-    return new CloudMovieDataStore(movieService, realm);
+
+  @Provides
+  SeriesService providesSeriesService(Retrofit retrofit) {
+    return retrofit.create(SeriesService.class);
   }
-  @Provides LocalMovieDataStore providesLocalMovieDataStore(Realm realm) {
-    return new LocalMovieDataStore(realm);
+
+  @Provides CloudMovieDataSource providesCloudMovieDataStore(MovieService movieService) {
+    return new CloudMovieDataSource(movieService);
   }
-  @Provides MovieDataRepository providesMovieDataRepository(LocalMovieDataStore localMovieDataStore,
-      CloudMovieDataStore cloudMovieDataStore, Realm realm) {
-    return new MovieDataRepository(localMovieDataStore, cloudMovieDataStore, realm);
+
+  @Provides CloudSeriesDataSource providesCloudSeriesDataStore(SeriesService seriesService) {
+    return new CloudSeriesDataSource(seriesService);
   }
-  @Provides HomePresenter providesHomePresenter(MovieDataRepository dataRepository) {
-    return new HomePresenter(dataRepository);
+
+  @Provides LocalMovieDataSource providesLocalMovieDataStore() {
+    return new LocalMovieDataSource();
+  }
+
+  @Provides LocalSeriesDataSource providesLocalSeriesDataStore() {
+    return new LocalSeriesDataSource();
+  }
+
+
+  @Provides MoviesRepository providesMovieDataRepository(LocalMovieDataSource localMovieDataSource,
+      CloudMovieDataSource cloudMovieDataSource, InputStream gendersFromJson) {
+    return new MoviesRepository(localMovieDataSource, cloudMovieDataSource, gendersFromJson);
+  }
+
+  @Provides SeriesRepository providesSeriesDataRepository(LocalSeriesDataSource localSeriesDataSource,
+      CloudSeriesDataSource cloudSeriesDataSource) {
+    return new SeriesRepository(localSeriesDataSource, cloudSeriesDataSource);
+  }
+
+
+  @Provides MoviesUseCase providesMovieUseCase(MoviesRepository dataRepository) {
+    return new MoviesUseCase(dataRepository);
+  }
+  @Provides SeriesUseCase providesSeriesUseCase(SeriesRepository dataRepository) {
+    return new SeriesUseCase(dataRepository);
   }
 }

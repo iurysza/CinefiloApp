@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_fragment_movies"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAppBackground"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="site.iurysouza.cinefilo.presentation.main.MainActivity"
+>
+
+
+  <com.github.florent37.materialviewpager.MaterialViewPager
+      android:id="@+id/viewpager_fragment_movies"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:viewpager_logo="@layout/header_logo"
+      app:viewpager_logoMarginTop="100dp"
+      app:viewpager_color="@color/colorPrimary"
+      app:viewpager_headerHeight="200dp"
+      app:viewpager_hideLogoWithFade="true"
+      app:viewpager_hideToolbarAndTitle="false"
+      android:scrollbars="none"
+      app:viewpager_enableToolbarElevation="true"
+      app:viewpager_imageHeaderDarkLayerAlpha="0"
+      app:viewpager_displayToolbarWhenSwipe="false"
+      app:viewpager_transparentToolbar="false"
+      app:viewpager_animatedHeaderImage="true"
+      app:viewpager_disableToolbar="false"
+
+  />
+
+</FrameLayout>

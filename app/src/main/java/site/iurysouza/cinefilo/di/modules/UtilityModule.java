@@ -1,11 +1,10 @@
 package site.iurysouza.cinefilo.di.modules;
 
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import dagger.Module;
 import dagger.Provides;
-import site.iurysouza.cinefilo.presentation.NavigationManager;
+import site.iurysouza.cinefilo.presentation.main.NavigationManager;
 
 /**
  * Created by Iury Souza on 09/11/2016.
@@ -30,13 +29,7 @@ public class UtilityModule {
   }
 
   @Provides
-  FragmentTransaction providesFragmentTransaction(FragmentManager fragmentManager) {
-    return fragmentManager.beginTransaction();
-  }
-
-  @Provides
-  NavigationManager providesNavigationManager(AppCompatActivity activity, FragmentManager manager,
-      FragmentTransaction transaction) {
-    return new NavigationManager(activity, manager, transaction);
+  NavigationManager providesNavigationManager(AppCompatActivity activity, FragmentManager manager) {
+    return new NavigationManager(activity, manager );
   }
 }
