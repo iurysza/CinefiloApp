@@ -16,7 +16,7 @@ import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.di.modules.RepositoryModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
-import site.iurysouza.cinefilo.presentation.movies.pager.MoviesPagerFragment;
+import site.iurysouza.cinefilo.presentation.medias.pager.MediaPagerFragment;
 
 import static com.ncapdevi.fragnav.FragNavController.TAB1;
 import static com.ncapdevi.fragnav.FragNavController.TAB2;
@@ -45,8 +45,8 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
     bottomBar.setInActiveCentreButtonIconColor(ContextCompat.getColor(this, R.color.appWhite));
 
     List<Fragment> fragments = new ArrayList<>();
-    fragments.add(MoviesPagerFragment.newInstance(TAB1));
-    fragments.add(MoviesPagerFragment.newInstance(TAB2));
+    fragments.add(MediaPagerFragment.newInstance(TAB1));
+    fragments.add(MediaPagerFragment.newInstance(TAB2));
 
     navigationManager.setupFragNavController(fragments, this);
     bottomBar.setSpaceOnClickListener(navigationManager);

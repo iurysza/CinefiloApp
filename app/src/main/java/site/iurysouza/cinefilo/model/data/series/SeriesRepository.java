@@ -19,7 +19,7 @@ import static site.iurysouza.cinefilo.model.data.entity.WatchMedia.valueOfRealmS
 import static site.iurysouza.cinefilo.model.entities.realm.RealmCurrentPage.MOST_POPULAR_LIST;
 import static site.iurysouza.cinefilo.model.entities.realm.RealmCurrentPage.NOW_PLAYING_LIST;
 import static site.iurysouza.cinefilo.model.entities.realm.RealmCurrentPage.TOP_RATED_LIST;
-import static site.iurysouza.cinefilo.presentation.movies.MovieListFragment.INVALID_PAGE;
+import static site.iurysouza.cinefilo.presentation.medias.MediaListFragment.INVALID_PAGE;
 
 /**
  * Created by Iury Souza on 12/10/2016.

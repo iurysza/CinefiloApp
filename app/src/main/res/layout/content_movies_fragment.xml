@@ -23,6 +23,7 @@
       app:viewpager_headerHeight="200dp"
       app:viewpager_hideLogoWithFade="true"
       app:viewpager_hideToolbarAndTitle="false"
+      android:scrollbars="none"
       app:viewpager_enableToolbarElevation="true"
       app:viewpager_imageHeaderDarkLayerAlpha="0"
       app:viewpager_displayToolbarWhenSwipe="false"

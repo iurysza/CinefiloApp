@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.movies;
+package site.iurysouza.cinefilo.presentation.medias;
 
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
@@ -9,12 +9,12 @@ import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
  * Created by Iury Souza on 15/12/2016.
  */
 
-public class MovieDiffCallBack extends DiffUtil.Callback{
+public class MediaDiffCallBack extends DiffUtil.Callback{
 
   private final List<WatchMediaValue> oldList;
   private final List<WatchMediaValue> newList;
 
-  public MovieDiffCallBack(List<WatchMediaValue> oldList, List<WatchMediaValue> newList) {
+  public MediaDiffCallBack(List<WatchMediaValue> oldList, List<WatchMediaValue> newList) {
     this.oldList = oldList;
     this.newList = newList;
   }

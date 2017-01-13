@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.movies;
+package site.iurysouza.cinefilo.presentation.medias;
 
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 

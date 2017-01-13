@@ -36,8 +36,8 @@ class SharedViewsManager {
 
   void updateViewsForFragment(Fragment currentFrag) {
     //this.currentFrag = currentFrag;
-    //if (currentFrag instanceof MoviesPagerFragment) {
-    //  MoviesPagerFragment frag = (MoviesPagerFragment) currentFrag;
+    //if (currentFrag instanceof MediaPagerFragment) {
+    //  MediaPagerFragment frag = (MediaPagerFragment) currentFrag;
     //  toolbarFragmentMovies.setTitle("UPDATED");
     //}
   }

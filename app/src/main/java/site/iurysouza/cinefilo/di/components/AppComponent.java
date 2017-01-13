@@ -2,8 +2,8 @@ package site.iurysouza.cinefilo.di.components;
 
 import dagger.Component;
 import javax.inject.Singleton;
+import site.iurysouza.cinefilo.di.modules.ApiModule;
 import site.iurysouza.cinefilo.di.modules.AppModule;
-import site.iurysouza.cinefilo.di.modules.MoviesApiModule;
 import site.iurysouza.cinefilo.di.modules.RepositoryModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import site.iurysouza.cinefilo.presentation.CineApplication;
@@ -15,7 +15,7 @@ import site.iurysouza.cinefilo.presentation.CineApplication;
 @Component(
     modules = {
         AppModule.class,
-        MoviesApiModule.class
+        ApiModule.class
     })
 
 public interface AppComponent {

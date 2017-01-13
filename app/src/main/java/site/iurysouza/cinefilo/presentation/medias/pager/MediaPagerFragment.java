@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.movies.pager;
+package site.iurysouza.cinefilo.presentation.medias.pager;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,15 +15,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.github.florent37.materialviewpager.MaterialViewPager;
-import java.util.List;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.presentation.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
-import site.iurysouza.cinefilo.presentation.movies.BackDropChangedEvent;
+import site.iurysouza.cinefilo.presentation.medias.BackDropChangedEvent;
 import site.iurysouza.cinefilo.util.ImageUtils;
 import site.iurysouza.cinefilo.util.Utils;
 
@@ -31,7 +29,7 @@ import site.iurysouza.cinefilo.util.Utils;
  * Created by Iury Souza on 09/11/2016.
  */
 
-public class MoviesPagerFragment extends BaseFragment implements MoviesPagerView {
+public class MediaPagerFragment extends BaseFragment  {
 
   private static final int FRAGS_IN_MEMORY = 3;
   public static final String MEDIA_TYPE = "MEDIA_TYPE";
@@ -39,12 +37,12 @@ public class MoviesPagerFragment extends BaseFragment implements MoviesPagerView
   @BindView(R.id.viewpager_fragment_movies) MaterialViewPager materialViewPager;
   @BindView(R.id.logo_white) TextView headerText;
 
-  public static MoviesPagerFragment newInstance(int mediaType) {
-    MoviesPagerFragment moviesPagerFragment = new MoviesPagerFragment();
+  public static MediaPagerFragment newInstance(int mediaType) {
+    MediaPagerFragment mediaPagerFragment = new MediaPagerFragment();
     Bundle args = new Bundle();
     args.putInt(MEDIA_TYPE, mediaType);
-    moviesPagerFragment.setArguments(args);
-    return moviesPagerFragment;
+    mediaPagerFragment.setArguments(args);
+    return mediaPagerFragment;
   }
 
   @Nullable @Override
@@ -56,7 +54,8 @@ public class MoviesPagerFragment extends BaseFragment implements MoviesPagerView
 
     int mediaType = getArguments().getInt(MEDIA_TYPE);
 
-    MoviesPagerAdapter adapter = new MoviesPagerAdapter(getChildFragmentManager(), getContext(), mediaType);
+    MediaPagerAdapter
+        adapter = new MediaPagerAdapter(getChildFragmentManager(), getContext(), mediaType);
 
     ViewPager viewPager = materialViewPager.getViewPager();
     viewPager.setAdapter(adapter);
@@ -73,15 +72,6 @@ public class MoviesPagerFragment extends BaseFragment implements MoviesPagerView
       actionBar.setDisplayHomeAsUpEnabled(false);
       actionBar.setDisplayShowTitleEnabled(true);
       actionBar.setDefaultDisplayHomeAsUpEnabled(false);
-    }
-  }
-
-  @Override public void createHeaderChangeListener(List<RealmMovie> showCaseMovies) {
-    if (showCaseMovies != null) {
-      RealmMovie movie = showCaseMovies.get(1);
-      String backDropUrl = ImageUtils.getBackDropUrl(movie.getBackdropPath());
-      materialViewPager.setImageUrl(backDropUrl, 100);
-      headerText.setText(movie.getOriginalTitle());
     }
   }
 

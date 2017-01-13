@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.movies;
+package site.iurysouza.cinefilo.presentation.medias;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
@@ -23,7 +23,7 @@ import site.iurysouza.cinefilo.util.ImageUtils;
  * Created by Iury Souza on 15/12/2016.
  */
 
-public final class MovieItemView extends FrameLayout {
+public final class MediaItemView extends FrameLayout {
   @BindView(R.id.movie_item_picture_imageview) ImageView movieImage;
   @BindView(R.id.movie_item_picture_card) CardView movieCard;
   @BindView(R.id.movie_item_genre) CardView genreCard;
@@ -33,7 +33,7 @@ public final class MovieItemView extends FrameLayout {
   @BindView(R.id.movie_item_title_text) TextView movieTitle;
   @BindView(R.id.movie_item_card) CardView backgroundCard;
 
-  public MovieItemView(Context context, AttributeSet attrs) {
+  public MediaItemView(Context context, AttributeSet attrs) {
     super(context, attrs);
 
     TypedValue outValue = new TypedValue();

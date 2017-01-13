@@ -14,7 +14,6 @@ import site.iurysouza.cinefilo.model.data.series.storage.CloudSeriesDataSource;
 import site.iurysouza.cinefilo.model.data.series.storage.LocalSeriesDataSource;
 import site.iurysouza.cinefilo.model.services.MovieService;
 import site.iurysouza.cinefilo.model.services.SeriesService;
-import site.iurysouza.cinefilo.presentation.series.SeriesPresenter;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -58,9 +57,6 @@ public class RepositoryModule {
     return new SeriesRepository(localSeriesDataSource, cloudSeriesDataSource);
   }
 
-  @Provides SeriesPresenter providesHomePresenter(MoviesRepository dataRepository) {
-    return new SeriesPresenter(dataRepository);
-  }
 
   @Provides MoviesUseCase providesMovieUseCase(MoviesRepository dataRepository) {
     return new MoviesUseCase(dataRepository);

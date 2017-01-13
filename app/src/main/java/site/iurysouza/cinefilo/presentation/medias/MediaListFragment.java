@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.movies;
+package site.iurysouza.cinefilo.presentation.medias;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -32,7 +32,7 @@ import site.iurysouza.cinefilo.util.Utils;
 import timber.log.Timber;
 
 import static com.ncapdevi.fragnav.FragNavController.TAB1;
-import static site.iurysouza.cinefilo.presentation.movies.pager.MoviesPagerFragment.MEDIA_TYPE;
+import static site.iurysouza.cinefilo.presentation.medias.pager.MediaPagerFragment.MEDIA_TYPE;
 import static site.iurysouza.cinefilo.util.Constants.Media.POP_MEDIA;
 import static site.iurysouza.cinefilo.util.Constants.Media.REC_MEDIA;
 import static site.iurysouza.cinefilo.util.Constants.Media.TOP_MEDIA;
@@ -41,9 +41,9 @@ import static site.iurysouza.cinefilo.util.Constants.Media.TOP_MEDIA;
  * Created by Iury Souza on 09/11/2016.
  */
 
-public class MovieListFragment extends BaseFragment
-    implements MoviesView,
-    MovieAdapter.OnAdapterClickListener,
+public class MediaListFragment extends BaseFragment
+    implements MediaView,
+    MediaAdapter.OnAdapterClickListener,
     OnMoreListener {
 
 
@@ -62,11 +62,11 @@ public class MovieListFragment extends BaseFragment
   @BindView(R.id.movie_list_progressImage) AVLoadingIndicatorView loadingPlaceHolder;
   @BindView(R.id.movie_list_recyclerview) SuperRecyclerView movieList;
 
-  private MovieAdapter movieAdapter;
-  private final MoviesPresenter moviesPresenter = new MoviesPresenter();
+  private MediaAdapter mediaAdapter;
+  private final MediaPresenter mediaPresenter = new MediaPresenter();
 
-  public static MovieListFragment newInstance(int movieListType, int mediaType) {
-    MovieListFragment moviesFragment = new MovieListFragment();
+  public static MediaListFragment newInstance(int movieListType, int mediaType) {
+    MediaListFragment moviesFragment = new MediaListFragment();
     Bundle args = new Bundle();
     args.putInt(LIST_TYPE, movieListType);
     args.putInt(MEDIA_TYPE, mediaType);
@@ -85,8 +85,8 @@ public class MovieListFragment extends BaseFragment
     listType = getArguments().getInt(LIST_TYPE);
     int mediaType = getArguments().getInt(MEDIA_TYPE);
 
-    moviesPresenter.createPresenter(moviesUseCase, seriesUseCase, mediaType);
-    moviesPresenter.attachView(this);
+    mediaPresenter.createPresenter(moviesUseCase, seriesUseCase, mediaType);
+    mediaPresenter.attachView(this);
 
     setupRecyclerView();
     loadData(listType);
@@ -99,15 +99,15 @@ public class MovieListFragment extends BaseFragment
     LinearLayoutManager layoutManger = new LinearLayoutManager(getContext());
     movieList.setLayoutManager(layoutManger);
     movieList.addItemDecoration(new MaterialViewPagerHeaderDecorator());
-    movieAdapter = new MovieAdapter(Picasso.with(getContext()), this);
-    movieList.setAdapter(movieAdapter);
+    mediaAdapter = new MediaAdapter(Picasso.with(getContext()), this);
+    movieList.setAdapter(mediaAdapter);
     movieList.setupMoreListener(this, MIN_ITEMS_THRESHOLD);
-    movieList.setRefreshListener(this::loadFeaturedMovieOnRefresh);
+    movieList.setRefreshListener(this::refreshFeaturedMedia);
   }
 
-  private void loadFeaturedMovieOnRefresh() {
+  private void refreshFeaturedMedia() {
     new Handler().postDelayed(() -> {
-      WatchMediaValue featuredMovie = movieAdapter.getFeauturedMovie();
+      WatchMediaValue featuredMovie = mediaAdapter.getFeauturedMovie();
       EventBus.getDefault().post(new BackDropChangedEvent(featuredMovie));
       movieList.setRefreshing(false);
     }, 50);
@@ -116,20 +116,20 @@ public class MovieListFragment extends BaseFragment
   private void loadData(int lisType) {
     switch (lisType) {
       case REC_MEDIA:
-        moviesPresenter.loadNowPlaying();
+        mediaPresenter.loadNowPlaying();
         break;
       case POP_MEDIA:
-        moviesPresenter.loadMostPopular();
+        mediaPresenter.loadMostPopular();
         break;
       case TOP_MEDIA:
-        moviesPresenter.loadTopRated();
+        mediaPresenter.loadTopRated();
         break;
     }
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    moviesPresenter.dettachView();
+    mediaPresenter.dettachView();
   }
 
   @Override public void showLoadingIndicator() {
@@ -151,7 +151,8 @@ public class MovieListFragment extends BaseFragment
   }
 
   @Override public void sendToListView(List<WatchMediaValue> watchMediaValuesList) {
-    movieAdapter.addAllMedia(watchMediaValuesList);
+    mediaAdapter.addAllMedia(watchMediaValuesList);
+    refreshFeaturedMedia();
     movieList.hideMoreProgress();
   }
 
@@ -181,13 +182,13 @@ public class MovieListFragment extends BaseFragment
     }
     switch (this.listType) {
       case REC_MEDIA:
-        moviesPresenter.loadNextNowPlaying(currentPage);
+        mediaPresenter.loadNextNowPlaying(currentPage);
         break;
       case POP_MEDIA:
-        moviesPresenter.loadNextMostPopularPlaying(currentPage);
+        mediaPresenter.loadNextMostPopularPlaying(currentPage);
         break;
       case TOP_MEDIA:
-        moviesPresenter.loadNextTopRated(currentPage);
+        mediaPresenter.loadNextTopRated(currentPage);
         break;
     }
   }

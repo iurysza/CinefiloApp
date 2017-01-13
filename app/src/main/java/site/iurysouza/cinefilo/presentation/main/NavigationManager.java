@@ -10,7 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 import org.greenrobot.eventbus.EventBus;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.presentation.movies.ItemReselectedEvent;
+import site.iurysouza.cinefilo.presentation.medias.ItemReselectedEvent;
 
 /**
  * Created by Iury Souza on 09/11/2016.

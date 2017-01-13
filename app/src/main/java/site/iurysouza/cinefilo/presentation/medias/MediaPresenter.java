@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.movies;
+package site.iurysouza.cinefilo.presentation.medias;
 
 import com.trello.rxlifecycle.components.support.RxFragment;
 import java.util.List;
@@ -16,14 +16,14 @@ import site.iurysouza.cinefilo.util.CineSubscriber;
  * Created by Iury Souza on 12/10/2016.
  */
 
-public class MoviesPresenter extends BasePresenter<MoviesView> {
+public class MediaPresenter extends BasePresenter<MediaView> {
   private UseCase useCase;
   private Subscription nowPlayingSubscription;
   private Subscription topRatedSubscription;
   private Subscription mostPopularSubscription;
   private RxFragment rxLifecycle;
 
-  MoviesPresenter() {
+  MediaPresenter() {
   }
 
   void createPresenter(MoviesUseCase moviesUseCase, SeriesUseCase seriesUseCase,
@@ -35,9 +35,9 @@ public class MoviesPresenter extends BasePresenter<MoviesView> {
     }
   }
 
-  @Override public void attachView(MoviesView view) {
+  @Override public void attachView(MediaView view) {
     super.attachView(view);
-    rxLifecycle = ((MovieListFragment) view);
+    rxLifecycle = ((MediaListFragment) view);
   }
 
   void loadNowPlaying() {

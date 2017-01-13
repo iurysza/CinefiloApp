@@ -27,8 +27,10 @@ import timber.log.Timber;
 /**
  * Created by Iury Souza on 12/10/2016.
  */
+@SuppressWarnings("WeakerAccess")
+
 @Module
-public class MoviesApiModule {
+public class ApiModule {
   @Provides @Singleton public Cache providesCache(Context context) {
     Cache cache = null;
     try {

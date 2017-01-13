@@ -9,8 +9,8 @@ import site.iurysouza.cinefilo.BuildConfig;
 import site.iurysouza.cinefilo.di.components.AppComponent;
 import site.iurysouza.cinefilo.di.components.DaggerAppComponent;
 import site.iurysouza.cinefilo.di.components.RepositoryComponent;
+import site.iurysouza.cinefilo.di.modules.ApiModule;
 import site.iurysouza.cinefilo.di.modules.AppModule;
-import site.iurysouza.cinefilo.di.modules.MoviesApiModule;
 import site.iurysouza.cinefilo.di.modules.RepositoryModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import timber.log.Timber;
@@ -74,7 +74,7 @@ public class CineApplication extends Application {
     appComponent = DaggerAppComponent
         .builder()
         .appModule(new AppModule(this, realm))
-        .moviesApiModule(new MoviesApiModule())
+        .apiModule(new ApiModule())
         .build();
   }
 

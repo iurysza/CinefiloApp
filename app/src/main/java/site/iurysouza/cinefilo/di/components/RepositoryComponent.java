@@ -4,10 +4,9 @@ import dagger.Subcomponent;
 import site.iurysouza.cinefilo.di.ActivityScope;
 import site.iurysouza.cinefilo.di.modules.RepositoryModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
-import site.iurysouza.cinefilo.presentation.series.SeriesFragment;
 import site.iurysouza.cinefilo.presentation.main.MainActivity;
-import site.iurysouza.cinefilo.presentation.movies.MovieListFragment;
-import site.iurysouza.cinefilo.presentation.movies.pager.MoviesPagerFragment;
+import site.iurysouza.cinefilo.presentation.medias.MediaListFragment;
+import site.iurysouza.cinefilo.presentation.medias.pager.MediaPagerFragment;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -20,7 +19,6 @@ import site.iurysouza.cinefilo.presentation.movies.pager.MoviesPagerFragment;
 
 public interface RepositoryComponent {
     void inject(MainActivity mainActivity);
-    void inject(MoviesPagerFragment target);
-    void inject(MovieListFragment target);
-    void inject(SeriesFragment target);
+    void inject(MediaPagerFragment target);
+    void inject(MediaListFragment target);
 }

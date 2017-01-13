@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.movies;
+package site.iurysouza.cinefilo.presentation.medias;
 
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -15,20 +15,20 @@ import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
  * Created by Iury Souza on 15/12/2016.
  */
 
-class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
+class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
 
   private final Picasso picasso;
   private final OnAdapterClickListener movieClickListener;
   private List<WatchMediaValue> mediaValueList = Collections.emptyList();
 
-  MovieAdapter(Picasso picasso, OnAdapterClickListener movieClickListener) {
+  MediaAdapter(Picasso picasso, OnAdapterClickListener movieClickListener) {
     this.picasso = picasso;
     this.movieClickListener = movieClickListener;
     setHasStableIds(true);
   }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-    MovieItemView view = (MovieItemView) LayoutInflater.from(viewGroup.getContext())
+    MediaItemView view = (MediaItemView) LayoutInflater.from(viewGroup.getContext())
         .inflate(R.layout.list_item_movie, viewGroup, false);
     return new ViewHolder(view);
   }
@@ -65,7 +65,7 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
   }
 
   private void swapItems(List<WatchMediaValue> mediaValues) {
-    final MovieDiffCallBack diffCallback = new MovieDiffCallBack(mediaValueList, mediaValues);
+    final MediaDiffCallBack diffCallback = new MediaDiffCallBack(mediaValueList, mediaValues);
     final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
     this.mediaValueList.clear();
     this.mediaValueList.addAll(mediaValues);
@@ -90,9 +90,9 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
   }
 
   final class ViewHolder extends RecyclerView.ViewHolder {
-    final MovieItemView itemView;
+    final MediaItemView itemView;
 
-    ViewHolder(MovieItemView itemView) {
+    ViewHolder(MediaItemView itemView) {
       super(itemView);
       this.itemView = itemView;
       this.itemView.setOnClickListener(v -> {
