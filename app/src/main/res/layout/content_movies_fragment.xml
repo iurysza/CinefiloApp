@@ -13,24 +13,26 @@
 >
 
 
+
   <com.github.florent37.materialviewpager.MaterialViewPager
       android:id="@+id/viewpager_fragment_movies"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:viewpager_logo="@layout/header_logo"
-      app:viewpager_logoMarginTop="100dp"
+      android:scrollbars="none"
+      app:viewpager_animatedHeaderImage="true"
       app:viewpager_color="@color/colorPrimary"
+      app:viewpager_disableToolbar="false"
+      app:viewpager_displayToolbarWhenSwipe="false"
+      app:viewpager_enableToolbarElevation="true"
       app:viewpager_headerHeight="200dp"
       app:viewpager_hideLogoWithFade="true"
       app:viewpager_hideToolbarAndTitle="false"
-      android:scrollbars="none"
-      app:viewpager_enableToolbarElevation="true"
       app:viewpager_imageHeaderDarkLayerAlpha="0"
-      app:viewpager_displayToolbarWhenSwipe="false"
+      app:viewpager_logo="@layout/header_logo"
+      app:viewpager_logoMarginTop="100dp"
       app:viewpager_transparentToolbar="false"
-      app:viewpager_animatedHeaderImage="true"
-      app:viewpager_disableToolbar="false"
 
   />
+
 
 </FrameLayout>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
 import com.malinskiy.superrecyclerview.OnMoreListener;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
@@ -28,6 +31,7 @@ import site.iurysouza.cinefilo.domain.SeriesUseCase;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
+import site.iurysouza.cinefilo.presentation.medias.filter.FilterViewManager;
 import site.iurysouza.cinefilo.util.Utils;
 import timber.log.Timber;
 
@@ -46,7 +50,6 @@ public class MediaListFragment extends BaseFragment
     MediaAdapter.OnAdapterClickListener,
     OnMoreListener {
 
-
   public static final int INVALID_PAGE = -1;
   private static final int PAGE_SIZE = 20;
   private static final int MIN_ITEMS_THRESHOLD = 5;
@@ -61,6 +64,8 @@ public class MediaListFragment extends BaseFragment
   @BindView(R.id.container_movie_list) FrameLayout container;
   @BindView(R.id.movie_list_progressImage) AVLoadingIndicatorView loadingPlaceHolder;
   @BindView(R.id.movie_list_recyclerview) SuperRecyclerView movieList;
+  @BindView(R.id.fabtoolbar_fab) FloatingActionButton fabFilter;
+  @BindView(R.id.fabtoolbar) FABToolbarLayout fabToolbarLayout;
 
   private MediaAdapter mediaAdapter;
   private final MediaPresenter mediaPresenter = new MediaPresenter();
@@ -88,10 +93,17 @@ public class MediaListFragment extends BaseFragment
     mediaPresenter.createPresenter(moviesUseCase, seriesUseCase, mediaType);
     mediaPresenter.attachView(this);
 
+
+
     setupRecyclerView();
     loadData(listType);
 
     return view;
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    FilterViewManager filterViewManager = new FilterViewManager(view);
   }
 
   private void setupRecyclerView() {
@@ -191,5 +203,9 @@ public class MediaListFragment extends BaseFragment
         mediaPresenter.loadNextTopRated(currentPage);
         break;
     }
+  }
+
+  @OnClick(R.id.fabtoolbar_fab) public void onClick() {
+    fabToolbarLayout.show();
   }
 }
