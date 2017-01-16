@@ -17,7 +17,8 @@ public interface UseCase {
    Observable<List<WatchMediaValue>> getTopRated();
 
 
-   Observable<List<WatchMediaValue>> getNextTopRated(int nextPage);
+
+   Observable<List<WatchMediaValue>> getNextTopRated(int nextPage, int filter);
 
    Observable<List<WatchMediaValue>> getNowPlaying();
 

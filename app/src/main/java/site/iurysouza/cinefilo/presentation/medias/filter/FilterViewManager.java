@@ -91,11 +91,7 @@ public class FilterViewManager {
           });
 
       gridList.setAdapter(adapter);
-      btnApply.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          filterSubject.onNext(adapter.getSelectedGenres());
-        }
-      });
+      btnApply.setOnClickListener(v -> filterSubject.onNext(adapter.getSelectedGenres()));
     }
 
     private ViewGroup getView(ViewGroup collection, @LayoutRes int layoutResId) {

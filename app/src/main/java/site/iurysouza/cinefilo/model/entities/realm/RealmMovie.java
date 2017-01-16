@@ -25,6 +25,7 @@ public class RealmMovie implements RealmModel {
   public static final int NOW_QUERY= 2;
   public static final int POP_QUERY = 1;
   public static final int TOP_QUERY = 0;
+  public static final int GENRE_QUERY = 3;
   public static final String QUERY_TYPE = "queryType";
 
   @PrimaryKey

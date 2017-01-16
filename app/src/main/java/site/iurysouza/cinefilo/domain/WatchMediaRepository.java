@@ -8,6 +8,9 @@ public interface WatchMediaRepository {
 
   void getMostPopular(int page, boolean forceRemote);
 
+
+  void getByGenre(int genreId, int filteredList);
+
   void getTopRated(int page, boolean forceRemote);
 
   void getNowPlaying(int page, boolean forceRemote);

@@ -5,11 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 
 /**
  * Created by Iury Souza on 15/12/2016.
@@ -83,6 +85,18 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     } else {
       return movie;
     }
+  }
+
+  public void filterByGender(List<GenderEnum> genderEnumList) {
+    List<WatchMediaValue> filteredList = new ArrayList<>();
+    for (WatchMediaValue media : mediaValueList) {
+      for (GenderEnum gender : genderEnumList) {
+        if (media.genre() == gender.getGenreId()) {
+          filteredList.add(media);
+        }
+      }
+    }
+    swapItems(filteredList);
   }
 
   interface OnAdapterClickListener {

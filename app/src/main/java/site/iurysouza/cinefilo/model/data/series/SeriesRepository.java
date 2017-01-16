@@ -56,6 +56,10 @@ public class SeriesRepository implements WatchMediaRepository {
         getMostPopularFromApi(page, MOST_POPULAR_LIST), mostPopularSubject);
   }
 
+  @Override public void getByGenre(int genreId, int filteredList) {
+
+  }
+
   @Override
   public void getTopRated(int page, boolean forceRemote) {
     boolean firstPageWasLoadedFromLocalStorage = page == INVALID_PAGE && forceRemote;

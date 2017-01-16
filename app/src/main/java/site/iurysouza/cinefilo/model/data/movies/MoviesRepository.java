@@ -14,12 +14,14 @@ import java.util.List;
 import javax.inject.Inject;
 import org.joda.time.DateTime;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import site.iurysouza.cinefilo.domain.WatchMediaRepository;
 import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
 import site.iurysouza.cinefilo.model.data.movies.storage.CloudMovieDataSource;
 import site.iurysouza.cinefilo.model.data.movies.storage.LocalMovieDataSource;
 import site.iurysouza.cinefilo.model.entities.realm.RealmGenre;
+import site.iurysouza.cinefilo.util.CineSubscriber;
 import site.iurysouza.cinefilo.util.Constants;
 import timber.log.Timber;
 
@@ -64,6 +66,35 @@ public class MoviesRepository implements WatchMediaRepository {
 
     queryLocalAndRemoteData(getMostPopularFromRealm(forceRemote),
         getMostPopularFromApi(page, MOST_POPULAR_LIST), mostPopularSubject);
+  }
+
+  @Override
+  public void getByGenre(int genreId, int filteredList) {
+    cloudDataStore.getByGenre(genreId)
+        .subscribeOn(Schedulers.io())
+        .map(realmMoviesResults -> valueOfRealmMovie(realmMoviesResults.getMovieList()))
+        .subscribe(new CineSubscriber<List<WatchMedia>>() {
+          @Override public void onError(Throwable e) {
+            super.onError(e);
+            Timber.e("Fail to get movies by genre: %s", e.getMessage());
+          }
+
+          @Override public void onNext(List<WatchMedia> watchMedias) {
+            super.onNext(watchMedias);
+            switch (filteredList) {
+              case MOST_POPULAR_LIST:
+                mostPopularSubject.onNext(watchMedias);
+                break;
+              case NOW_PLAYING_LIST:
+                nowPlayingSubject.onNext(watchMedias);
+                break;
+              case TOP_RATED_LIST:
+                topRatedSubject.onNext(watchMedias);
+                break;
+            }
+
+          }
+        });
   }
 
   @Override
@@ -192,26 +223,6 @@ public class MoviesRepository implements WatchMediaRepository {
 
   @Override
   public void getGenreList() {
-    //RealmGenre first = realm
-    //    .where(RealmGenre.class)
-    //    .isNotNull(RealmGenre.QUERY_DATE)
-    //    .findFirstAsync();
-    //
-    //RealmObject.asObservable(first)
-    //    .filter(RealmObject::isLoaded)
-    //    .subscribe(realmGenre -> {
-    //      try {
-    //        //if (!RealmObject.isValid(realmGenre)) {
-    //          insertGenresToRealm(readJsonStream(genresFromJson));
-    //        //} else {
-    //        //  if (isDataStaled(realmGenre.getQueryDate())) {
-    //            //cloudDataStore.getUpdateGenreList();
-    //          //}
-    //        //}
-    //      } catch (IOException e) {
-    //        e.printStackTrace();
-    //      }
-    //    }, Throwable::printStackTrace);
   }
 
   private List<RealmGenre> readJsonStream(InputStream in) throws IOException {
@@ -245,15 +256,6 @@ public class MoviesRepository implements WatchMediaRepository {
 
     //return (Math.abs(stampMonth - currentMonth) > MONTHS_STALED);
     return false;
-  }
-
-  private void insertGenresToRealm(List<RealmGenre> genreList) {
-    //realm.executeTransactionAsync(realm -> {
-    //      realm.insertOrUpdate(genreList);
-    //    },
-    //    throwable -> {
-    //      Timber.i(throwable, "Could not save data");
-    //    });
   }
 
   public Observable<List<WatchMedia>> getTopRatedSubject() {

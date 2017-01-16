@@ -1,13 +1,10 @@
 package site.iurysouza.cinefilo.presentation.medias;
 
 import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,9 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
-import com.github.mmin18.widget.RealtimeBlurView;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.malinskiy.superrecyclerview.OnMoreListener;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
@@ -37,9 +32,8 @@ import site.iurysouza.cinefilo.domain.SeriesUseCase;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
-import site.iurysouza.cinefilo.presentation.medias.filter.FilterViewManager;
+import site.iurysouza.cinefilo.presentation.main.FilterEvent;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
-import site.iurysouza.cinefilo.util.CineSubscriber;
 import site.iurysouza.cinefilo.util.Utils;
 import timber.log.Timber;
 
@@ -71,8 +65,6 @@ public class MediaListFragment extends BaseFragment
   @BindView(R.id.movie_list_progressImage) AVLoadingIndicatorView loadingPlaceHolder;
   @BindView(R.id.movie_list_recyclerview) SuperRecyclerView movieList;
   FloatingActionButton fabFilter;
-  FABToolbarLayout fabToolbarLayout;
-  RealtimeBlurView blurView;
   SpaceNavigationView navigationView;
   private int listType;
   private MediaAdapter mediaAdapter;
@@ -103,66 +95,26 @@ public class MediaListFragment extends BaseFragment
     mediaPresenter.attachView(this);
 
     fabFilter = (FloatingActionButton) getActivity().findViewById(R.id.fabtoolbar_fab);
-    fabToolbarLayout = (FABToolbarLayout) getActivity().findViewById(R.id.fabtoolbar);
-    blurView = (RealtimeBlurView) getActivity().findViewById(R.id.main_blurred_view);
     navigationView = (SpaceNavigationView) getActivity().findViewById(R.id.space_bottom_bar);
 
     setupRecyclerView();
     loadData(listType);
 
-    fabFilter.setOnClickListener(v -> showFilterView());
-    blurView.setOnClickListener(v -> hideFilterView());
-
     return view;
   }
 
-  private void hideFilterView() {
-    fabToolbarLayout.hide();
-    blurView.postDelayed(() -> blurView.setVisibility(View.GONE), 150);
-  }
-
-  private void showFilterView() {
-    fabToolbarLayout.show();
-    blurView.postDelayed(() -> blurView.setVisibility(View.VISIBLE), 150);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    this.view = view;
-    super.onViewCreated(view, savedInstanceState);
-
-    FilterViewManager filterViewManager = new FilterViewManager(getActivity());
-
-    if (filterObserver != null && filterObserver.isUnsubscribed()) {
-      filterObserver.unsubscribe();
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onFilterApplied(FilterEvent event) {
+    if (isMenuVisible()) {
+      List<GenderEnum> genderList = event.genderEnumList;
+      mediaAdapter.filterByGender(genderList);
+      mediaPresenter.filterNextByGender(genderList);
     }
-    filterObserver = filterViewManager.getFilterSubjectAsObservable().subscribe(
-        new CineSubscriber<List<GenderEnum>>() {
-          @Override public void onNext(List<GenderEnum> genderEnumList) {
-            super.onNext(genderEnumList);
-            hideFilterView();
-            if (genderEnumList != null) {
-              Timber.e("Got Genders from filter: %s", genderEnumList);
-              ColorStateList colorStateList =
-                  getResources().getColorStateList(R.color.filter_fab_on);
-              fabFilter.setBackgroundTintList(
-                  colorStateList);
-              ViewCompat.setBackgroundTintList(fabFilter,
-                  colorStateList);
-              fabFilter.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.filter_fab_on));
-              if (genderEnumList.isEmpty()) {
-                fabFilter.setBackgroundTintList(
-                    getResources().getColorStateList(R.color.filter_fab_off));
-              }
-            }
-          }
-
-          @Override public void onError(Throwable e) {
-            super.onError(e);
-            hideFilterView();
-          }
-        });
   }
 
+  public boolean isFragmentUIActive() {
+    return isAdded() && !isDetached() && !isRemoving();
+  }
   private void setupRecyclerView() {
     movieList.getRecyclerView().setHasFixedSize(true);
     LinearLayoutManager layoutManger = new LinearLayoutManager(getContext());

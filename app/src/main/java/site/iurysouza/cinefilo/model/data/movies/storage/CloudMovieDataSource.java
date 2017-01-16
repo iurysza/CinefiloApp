@@ -7,6 +7,7 @@ import site.iurysouza.cinefilo.model.services.MovieService;
 import site.iurysouza.cinefilo.util.Constants;
 import timber.log.Timber;
 
+import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.GENRE_QUERY;
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.NOW_QUERY;
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.POP_QUERY;
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.TOP_QUERY;
@@ -48,6 +49,12 @@ public class CloudMovieDataSource {
     Timber.i("Loaded %s movies from network", realmMoviesResults.getMovieList().size());
   }
 
+  public Observable<RealmMoviesResults> getByGenre(int genreId) {
+    return movieService.getMoviesByGenre(genreId, Constants.MOVIE_DB_API.API_KEY)
+        .map(movieResults -> RealmMoviesResults.valueOf(movieResults, GENRE_QUERY))
+        .doOnNext(this::printLoadedMovies);
+  }
+
 
   /*
   public void movieById(int movieId) {
@@ -68,5 +75,4 @@ public class CloudMovieDataSource {
     //    .subscribe(this::saveToRealm, Throwable::printStackTrace);
   }
   */
-
 }

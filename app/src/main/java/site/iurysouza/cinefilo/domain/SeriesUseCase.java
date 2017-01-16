@@ -50,7 +50,14 @@ public class SeriesUseCase implements UseCase {
         .map(WatchMediaValueMapper::mapToValueMedia);
   }
 
-  @Override
+  @Override public Observable<List<WatchMediaValue>> getNextTopRated(int nextPage, int filter) {
+    seriesRepository.getTopRated(nextPage, true);
+
+    return seriesRepository
+        .getTopRatedSubject()
+        .map(WatchMediaValueMapper::mapToValueMedia);
+  }
+
   public Observable<List<WatchMediaValue>> getNextTopRated(int nextPage) {
     seriesRepository.getTopRated(nextPage, true);
 

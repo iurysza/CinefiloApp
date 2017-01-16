@@ -10,6 +10,7 @@ import site.iurysouza.cinefilo.domain.SeriesUseCase;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.UseCase;
 import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
+import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 import site.iurysouza.cinefilo.util.CineSubscriber;
 
 /**
@@ -22,6 +23,8 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   private Subscription topRatedSubscription;
   private Subscription mostPopularSubscription;
   private RxFragment rxLifecycle;
+
+  private int FILTER = MoviesUseCase.NO_FILTER;
 
   MediaPresenter() {
   }
@@ -143,7 +146,7 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   void loadNextTopRated(int page) {
     resetSubscription(topRatedSubscription);
     topRatedSubscription = useCase
-        .getNextTopRated(page)
+        .getNextTopRated(page, FILTER)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
@@ -171,5 +174,9 @@ public class MediaPresenter extends BasePresenter<MediaView> {
     if (subscription != null && !subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
+  }
+
+  public void filterNextByGender(List<GenderEnum> genderList) {
+    FILTER = genderList.get(0).getGenreId();
   }
 }
