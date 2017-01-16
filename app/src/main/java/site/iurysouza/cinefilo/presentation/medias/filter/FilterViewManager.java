@@ -1,14 +1,18 @@
 package site.iurysouza.cinefilo.presentation.medias.filter;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
+import mehdi.sakout.fancybuttons.FancyButton;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 import site.iurysouza.cinefilo.R;
@@ -19,19 +23,28 @@ import site.iurysouza.cinefilo.R;
 
 public class FilterViewManager {
 
-  BehaviorSubject<String> filterSubject = BehaviorSubject.create();
+  BehaviorSubject<List<GenderEnum>> filterSubject = BehaviorSubject.create();
 
-  @BindView(R.id.media_list_filter_viewpager) ViewPager viewPager;
-  @BindView(R.id.media_list_page_indicator) CircleIndicator indicator;
+  ViewPager viewPager;
+  CircleIndicator indicator;
+  FancyButton btnApply;
+  FancyButton btnClose;
 
-  public FilterViewManager(View view) {
-    ButterKnife.bind(this, view);
-    FilterPagerAdapter filterAdater = new FilterPagerAdapter(view.getContext());
+
+  public FilterViewManager(FragmentActivity activity) {
+
+    viewPager = (ViewPager) activity.findViewById(R.id.media_list_filter_viewpager);
+    indicator = (CircleIndicator) activity.findViewById(R.id.media_list_page_indicator);
+    btnApply = (FancyButton) activity.findViewById(R.id.filter_btn_apply);
+    btnClose = (FancyButton) activity.findViewById(R.id.filter_btn_close);
+
+    FilterPagerAdapter filterAdater = new FilterPagerAdapter(activity.getApplicationContext());
     viewPager.setAdapter(filterAdater);
     indicator.setViewPager(viewPager);
+    btnClose.setOnClickListener(v -> filterSubject.onNext(null));
   }
 
-  public Observable getFilterSubjectAsObservable() {
+  public Observable<List<GenderEnum>> getFilterSubjectAsObservable() {
     return filterSubject.asObservable();
   }
 
@@ -45,14 +58,48 @@ public class FilterViewManager {
 
     @Override
     public Object instantiateItem(ViewGroup collection, int position) {
-      ViewGroup layout = getView(collection, FilterPagerEnum.values()[position]);
-      layout.getRootView().setOnClickListener(v -> filterSubject.onNext(""));
+      FilterPagerEnum currentFilter = FilterPagerEnum.values()[position];
+      ViewGroup layout = getView(collection, currentFilter.getLayoutResId());
+
+      if (currentFilter.getLayoutResId() == FilterPagerEnum.GENRE_FILTER.getLayoutResId()) {
+        bindGenreFilterLayout(layout);
+      } else {
+        bindGeneralFilterLayout(layout);
+      }
       return layout;
     }
 
-    private ViewGroup getView(ViewGroup collection, FilterPagerEnum filterPagerEnum) {
+    private void bindGeneralFilterLayout(ViewGroup layout) {
+
+    }
+
+    private void bindGenreFilterLayout(ViewGroup layout) {
+      RecyclerView gridList = (RecyclerView) layout.findViewById(R.id.genre_filter_list);
+      gridList.addItemDecoration(new GridSpacingItemDecoration(3, 50, true));
+      gridList.setHasFixedSize(true);
+      gridList.setLayoutManager(new GridLayoutManager(context, 3));
+
+      GenreGridAdapter adapter = new GenreGridAdapter(context,
+          new GenreGridAdapter.OnAdapterClickListener() {
+            @Override public void onItemSelected() {
+              btnApply.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+            }
+
+            @Override public void onNoneSelected() {
+              btnApply.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+            }
+          });
+
+      gridList.setAdapter(adapter);
+      btnApply.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          filterSubject.onNext(adapter.getSelectedGenres());
+        }
+      });
+    }
+
+    private ViewGroup getView(ViewGroup collection, @LayoutRes int layoutResId) {
       LayoutInflater inflater = LayoutInflater.from(context);
-      int layoutResId = filterPagerEnum.getLayoutResId();
       ViewGroup layout = (ViewGroup) inflater.inflate(layoutResId, collection, false);
       collection.addView(layout);
       return layout;

@@ -1,12 +1,31 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    tools:background="@color/appLightBlack"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="8dp"
     android:layout_height="match_parent"
-    tools:context="site.iurysouza.cinefilo.presentation.medias.filter.GenrePageFragment">
+    android:layout_gravity="center"
+    >
 
   <TextView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:text="Genre Filter"/>
+      android:text="With Genres"
+      android:layout_marginLeft="16dp"
+      android:textColor="@color/appGrey"
+      android:alpha=".8"
+      android:textSize="@dimen/standard_text_size"
+      >
 
+  </TextView>
+
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/genre_filter_list"
+      android:layout_width="match_parent"
+      android:layout_marginTop="14dp"
+      tools:listitem="@layout/genre_grid_item"
+      android:layout_height="wrap_content"
+      >
+
+  </android.support.v7.widget.RecyclerView>
 </FrameLayout>

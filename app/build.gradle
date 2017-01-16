@@ -8,6 +8,8 @@ android {
   compileSdkVersion 25
   buildToolsVersion rootProject.ext.supportLibrary
   defaultConfig {
+    renderscriptTargetApi 19
+    renderscriptSupportModeEnabled true
     applicationId "site.iurysouza.cinefilo"
     minSdkVersion 22
     targetSdkVersion 25
@@ -54,6 +56,9 @@ dependencies {
   }
   compile 'me.relex:circleindicator:1.2.2@aar'
   compile 'com.github.fafaldo:fab-toolbar:1.2.0'
+  compile 'com.github.mmin18:realtimeblurview:1.1.0'
+  compile 'com.github.medyo:fancybuttons:1.8.3'
+
 
   //Value Type Generator
   provided "com.google.auto.value:auto-value:1.2"

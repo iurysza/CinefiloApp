@@ -1,6 +1,7 @@
 package site.iurysouza.cinefilo.presentation.main;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.Menu;
@@ -27,6 +28,7 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
 
   @Inject
   NavigationManager navigationManager;
+  @BindView(R.id.fabtoolbar_fab) FloatingActionButton filterFab;
 
   private SharedViewsManager sharedViewsManager;
 
@@ -35,7 +37,7 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
-
+    filterFab.hide();
     bottomBar.initWithSaveInstanceState(savedInstanceState);
     bottomBar.addSpaceItem(
         new SpaceItem(getString(R.string.bottombar_title_movies), R.drawable.ic_drawer_movies));
