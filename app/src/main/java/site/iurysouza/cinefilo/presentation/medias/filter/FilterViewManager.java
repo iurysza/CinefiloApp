@@ -22,12 +22,12 @@ import site.iurysouza.cinefilo.R;
 
 public class FilterViewManager {
 
-  PublishSubject<GenderEnum> filterSubject = PublishSubject.create();
+  private PublishSubject<GenderEnum> filterSubject = PublishSubject.create();
 
   ViewPager viewPager;
   CircleIndicator indicator;
-  FancyButton btnApply;
-  FancyButton btnClose;
+  private FancyButton btnApply;
+  private FancyButton btnClose;
 
 
   public FilterViewManager(FragmentActivity activity) {

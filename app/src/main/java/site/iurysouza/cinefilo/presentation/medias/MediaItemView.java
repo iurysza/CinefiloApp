@@ -1,8 +1,6 @@
 package site.iurysouza.cinefilo.presentation.medias;
 
 import android.content.Context;
-import android.support.annotation.ColorInt;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -15,8 +13,7 @@ import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.model.entities.realm.RealmGenre;
-import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
+import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 import site.iurysouza.cinefilo.util.ImageUtils;
 
 /**
@@ -45,18 +42,7 @@ public final class MediaItemView extends FrameLayout {
     ButterKnife.bind(this);
   }
 
-  private boolean isMovieValid(RealmMovie realmMovie) {
-    boolean hasTitle = realmMovie.getOriginalTitle() != null;
-    boolean hasPoster = realmMovie.getPosterPath() != null;
-    boolean hasOverview = realmMovie.getOverview() != null;
-    if (hasTitle && hasPoster && hasOverview) {
-      return true;
-    }
-    return false;
-  }
-
   public void bindTo(WatchMediaValue realmMovie, Picasso picasso) {
-
     String posterPath = realmMovie.posterPath();
     if (posterPath != null) {
       String posterUrl = ImageUtils.getPosterUrl(posterPath);
@@ -74,44 +60,14 @@ public final class MediaItemView extends FrameLayout {
     Integer genre = realmMovie.genre();
 
     if (genre != null) {
-      //RealmGenre realmGenre = Realm.getDefaultInstance()
-      //    .where(RealmGenre.class)
-      //    .equalTo(RealmGenre.ID, Long.valueOf(genre))
-      //    .findFirstAsync();
-      //RealmObject
-      //    .asObservable(realmGenre)
-      //    .filter(RealmObject::isLoaded)
-      //    .filter(RealmObject::isValid)
-      //    .subscribe(realmGenre1 -> {
-      //      genreCard.setCardBackgroundColor(getGenreColor(realmGenre1.getId()));
-      //      setGenreText(realmGenre1);
-      //    }, Throwable::printStackTrace);
+      GenderEnum genderEnum = GenderEnum.getGenreById(genre);
+      if (genderEnum != null) {
+
+      genreText.setText(getContext().getString(genderEnum.getGenreNameRes()));
+        genreCard.setCardBackgroundColor(
+            (getContext().getResources().getColor(genderEnum.getColorRes())));
+      }
     }
   }
 
-  @ColorInt
-  private int getGenreColor(long genreId) {
-    Context context = getContext();
-    if (genreId < 25) {
-      return ContextCompat.getColor(context, R.color.colorGenreGroup2);
-    }
-    if (genreId < 50) {
-      return ContextCompat.getColor(context, R.color.colorGenreGroup1);
-    }
-    if (genreId < 1000) {
-      return ContextCompat.getColor(context, R.color.colorGenreGroup3);
-    }
-    if (genreId > 1000) {
-      return ContextCompat.getColor(context, R.color.colorGenreGroup4);
-    }
-    return ContextCompat.getColor(context, R.color.colorGenreGroup2);
-  }
-
-  private void setGenreText(RealmGenre realmGenre) {
-    String name = realmGenre.getName();
-    if (name.equals("Science Fiction")) {
-      name = "Sci-Fi";
-    }
-    genreText.setText(name);
-  }
 }
