@@ -8,15 +8,12 @@ import site.iurysouza.cinefilo.domain.entity.WatchMediaValueMapper;
 import site.iurysouza.cinefilo.model.data.movies.MoviesRepository;
 import site.iurysouza.cinefilo.presentation.UseCase;
 
-import static site.iurysouza.cinefilo.model.entities.realm.RealmCurrentPage.TOP_RATED_LIST;
-
 /**
  * Created by Iury Souza on 09/11/2016.
  */
 
 public class MoviesUseCase implements UseCase {
 
-  public static final int NO_FILTER = -1;
   private static final int FIRST_PAGE = 1;
   private MoviesRepository movieRepository;
 
@@ -54,20 +51,11 @@ public class MoviesUseCase implements UseCase {
   }
 
   @Override
-  public Observable<List<WatchMediaValue>> getNextTopRated(int nextPage, int filter) {
-
-    if (filter == NO_FILTER) {
+  public Observable<List<WatchMediaValue>> getNextTopRated(int nextPage) {
       movieRepository.getTopRated(nextPage, true);
       return movieRepository
           .getTopRatedSubject()
           .map(WatchMediaValueMapper::mapToValueMedia);
-    } else {
-      movieRepository.getByGenre(filter, TOP_RATED_LIST);
-      return movieRepository
-          .getTopRatedSubject()
-          .skip(1) //skips BehaviorSubject local data reemission
-          .map(WatchMediaValueMapper::mapToValueMedia);
-    }
   }
 
   @Override
@@ -76,6 +64,13 @@ public class MoviesUseCase implements UseCase {
 
     return movieRepository
         .getNowPlayingSubject()
+        .map(WatchMediaValueMapper::mapToValueMedia);
+  }
+
+  @Override public Observable<List<WatchMediaValue>> getMediaByGender(int gender) {
+    movieRepository.getByGenre(gender);
+    return movieRepository
+        .getGenresSubject()
         .map(WatchMediaValueMapper::mapToValueMedia);
   }
 

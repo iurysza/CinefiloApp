@@ -1,6 +1,5 @@
 package site.iurysouza.cinefilo.presentation.main;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -39,6 +38,8 @@ import static com.ncapdevi.fragnav.FragNavController.TAB2;
 
 public class MainActivity extends BaseActivity implements BottomBarListener {
 
+  public static final int BLUR_VIEW_HIDE_DELAY = 550;
+  public static final int BLUR_VIEW_SHOW_DELAY = 450;
   @BindView(R.id.space_bottom_bar) SpaceNavigationView bottomBar;
 
   @Inject
@@ -104,22 +105,22 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
       @Override public void run() {
         if (genderEnum != null) {
           Timber.e("Got Genders from filter: %s", genderEnum);
-          ColorStateList colorStateList =
-              getResources().getColorStateList(R.color.filter_fab_on);
-          filterFab.setBackgroundTintList(
-              colorStateList);
+          //ColorStateList colorStateList =
+          //    getResources().getColorStateList(R.color.filter_fab_on);
+          //filterFab.setBackgroundTintList(
+          //    colorStateList);
           //ViewCompat.setBackgroundTintList(filterFab,
           //    colorStateList);
-          //filterFab.setBackgroundTintList(
-          //    ContextCompat.getColorStateList(getBaseContext(), R.color.filter_fab_on));
+          filterFab.setBackgroundTintList(
+              ContextCompat.getColorStateList(getBaseContext(), R.color.filter_fab_on));
           filterFab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), genderEnum.getGenreIconRes()));
         } else {
           filterFab.setBackgroundTintList(
               getResources().getColorStateList(R.color.filter_fab_off));
-          filterFab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.ic_filter_on));
+          filterFab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.ic_filter_off));
         }
       }
-    }, 660);
+    }, BLUR_VIEW_HIDE_DELAY);
   }
 
   @Override protected void setupActivityComponent(Bundle savedInstanceState) {
@@ -156,12 +157,20 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
 
   private void hideFilterView() {
     fabtoolbar.hide();
-    blurredView.postDelayed(() -> blurredView.setVisibility(View.GONE), 550);
+    blurredView.postDelayed(() -> blurredView.setVisibility(View.GONE), BLUR_VIEW_HIDE_DELAY);
   }
 
   private void showFilterView() {
     fabtoolbar.show();
-    blurredView.postDelayed(() -> blurredView.setVisibility(View.VISIBLE), 450);
+    blurredView.postDelayed(() -> blurredView.setVisibility(View.VISIBLE), BLUR_VIEW_SHOW_DELAY);
+  }
+
+  @Override public void onBackPressed() {
+    if (blurredView.isShown()) {
+      hideFilterView();
+      return;
+    }
+    super.onBackPressed();
   }
 
   @OnClick({

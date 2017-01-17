@@ -62,12 +62,10 @@ public final class MediaItemView extends FrameLayout {
     if (genre != null) {
       GenderEnum genderEnum = GenderEnum.getGenreById(genre);
       if (genderEnum != null) {
-
-      genreText.setText(getContext().getString(genderEnum.getGenreNameRes()));
+        genreText.setText(getContext().getString(genderEnum.getGenreNameRes()));
         genreCard.setCardBackgroundColor(
             (getContext().getResources().getColor(genderEnum.getColorRes())));
       }
     }
   }
-
 }

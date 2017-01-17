@@ -1,8 +1,8 @@
 package site.iurysouza.cinefilo.presentation.medias;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,8 +49,7 @@ import static site.iurysouza.cinefilo.util.Constants.Media.TOP_MEDIA;
 
 public class MediaListFragment extends BaseFragment
     implements MediaView,
-    MediaAdapter.OnAdapterClickListener,
-    OnMoreListener {
+    MediaAdapter.OnAdapterClickListener {
 
   public static final int INVALID_PAGE = -1;
   private static final int PAGE_SIZE = 20;
@@ -107,24 +106,52 @@ public class MediaListFragment extends BaseFragment
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onFilterApplied(FilterEvent event) {
     if (isMenuVisible()) {
-      movieList.getRecyclerView().smoothScrollToPosition(0);
-      GenderEnum genderEnum = event.genderEnum;
-      List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderEnum);
-        movieList.setOnScrollListener(new RecyclerView.OnScrollListener() {
-          @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-            if (layoutManger.findFirstVisibleItemPosition() == 0 && newState == RecyclerView.SCROLL_STATE_IDLE) {
-              applyFilterToAdapter(filteredList, genderEnum);
-              movieList.setOnScrollListener(null);
-            }
-          }
-        });
+      if (event == null) {
+        disableFilter();
+      } else {
+      applyFilter(event);
+      }
+    //  GenderEnum genderEnum = event.genderEnum;
+    //  List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderEnum);
+    //  mediaAdapter.swapItems(filteredList);
+    //  mediaPresenter.loadByGender(genderEnum.getGenreId());
     }
   }
 
-  private void applyFilterToAdapter(List<WatchMediaValue> filteredList, GenderEnum genderEnum) {
-    mediaAdapter.swapItems(filteredList);
-    mediaPresenter.filterNextByGender(genderEnum);
+  private void disableFilter() {
+    movieList.getRecyclerView().smoothScrollToPosition(0);
+    movieList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+      @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        super.onScrollStateChanged(recyclerView, newState);
+        if (layoutManger.findFirstVisibleItemPosition() == 0
+            && newState == RecyclerView.SCROLL_STATE_IDLE) {
+          mediaAdapter.clear();
+          loadData(listType);
+          movieList.setOnMoreListener(createOnMoreListener());
+          movieList.getRecyclerView().removeOnScrollListener(this);
+        }
+      }
+    });
+  }
+
+  private void applyFilter(FilterEvent event) {
+    movieList.getRecyclerView().smoothScrollToPosition(0);
+
+    GenderEnum genderEnum = event.genderEnum;
+    List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderEnum);
+
+    movieList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+      @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        super.onScrollStateChanged(recyclerView, newState);
+        if (layoutManger.findFirstVisibleItemPosition() == 0
+            && newState == RecyclerView.SCROLL_STATE_IDLE) {
+          mediaAdapter.swapItems(filteredList);
+          mediaPresenter.loadByGender(genderEnum.getGenreId());
+          movieList.setupMoreListener(null, 0);
+          movieList.getRecyclerView().removeOnScrollListener(this);
+        }
+      }
+    });
   }
 
   private void setupRecyclerView() {
@@ -134,9 +161,13 @@ public class MediaListFragment extends BaseFragment
     movieList.addItemDecoration(new MaterialViewPagerHeaderDecorator());
     mediaAdapter = new MediaAdapter(Picasso.with(getContext()), this);
     movieList.setAdapter(mediaAdapter);
-    movieList.setupMoreListener(this, MIN_ITEMS_THRESHOLD);
+    movieList.setupMoreListener(createOnMoreListener(), MIN_ITEMS_THRESHOLD);
     movieList.setRefreshListener(this::refreshFeaturedMedia);
-    movieList.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+    movieList.getRecyclerView().addOnScrollListener(createFabScrollBehavior());
+  }
+
+  @NonNull private RecyclerView.OnScrollListener createFabScrollBehavior() {
+    return new RecyclerView.OnScrollListener() {
       @Override
       public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         if (dy > 0 || dy < 0 && fabFilter.isShown()) {
@@ -153,7 +184,28 @@ public class MediaListFragment extends BaseFragment
 
         super.onScrollStateChanged(recyclerView, newState);
       }
-    });
+    };
+  }
+
+  @NonNull private OnMoreListener createOnMoreListener() {
+    return (overallItemsCount, itemsBeforeMore, maxLastVisiblePosition) -> {
+      movieList.showMoreProgress();
+      currentPage++;
+      if (overallItemsCount > currentPage * PAGE_SIZE) {
+        currentPage = INVALID_PAGE;
+      }
+      switch (listType) {
+        case REC_MEDIA:
+          mediaPresenter.loadNextNowPlaying(currentPage);
+          break;
+        case POP_MEDIA:
+          mediaPresenter.loadNextMostPopularPlaying(currentPage);
+          break;
+        case TOP_MEDIA:
+          mediaPresenter.loadNextTopRated(currentPage);
+          break;
+      }
+    };
   }
 
   private void refreshFeaturedMedia() {
@@ -220,27 +272,6 @@ public class MediaListFragment extends BaseFragment
   public void onItemReselected(ItemReselectedEvent event) {
     if (event.itemIndex == TAB1) {
       movieList.scrollTo(0, 0);
-    }
-  }
-
-  @SuppressLint("BinaryOperationInTimber")
-  @Override
-  public void onMoreAsked(int overallItemsCount, int itemsBeforeMore, int maxLastVisiblePosition) {
-    movieList.showMoreProgress();
-    currentPage++;
-    if (overallItemsCount > currentPage * PAGE_SIZE) {
-      currentPage = INVALID_PAGE;
-    }
-    switch (this.listType) {
-      case REC_MEDIA:
-        mediaPresenter.loadNextNowPlaying(currentPage);
-        break;
-      case POP_MEDIA:
-        mediaPresenter.loadNextMostPopularPlaying(currentPage);
-        break;
-      case TOP_MEDIA:
-        mediaPresenter.loadNextTopRated(currentPage);
-        break;
     }
   }
 }

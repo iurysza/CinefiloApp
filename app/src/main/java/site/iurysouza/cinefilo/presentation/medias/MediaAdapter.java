@@ -57,6 +57,10 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     appendMedia(mediaValues);
   }
 
+  public void clear() {
+    mediaValueList.clear();
+    notifyDataSetChanged();
+  }
   private void appendMedia(List<WatchMediaValue> mediaList) {
     int positionStart = mediaValueList.size() - 1;
     mediaValueList.addAll(mediaList);

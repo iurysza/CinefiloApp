@@ -45,6 +45,7 @@ public class MoviesRepository implements WatchMediaRepository {
   private BehaviorSubject<List<WatchMedia>> nowPlayingSubject = BehaviorSubject.create();
   private BehaviorSubject<List<WatchMedia>> topRatedSubject = BehaviorSubject.create();
   private BehaviorSubject<List<WatchMedia>> mostPopularSubject = BehaviorSubject.create();
+  private BehaviorSubject<List<WatchMedia>> genreSubject = BehaviorSubject.create();
 
   @Inject
   public MoviesRepository(LocalMovieDataSource localDataStore,
@@ -69,30 +70,19 @@ public class MoviesRepository implements WatchMediaRepository {
   }
 
   @Override
-  public void getByGenre(int genreId, int filteredList) {
+  public void getByGenre(int genreId) {
     cloudDataStore.getByGenre(genreId)
         .subscribeOn(Schedulers.io())
         .map(realmMoviesResults -> valueOfRealmMovie(realmMoviesResults.getMovieList()))
         .subscribe(new CineSubscriber<List<WatchMedia>>() {
           @Override public void onError(Throwable e) {
             super.onError(e);
-            Timber.e("Fail to get movies by genre: %s", e.getMessage());
+            Timber.e("Failed to get movies by genre: %s", e.getMessage());
           }
 
           @Override public void onNext(List<WatchMedia> watchMedias) {
             super.onNext(watchMedias);
-            switch (filteredList) {
-              case MOST_POPULAR_LIST:
-                mostPopularSubject.onNext(watchMedias);
-                break;
-              case NOW_PLAYING_LIST:
-                nowPlayingSubject.onNext(watchMedias);
-                break;
-              case TOP_RATED_LIST:
-                topRatedSubject.onNext(watchMedias);
-                break;
-            }
-
+            genreSubject.onNext(watchMedias);
           }
         });
   }
@@ -221,9 +211,6 @@ public class MoviesRepository implements WatchMediaRepository {
                 watchMedias.size()));
   }
 
-  @Override
-  public void getGenreList() {
-  }
 
   private List<RealmGenre> readJsonStream(InputStream in) throws IOException {
     JsonReader reader = new JsonReader(new InputStreamReader(in, Constants.JSON_CHAR_SET));
@@ -268,5 +255,8 @@ public class MoviesRepository implements WatchMediaRepository {
 
   public Observable<List<WatchMedia>> getNowPlayingSubject() {
     return nowPlayingSubject.asObservable();
+  }
+  public Observable<List<WatchMedia>> getGenresSubject() {
+    return genreSubject.asObservable();
   }
 }

@@ -42,6 +42,10 @@ public class SeriesRepository implements WatchMediaRepository {
     this.cloudDataStore = cloudDataStore;
   }
 
+  @Override public void getByGenre(int genreId) {
+
+  }
+
   @Override
   public void getMostPopular(int page, boolean forceRemote) {
     boolean firstPageWasLoadedFromLocalStorage = page == INVALID_PAGE && forceRemote;
@@ -56,9 +60,6 @@ public class SeriesRepository implements WatchMediaRepository {
         getMostPopularFromApi(page, MOST_POPULAR_LIST), mostPopularSubject);
   }
 
-  @Override public void getByGenre(int genreId, int filteredList) {
-
-  }
 
   @Override
   public void getTopRated(int page, boolean forceRemote) {
@@ -184,9 +185,6 @@ public class SeriesRepository implements WatchMediaRepository {
   }
 
 
-  @Override
-  public void getGenreList() {
-  }
 
   public Observable<List<WatchMedia>> getTopRatedSubject() {
     return topRatedSubject.asObservable();

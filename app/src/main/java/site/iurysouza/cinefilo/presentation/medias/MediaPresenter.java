@@ -10,7 +10,6 @@ import site.iurysouza.cinefilo.domain.SeriesUseCase;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.UseCase;
 import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
-import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 import site.iurysouza.cinefilo.util.CineSubscriber;
 
 /**
@@ -24,7 +23,7 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   private Subscription mostPopularSubscription;
   private RxFragment rxLifecycle;
 
-  private int FILTER = MoviesUseCase.NO_FILTER;
+  private Subscription genderSubscription;
 
   MediaPresenter() {
   }
@@ -146,7 +145,26 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   void loadNextTopRated(int page) {
     resetSubscription(topRatedSubscription);
     topRatedSubscription = useCase
-        .getNextTopRated(page, FILTER)
+        .getNextTopRated(page)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
+          @Override public void onNext(List<WatchMediaValue> watchMediaValues) {
+            super.onNext(watchMediaValues);
+            sendMediaToView(watchMediaValues);
+          }
+
+          @Override public void onError(Throwable e) {
+            super.onError(e);
+            getBaseView().showErrorIndicator();
+          }
+        });
+  }
+
+  void loadByGender(int gender) {
+    resetSubscription(genderSubscription);
+    genderSubscription = useCase
+        .getMediaByGender(gender)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
@@ -174,9 +192,5 @@ public class MediaPresenter extends BasePresenter<MediaView> {
     if (subscription != null && !subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
-  }
-
-  public void filterNextByGender(GenderEnum genderEnum) {
-    FILTER = genderEnum.getGenreId();
   }
 }

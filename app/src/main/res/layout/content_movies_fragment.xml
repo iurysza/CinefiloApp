@@ -25,6 +25,7 @@
       app:viewpager_displayToolbarWhenSwipe="false"
       app:viewpager_enableToolbarElevation="true"
       app:viewpager_headerHeight="200dp"
+      app:viewpager_pagerTitleStrip="@layout/material_view_pager_pagertitlestrip_newstand"
       app:viewpager_hideLogoWithFade="true"
       app:viewpager_hideToolbarAndTitle="false"
       app:viewpager_imageHeaderDarkLayerAlpha="0"
