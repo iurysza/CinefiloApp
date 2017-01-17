@@ -65,7 +65,7 @@ public class MoviesUseCase implements UseCase {
       movieRepository.getByGenre(filter, TOP_RATED_LIST);
       return movieRepository
           .getTopRatedSubject()
-          .skip(1) //skips BehaviorSubject reemmission
+          .skip(1) //skips BehaviorSubject local data reemission
           .map(WatchMediaValueMapper::mapToValueMedia);
     }
   }

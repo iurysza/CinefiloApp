@@ -1,15 +1,16 @@
 package site.iurysouza.cinefilo.presentation.main;
 
-import java.util.List;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 
 /**
  * Created by Iury Souza on 16/01/2017.
  */
 public class FilterEvent {
-  public final List<GenderEnum> genderEnumList;
+  public final GenderEnum genderEnum;
 
-  public FilterEvent(List<GenderEnum> genderEnumList) {
-    this.genderEnumList = genderEnumList;
+
+
+  public FilterEvent(GenderEnum genderEnum) {
+    this.genderEnum = genderEnum;
   }
 }

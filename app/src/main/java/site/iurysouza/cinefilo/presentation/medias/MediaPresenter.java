@@ -176,7 +176,7 @@ public class MediaPresenter extends BasePresenter<MediaView> {
     }
   }
 
-  public void filterNextByGender(List<GenderEnum> genderList) {
-    FILTER = genderList.get(0).getGenreId();
+  public void filterNextByGender(GenderEnum genderEnum) {
+    FILTER = genderEnum.getGenreId();
   }
 }

@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 import mehdi.sakout.fancybuttons.FancyButton;
 import rx.Observable;
@@ -23,7 +22,7 @@ import site.iurysouza.cinefilo.R;
 
 public class FilterViewManager {
 
-  BehaviorSubject<List<GenderEnum>> filterSubject = BehaviorSubject.create();
+  BehaviorSubject<GenderEnum> filterSubject = BehaviorSubject.create();
 
   ViewPager viewPager;
   CircleIndicator indicator;
@@ -44,7 +43,7 @@ public class FilterViewManager {
     btnClose.setOnClickListener(v -> filterSubject.onNext(null));
   }
 
-  public Observable<List<GenderEnum>> getFilterSubjectAsObservable() {
+  public Observable<GenderEnum> getFilterSubjectAsObservable() {
     return filterSubject.asObservable();
   }
 

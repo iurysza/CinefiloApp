@@ -2,7 +2,8 @@ package site.iurysouza.cinefilo.presentation.medias.filter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,78 +13,41 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.util.ImageUtils;
+
+import static site.iurysouza.cinefilo.util.ImageUtils.changeIconColor;
 
 /**
  * Created by Iury Souza on 15/01/2017.
  */
 
-public class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHolder> {
+class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHolder> {
 
   private List<GenderEnum> genderEnumList = Arrays.asList(GenderEnum.values());
-  private List<GenderEnum> selectedGenresList = new ArrayList<>();
+  private GenderEnum selectedGenre;
   private Context context;
   private OnAdapterClickListener listener;
 
-  public GenreGridAdapter(Context context, OnAdapterClickListener listener) {
+  GenreGridAdapter(Context context, OnAdapterClickListener listener) {
     this.context = context;
     this.listener = listener;
   }
 
   @Override
   public GenreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view =
-        LayoutInflater.from(parent.getContext()).inflate(R.layout.genre_grid_item, parent, false);
-    return new GenreViewHolder(view);
+    View view = LayoutInflater
+        .from(parent.getContext())
+        .inflate(R.layout.genre_grid_item, parent, false);
+
+    GenreViewHolder vh = new GenreViewHolder(view);
+    vh.genreItemRoot.setOnClickListener(v -> vh.onItemClicked());
+    return vh;
   }
 
   @Override public void onBindViewHolder(GenreViewHolder holder, int position) {
-    int iconRes = genderEnumList.get(position).getGenreIconRes();
-    GenderEnum currentGender = genderEnumList.get(position);
-    int defaultColor = R.color.colorPrimary;
-    int selectedColor = R.color.appRed;
-    Drawable icon = ImageUtils.changeIconColor(context, iconRes, defaultColor);
-    holder.genreItemImageView.setImageDrawable(icon);
-    holder.genreItemText.setText(genderEnumList.get(position).getGenreNameRes());
-    initItemState(holder, currentGender, iconRes, defaultColor, selectedColor);
-    holder.genreItemRoot.setOnClickListener(
-        onItemSelected(holder, currentGender, iconRes, defaultColor, selectedColor));
-  }
-
-  @NonNull private View.OnClickListener onItemSelected(final GenreViewHolder holder,
-      final GenderEnum currentGender, final int iconRes, int defaultColor, int selectedColor) {
-    return v -> {
-
-      if (selectedGenresList.contains(currentGender)) {
-        holder.genreItemImageView.setImageDrawable(
-            ImageUtils.changeIconColor(context, iconRes, defaultColor));
-        selectedGenresList.remove(currentGender);
-      } else {
-        holder.genreItemImageView.setImageDrawable(
-            ImageUtils.changeIconColor(context, iconRes, selectedColor));
-        selectedGenresList.add(currentGender);
-      }
-      if (selectedGenresList.isEmpty()) {
-        listener.onNoneSelected();
-      } else {
-        listener.onItemSelected();
-      }
-    };
-  }
-
-  private void initItemState(GenreViewHolder holder,
-      GenderEnum currentGender, int iconRes, int defaultColor, int selectedColor) {
-    if (selectedGenresList.contains(currentGender)) {
-      holder.genreItemImageView.setImageDrawable(
-          ImageUtils.changeIconColor(context, iconRes, selectedColor));
-    } else {
-      holder.genreItemImageView.setImageDrawable(
-          ImageUtils.changeIconColor(context, iconRes, defaultColor));
-    }
+    holder.bindTo(genderEnumList.get(holder.getAdapterPosition()));
   }
 
   @Override
@@ -91,24 +55,73 @@ public class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.Genr
     return genderEnumList.size();
   }
 
-  public List<GenderEnum> getSelectedGenres() {
-    return selectedGenresList;
+  GenderEnum getSelectedGenres() {
+    return selectedGenre;
   }
 
-  static class GenreViewHolder extends RecyclerView.ViewHolder {
+  interface OnAdapterClickListener {
+    void onItemSelected();
+
+    void onNoneSelected();
+  }
+
+  class GenreViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.genre_item_btn) ImageView genreItemImageView;
     @BindView(R.id.genre_item_text) TextView genreItemText;
     @BindView(R.id.genre_item_root) RelativeLayout genreItemRoot;
+    @DrawableRes int iconRes;
+    @ColorRes int defaultColor = R.color.colorPrimary;
+    @ColorRes int selectedColor = R.color.appRed;
+    GenderEnum currentItemGender;
 
     GenreViewHolder(View view) {
       super(view);
       ButterKnife.bind(this, view);
     }
-  }
 
-  public interface OnAdapterClickListener{
-    void onItemSelected();
+    void bindTo(GenderEnum genderEnum) {
+      currentItemGender = genderEnum;
+      iconRes = genderEnum.getGenreIconRes();
+      Drawable icon = changeIconColor(context, iconRes, defaultColor);
+      genreItemImageView.setImageDrawable(icon);
+      genreItemText.setText(genderEnum.getGenreNameRes());
+      initItemState(currentItemGender, iconRes);
+    }
 
-    void onNoneSelected();
+    private void initItemState(GenderEnum currentGender, int iconRes) {
+      if (selectedGenre != null && selectedGenre.equals(currentGender)) {
+        Drawable unSelectedIcon = changeIconColor(context, iconRes, selectedColor);
+        genreItemImageView.setImageDrawable(unSelectedIcon);
+      } else {
+        Drawable selectedIcon = changeIconColor(context, iconRes, defaultColor);
+        genreItemImageView.setImageDrawable(selectedIcon);
+      }
+    }
+
+    void onItemClicked() {
+      int previousPosition = -1;
+      if (selectedGenre != null) {
+        previousPosition = genderEnumList.indexOf(selectedGenre);
+      }
+      //currentItemGender = genderEnumList.get(adapterPosition);
+      if (selectedGenre != null && selectedGenre.equals(currentItemGender)) {
+        Drawable unselectedIcon = changeIconColor(context, iconRes, defaultColor);
+        genreItemImageView.setImageDrawable(unselectedIcon);
+        selectedGenre = null;
+      } else {
+        Drawable selectedIcon = changeIconColor(context, iconRes, selectedColor);
+        genreItemImageView.setImageDrawable(selectedIcon);
+        selectedGenre = currentItemGender;
+      }
+      if (selectedGenre == null) {
+        listener.onNoneSelected();
+      } else {
+        listener.onItemSelected();
+      }
+      //rebinds previous selected item
+      if (previousPosition != -1) {
+        notifyItemChanged(previousPosition);
+      }
+    }
   }
 }

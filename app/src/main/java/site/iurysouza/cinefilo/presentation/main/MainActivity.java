@@ -85,12 +85,12 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
       filterObserver.unsubscribe();
     }
     filterObserver = filterViewManager.getFilterSubjectAsObservable().subscribe(
-        new CineSubscriber<List<GenderEnum>>() {
-          @Override public void onNext(List<GenderEnum> genderEnumList) {
+        new CineSubscriber<GenderEnum>() {
+          @Override public void onNext(GenderEnum genderEnumList) {
             super.onNext(genderEnumList);
+            EventBus.getDefault().post(new FilterEvent(genderEnumList));
             hideFilterView();
             changeFilterButtonColor(genderEnumList);
-            EventBus.getDefault().post(new FilterEvent(genderEnumList));
           }
 
           @Override public void onError(Throwable e) {
@@ -100,7 +100,7 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
         });
   }
 
-  private void changeFilterButtonColor(List<GenderEnum> genderEnumList) {
+  private void changeFilterButtonColor(GenderEnum genderEnumList) {
     if (genderEnumList != null) {
       Timber.e("Got Genders from filter: %s", genderEnumList);
       ColorStateList colorStateList =
@@ -111,10 +111,9 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
           colorStateList);
       filterFab.setBackgroundTintList(
           ContextCompat.getColorStateList(this, R.color.filter_fab_on));
-      if (genderEnumList.isEmpty()) {
-        filterFab.setBackgroundTintList(
-            getResources().getColorStateList(R.color.filter_fab_off));
-      }
+    } else {
+      filterFab.setBackgroundTintList(
+          getResources().getColorStateList(R.color.filter_fab_off));
     }
   }
 

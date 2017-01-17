@@ -1,6 +1,5 @@
 package site.iurysouza.cinefilo.presentation.medias;
 
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -62,23 +61,26 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     int positionStart = mediaValueList.size() - 1;
     mediaValueList.addAll(mediaList);
     notifyItemRangeInserted(positionStart, mediaList.size());
-  //    Handler handler = new Handler(Looper.getMainLooper());
-  //    handler.post(() -> notifyItemRangeInserted(positionStart, mediaList.size()));
   }
 
-  private void swapItems(List<WatchMediaValue> mediaValues) {
-    final MediaDiffCallBack diffCallback = new MediaDiffCallBack(mediaValueList, mediaValues);
-    final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+  public void swapItems(List<WatchMediaValue> mediaValues) {
+    //final MediaDiffCallBack diffCallback = new MediaDiffCallBack(mediaValueList, mediaValues);
+    //final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
     this.mediaValueList.clear();
     this.mediaValueList.addAll(mediaValues);
-    diffResult.dispatchUpdatesTo(this);
+    notifyDataSetChanged();
+    //diffResult.dispatchUpdatesTo(this);
   }
+
 
   WatchMediaValue getFeauturedMovie() {
     return getRandomMovieWithBackDrop(mediaValueList);
   }
 
   private WatchMediaValue getRandomMovieWithBackDrop(List<WatchMediaValue> movieList) {
+    if (movieList.isEmpty()) {
+      return null;
+    }
     WatchMediaValue movie = mediaValueList.get((new Random()).nextInt(mediaValueList.size()));
     if (movie.backdropPath() == null) {
       return getRandomMovieWithBackDrop(movieList);
@@ -87,16 +89,14 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     }
   }
 
-  public void filterByGender(List<GenderEnum> genderEnumList) {
+  public List<WatchMediaValue> getAdapterListFilteredBy(GenderEnum genderEnum) {
     List<WatchMediaValue> filteredList = new ArrayList<>();
     for (WatchMediaValue media : mediaValueList) {
-      for (GenderEnum gender : genderEnumList) {
-        if (media.genre() == gender.getGenreId()) {
+        if (media.genre() == genderEnum.getGenreId()) {
           filteredList.add(media);
         }
       }
-    }
-    swapItems(filteredList);
+    return filteredList;
   }
 
   interface OnAdapterClickListener {

@@ -70,6 +70,7 @@ public class MediaListFragment extends BaseFragment
   private MediaAdapter mediaAdapter;
   private View view;
   private Subscription filterObserver;
+  private LinearLayoutManager layoutManger;
 
   public static MediaListFragment newInstance(int movieListType, int mediaType) {
     MediaListFragment moviesFragment = new MediaListFragment();
@@ -106,18 +107,29 @@ public class MediaListFragment extends BaseFragment
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onFilterApplied(FilterEvent event) {
     if (isMenuVisible()) {
-      List<GenderEnum> genderList = event.genderEnumList;
-      mediaAdapter.filterByGender(genderList);
-      mediaPresenter.filterNextByGender(genderList);
+      layoutManger.scrollToPosition(0);
+      GenderEnum genderEnum = event.genderEnum;
+      List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderEnum);
+    //work around for materialviewpager lib bugs
+      mediaAdapter.swapItems(filteredList);
+      mediaPresenter.filterNextByGender(genderEnum);
+        //movieList.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+        //  @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        //    super.onScrollStateChanged(recyclerView, newState);
+        //    if (newState == RecyclerView.SCROLL_STATE_IDLE || !movieList.canScrollVertically(-1)) {
+        //
+        //      movieList.getRecyclerView().removeOnScrollListener(this);
+        //    }
+        //  }
+        //});
+      }
     }
-  }
 
-  public boolean isFragmentUIActive() {
-    return isAdded() && !isDetached() && !isRemoving();
-  }
+
+
   private void setupRecyclerView() {
     movieList.getRecyclerView().setHasFixedSize(true);
-    LinearLayoutManager layoutManger = new LinearLayoutManager(getContext());
+    layoutManger = new LinearLayoutManager(getContext());
     movieList.setLayoutManager(layoutManger);
     movieList.addItemDecoration(new MaterialViewPagerHeaderDecorator());
     mediaAdapter = new MediaAdapter(Picasso.with(getContext()), this);
