@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import me.relex.circleindicator.CircleIndicator;
 import mehdi.sakout.fancybuttons.FancyButton;
 import rx.Observable;
-import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 import site.iurysouza.cinefilo.R;
 
 /**
@@ -22,7 +22,7 @@ import site.iurysouza.cinefilo.R;
 
 public class FilterViewManager {
 
-  BehaviorSubject<GenderEnum> filterSubject = BehaviorSubject.create();
+  PublishSubject<GenderEnum> filterSubject = PublishSubject.create();
 
   ViewPager viewPager;
   CircleIndicator indicator;

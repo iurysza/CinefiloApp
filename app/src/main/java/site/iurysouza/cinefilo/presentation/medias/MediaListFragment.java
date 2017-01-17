@@ -107,25 +107,25 @@ public class MediaListFragment extends BaseFragment
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onFilterApplied(FilterEvent event) {
     if (isMenuVisible()) {
-      layoutManger.scrollToPosition(0);
+      movieList.getRecyclerView().smoothScrollToPosition(0);
       GenderEnum genderEnum = event.genderEnum;
       List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderEnum);
-    //work around for materialviewpager lib bugs
-      mediaAdapter.swapItems(filteredList);
-      mediaPresenter.filterNextByGender(genderEnum);
-        //movieList.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
-        //  @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        //    super.onScrollStateChanged(recyclerView, newState);
-        //    if (newState == RecyclerView.SCROLL_STATE_IDLE || !movieList.canScrollVertically(-1)) {
-        //
-        //      movieList.getRecyclerView().removeOnScrollListener(this);
-        //    }
-        //  }
-        //});
-      }
+        movieList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+          @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            if (layoutManger.findFirstVisibleItemPosition() == 0 && newState == RecyclerView.SCROLL_STATE_IDLE) {
+              applyFilterToAdapter(filteredList, genderEnum);
+              movieList.setOnScrollListener(null);
+            }
+          }
+        });
     }
+  }
 
-
+  private void applyFilterToAdapter(List<WatchMediaValue> filteredList, GenderEnum genderEnum) {
+    mediaAdapter.swapItems(filteredList);
+    mediaPresenter.filterNextByGender(genderEnum);
+  }
 
   private void setupRecyclerView() {
     movieList.getRecyclerView().setHasFixedSize(true);

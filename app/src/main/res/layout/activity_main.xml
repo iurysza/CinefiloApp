@@ -49,7 +49,7 @@
       app:fabId="@+id/fabtoolbar_fab"
       app:fabToolbarId="@+id/fabtoolbar_toolbar"
       app:fadeInFraction="0.2"
-      app:hideDuration="450"
+      app:hideDuration="650"
       app:fabDrawableAnimationEnabled="false"
       app:showDuration="600"
       app:horizontalMargin="30dp"
