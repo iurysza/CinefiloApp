@@ -120,38 +120,43 @@ public class MediaListFragment extends BaseFragment
 
   private void disableFilter() {
     movieList.getRecyclerView().smoothScrollToPosition(0);
-    movieList.setOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        super.onScrollStateChanged(recyclerView, newState);
-        if (layoutManger.findFirstVisibleItemPosition() == 0
-            && newState == RecyclerView.SCROLL_STATE_IDLE) {
-          mediaAdapter.clear();
-          loadData(listType);
-          movieList.setOnMoreListener(createOnMoreListener());
-          movieList.getRecyclerView().removeOnScrollListener(this);
-        }
-      }
-    });
+    mediaAdapter.clear();
+    loadData(listType);
+    movieList.setOnMoreListener(createOnMoreListener());
+    //movieList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+    //  @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+    //    super.onScrollStateChanged(recyclerView, newState);
+    //    if (layoutManger.findFirstVisibleItemPosition() == 0
+    //        && newState == RecyclerView.SCROLL_STATE_IDLE) {
+    //      mediaAdapter.clear();
+    //      loadData(listType);
+    //      movieList.setOnMoreListener(createOnMoreListener());
+    //      movieList.getRecyclerView().removeOnScrollListener(this);
+    //    }
+    //  }
+    //});
   }
 
   private void applyFilter(FilterEvent event) {
-    movieList.getRecyclerView().smoothScrollToPosition(0);
+    //movieList.getRecyclerView().smoothScrollToPosition(0);
 
     GenderEnum genderEnum = event.genderEnum;
     List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderEnum);
-
-    movieList.setOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        super.onScrollStateChanged(recyclerView, newState);
-        if (layoutManger.findFirstVisibleItemPosition() == 0
-            && newState == RecyclerView.SCROLL_STATE_IDLE) {
-          mediaAdapter.swapItems(filteredList);
-          mediaPresenter.loadByGender(genderEnum.getGenreId());
-          movieList.setupMoreListener(null, 0);
-          movieList.getRecyclerView().removeOnScrollListener(this);
-        }
-      }
-    });
+    mediaAdapter.swapItems(filteredList);
+    mediaPresenter.loadByGender(genderEnum.getGenreId());
+    movieList.setupMoreListener(null, 0);
+    //movieList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+    //  @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+    //    super.onScrollStateChanged(recyclerView, newState);
+    //    if (layoutManger.findFirstVisibleItemPosition() == 0
+    //        && newState == RecyclerView.SCROLL_STATE_IDLE) {
+    //      mediaAdapter.swapItems(filteredList);
+    //      mediaPresenter.loadByGender(genderEnum.getGenreId());
+    //      movieList.setupMoreListener(null, 0);
+    //      movieList.getRecyclerView().removeOnScrollListener(this);
+    //    }
+    //  }
+    //});
   }
 
   private void setupRecyclerView() {
@@ -169,17 +174,11 @@ public class MediaListFragment extends BaseFragment
   @NonNull private RecyclerView.OnScrollListener createFabScrollBehavior() {
     return new RecyclerView.OnScrollListener() {
       @Override
-      public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        if (dy > 0 || dy < 0 && fabFilter.isShown()) {
-          fabFilter.hide();
-        }
-      }
-
-      @Override
       public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-
-        if (newState == RecyclerView.SCROLL_STATE_IDLE && navigationView.getTranslationY() != 0) {
+        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
           fabFilter.show();
+        } else {
+          fabFilter.hide();
         }
 
         super.onScrollStateChanged(recyclerView, newState);

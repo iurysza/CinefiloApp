@@ -1,5 +1,7 @@
 package site.iurysouza.cinefilo.presentation.main;
 
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -31,14 +33,14 @@ import site.iurysouza.cinefilo.presentation.medias.filter.FilterViewManager;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 import site.iurysouza.cinefilo.presentation.medias.pager.MediaPagerFragment;
 import site.iurysouza.cinefilo.util.CineSubscriber;
-import timber.log.Timber;
 
 import static com.ncapdevi.fragnav.FragNavController.TAB1;
 import static com.ncapdevi.fragnav.FragNavController.TAB2;
+import static site.iurysouza.cinefilo.util.ImageUtils.changeIconColor;
 
 public class MainActivity extends BaseActivity implements BottomBarListener {
 
-  public static final int BLUR_VIEW_HIDE_DELAY = 550;
+  public static final int BLUR_VIEW_HIDE_DELAY = 350;
   public static final int BLUR_VIEW_SHOW_DELAY = 450;
   @BindView(R.id.space_bottom_bar) SpaceNavigationView bottomBar;
 
@@ -75,9 +77,9 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
     navigationManager.setupFragNavController(fragments, this);
     bottomBar.setSpaceOnClickListener(navigationManager);
     sharedViewsManager = SharedViewsManager.createSharedViewsManager(this, bottomBar);
-
     FilterViewManager filterViewManager = new FilterViewManager(this);
     subscribeToFilterManager(filterViewManager);
+    filterFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
   }
 
   private void subscribeToFilterManager(FilterViewManager filterViewManager) {
@@ -100,26 +102,17 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
         });
   }
 
-  private void changeFilterButtonColor(GenderEnum genderEnum) {
-    new Handler().postDelayed(new Runnable() {
-      @Override public void run() {
-        if (genderEnum != null) {
-          Timber.e("Got Genders from filter: %s", genderEnum);
-          //ColorStateList colorStateList =
-          //    getResources().getColorStateList(R.color.filter_fab_on);
-          //filterFab.setBackgroundTintList(
-          //    colorStateList);
-          //ViewCompat.setBackgroundTintList(filterFab,
-          //    colorStateList);
-          filterFab.setBackgroundTintList(
-              ContextCompat.getColorStateList(getBaseContext(), R.color.filter_fab_on));
-          filterFab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), genderEnum.getGenreIconRes()));
-        } else {
-          filterFab.setBackgroundTintList(
-              getResources().getColorStateList(R.color.filter_fab_off));
-          filterFab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.ic_filter_off));
-        }
+  private void changeFilterButtonColor(GenderEnum genres) {
+    new Handler().postDelayed(() -> {
+      if (genres == null) {
+        filterFab.setBackgroundTintList(
+            ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+        filterFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_filter_on));
+        return;
       }
+      Drawable showIcon = changeIconColor(this, genres.getGenreIconRes(), R.color.appWhite);
+      filterFab.setImageDrawable(showIcon);
+      filterFab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
     }, BLUR_VIEW_HIDE_DELAY);
   }
 

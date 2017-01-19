@@ -66,4 +66,5 @@ public class Movie {
   private List<ProductionCountry> productionCountryList;
   @SerializedName("spoken_languages")
   private List<SpokenLanguage> spokenLanguageList;
+
 }

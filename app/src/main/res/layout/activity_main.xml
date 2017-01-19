@@ -9,15 +9,23 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="site.iurysouza.cinefilo.presentation.main.MainActivity"
->
+    >
 
+  <include
+      layout="@layout/expandable_toolbar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      >
+
+  </include>
 
   <FrameLayout
       android:id="@+id/main_fragment_container"
       android:layout_width="match_parent"
+
       android:layout_height="match_parent"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
-  />
+      />
 
 
   <com.luseen.spacenavigation.SpaceNavigationView
@@ -29,7 +37,8 @@
       app:centre_button_color="@color/colorPrimary"
       app:centre_button_icon="@drawable/ic_drawer_search_24dp"
       app:inactive_item_color="@color/white_with_alpha"
-      app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior"/>
+      app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior"
+      />
 
 
   <com.github.mmin18.widget.RealtimeBlurView
@@ -38,38 +47,42 @@
       android:layout_height="match_parent"
       android:visibility="gone"
       app:realtimeBlurRadius="20dp"
-      app:realtimeOverlayColor="#8000"/>
+      app:realtimeOverlayColor="#8000"
+      />
+
+
 
 
   <com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
       android:id="@+id/fabtoolbar"
       android:layout_width="match_parent"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
       android:layout_height="match_parent"
       app:containerId="@+id/fabtoolbar_container"
+      app:fabDrawableAnimationEnabled="false"
       app:fabId="@+id/fabtoolbar_fab"
       app:fabToolbarId="@+id/fabtoolbar_toolbar"
       app:fadeInFraction="0.2"
-      app:hideDuration="650"
-      app:fabDrawableAnimationEnabled="false"
-      app:showDuration="600"
+      app:hideDuration="300"
       app:horizontalMargin="30dp"
-      app:verticalMargin="30dp">
+      app:showDuration="600"
+      app:verticalMargin="60dp"
+      >
 
     <RelativeLayout
         android:id="@+id/fabtoolbar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true">
+        >
 
       <android.support.design.widget.FloatingActionButton
           android:id="@id/fabtoolbar_fab"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:backgroundTint="@color/colorPrimary"
           android:src="@drawable/ic_filter_on"
           app:borderWidth="0dp"
-          app:fabSize="normal"/>
+          app:fabSize="normal"
+          />
 
     </RelativeLayout>
 
@@ -80,10 +93,14 @@
         android:layout_alignParentBottom="true"
         android:background="@color/appLightBlack"
         android:gravity="bottom"
-        android:orientation="horizontal">
-      <FrameLayout android:id="@+id/filter_view_header"
+        android:orientation="horizontal"
+        >
+
+      <FrameLayout
+          android:id="@+id/filter_view_header"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content">
+          android:layout_height="wrap_content"
+          >
 
         <TextView
             android:id="@+id/filter_view_title"
@@ -93,7 +110,9 @@
             android:layout_margin="4dp"
             android:text="Filter"
             android:textColor="@color/appWhite"
-            android:textSize="@dimen/title_text_size"/>
+            android:textSize="@dimen/title_text_size"
+            />
+
         <mehdi.sakout.fancybuttons.FancyButton
             android:id="@+id/filter_btn_close"
             android:layout_width="48dp"
@@ -107,24 +126,26 @@
             fancy:fb_iconPaddingRight="0dp"
             fancy:fb_iconResource="@drawable/ic_close_grey_500_24dp"
             fancy:fb_radius="64dp"
-            fancy:fb_textColor="#FFFFFF"/>
+            fancy:fb_textColor="#FFFFFF"
+            />
 
       </FrameLayout>
 
       <me.relex.circleindicator.CircleIndicator
           android:id="@+id/media_list_page_indicator"
           android:layout_width="match_parent"
-          android:layout_marginTop="20dp"
           android:layout_height="48dp"
-      />
+          android:layout_marginTop="20dp"
+          />
+
       <android.support.v4.view.ViewPager
           android:id="@+id/media_list_filter_viewpager"
           android:layout_width="match_parent"
-          android:layout_height="360dp"
+          android:layout_height="@dimen/filter_viewpager_size"
+          android:layout_below="@id/filter_view_header"
           android:layout_centerHorizontal="true"
           android:layout_marginTop="22dp"
-          android:layout_below="@id/filter_view_header"
-      >
+          >
       </android.support.v4.view.ViewPager>
 
       <mehdi.sakout.fancybuttons.FancyButton
@@ -140,7 +161,8 @@
           fancy:fb_defaultColor="@color/colorPrimaryDark"
           fancy:fb_focusColor="@color/colorPrimary"
           fancy:fb_text="Apply Filters"
-          fancy:fb_textColor="#FFFFFF"/>
+          fancy:fb_textColor="#FFFFFF"
+          />
     </RelativeLayout>
 
   </com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout>

@@ -1,7 +1,9 @@
 package site.iurysouza.cinefilo.presentation.medias.filter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.support.annotation.LayoutRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -22,13 +24,12 @@ import site.iurysouza.cinefilo.R;
 
 public class FilterViewManager {
 
-  private PublishSubject<GenderEnum> filterSubject = PublishSubject.create();
-
+  private final FloatingActionButton fab;
   ViewPager viewPager;
   CircleIndicator indicator;
+  private PublishSubject<GenderEnum> filterSubject = PublishSubject.create();
   private FancyButton btnApply;
   private FancyButton btnClose;
-
 
   public FilterViewManager(FragmentActivity activity) {
 
@@ -36,11 +37,15 @@ public class FilterViewManager {
     indicator = (CircleIndicator) activity.findViewById(R.id.media_list_page_indicator);
     btnApply = (FancyButton) activity.findViewById(R.id.filter_btn_apply);
     btnClose = (FancyButton) activity.findViewById(R.id.filter_btn_close);
+    fab = (FloatingActionButton) activity.findViewById(R.id.fabtoolbar_fab);
 
     FilterPagerAdapter filterAdater = new FilterPagerAdapter(activity.getApplicationContext());
     viewPager.setAdapter(filterAdater);
     indicator.setViewPager(viewPager);
-    btnClose.setOnClickListener(v -> filterSubject.onNext(null));
+    btnClose.setOnClickListener(v -> {
+
+      filterSubject.onNext(null);
+    });
   }
 
   public Observable<GenderEnum> getFilterSubjectAsObservable() {
@@ -90,7 +95,22 @@ public class FilterViewManager {
           });
 
       gridList.setAdapter(adapter);
-      btnApply.setOnClickListener(v -> filterSubject.onNext(adapter.getSelectedGenres()));
+      btnApply.setOnClickListener(v -> {
+        GenderEnum genres = adapter.getSelectedGenres();
+        changeFabIconAndColor(genres);
+        filterSubject.onNext(genres);
+      });
+    }
+
+    private void changeFabIconAndColor(GenderEnum genres) {
+      if (genres == null) {
+        fab.setBackgroundTintList(
+            ColorStateList.valueOf(context.getResources().getColor(R.color.colorPrimary)));
+        fab.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_filter_on));
+        return;
+      }
+      fab.setImageDrawable(context.getResources().getDrawable(genres.getGenreIconRes()));
+      fab.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorAccent)));
     }
 
     private ViewGroup getView(ViewGroup collection, @LayoutRes int layoutResId) {

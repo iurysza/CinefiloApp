@@ -29,9 +29,9 @@ public class ImageUtils {
     return drawable;
   }
 
-  public static Drawable changeIconColor(Context context, int iconRes, int colorRes) {
+  public static Drawable changeIconColor(Context context, @DrawableRes int iconRes, @ColorRes int colorRes) {
     @ColorRes int color =
-        ResourcesCompat.getColor(context.getResources(), colorRes,null);
+        ResourcesCompat.getColor(context.getResources(), colorRes, null);
     return changeDrawableColor(context, iconRes, color);
   }
 

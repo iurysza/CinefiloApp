@@ -103,7 +103,6 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
       if (selectedGenre != null) {
         previousPosition = genderEnumList.indexOf(selectedGenre);
       }
-      //currentItemGender = genderEnumList.get(adapterPosition);
       if (selectedGenre != null && selectedGenre.equals(currentItemGender)) {
         Drawable unselectedIcon = changeIconColor(context, iconRes, defaultColor);
         genreItemImageView.setImageDrawable(unselectedIcon);
