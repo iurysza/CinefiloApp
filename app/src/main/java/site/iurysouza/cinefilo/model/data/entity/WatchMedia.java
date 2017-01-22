@@ -52,6 +52,24 @@ public class WatchMedia {
         .build();
   }
 
+  public static List<WatchMedia> valueOfMovieList(List<Movie> movieList) {
+    List<WatchMedia> mediaList = new ArrayList<>();
+
+    if (movieList.isEmpty()) {
+      return mediaList;
+    } else {
+      for (Movie movie : movieList) {
+        if (movie.getOriginalTitle() != null ||
+            movie.getPosterPath() != null ||
+            movie.getOverview() != null) {
+
+          mediaList.add(valueOf(movie));
+        }
+      }
+    }
+    return mediaList;
+  }
+
   private static Integer getGenreIdValue(Movie movie) {
     Integer[] genreIdList = movie.getGenreIds();
     Integer genreId = 0;
@@ -74,8 +92,6 @@ public class WatchMedia {
         .genre(genreValue)
         .build();
   }
-
-
 
   private static Integer getGenreIdValue(RealmMovie movie) {
     RealmList<RealmInteger> genreIds = movie.getGenreIds();

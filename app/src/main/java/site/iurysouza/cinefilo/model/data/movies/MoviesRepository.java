@@ -150,6 +150,25 @@ public class MoviesRepository implements WatchMediaRepository {
         });
   }
 
+  @Override
+  public void getFilteredBy(int page, MediaFilter mediaFilter) {
+    cloudDataStore
+        .getFilteredMovies(page, mediaFilter)
+        .map(MovieResults::getMovieList)
+        .map(WatchMedia::valueOfMovieList)
+        .onErrorResumeNext(e -> {
+          Timber.e("Failed to get filtered movies from api :", e.getMessage());
+          return Observable.just(Collections.emptyList());
+        })
+        .doOnNext(watchMedias -> Timber.i("Loaded filtered movies from api: %s",
+            watchMedias.size()))
+        .subscribe(new CineSubscriber<List<WatchMedia>>() {
+          @Override public void onNext(List<WatchMedia> watchMedias) {
+            super.onNext(watchMedias);
+            filteredSubject.onNext(watchMedias);
+          }
+        });
+  }
   @NonNull
   private Observable<List<WatchMedia>> getTopRatedFromApi(int page, int pageId) {
     return cloudDataStore
@@ -267,12 +286,4 @@ public class MoviesRepository implements WatchMediaRepository {
     return filteredSubject.asObservable();
   }
 
-  @Override public Observable<List<WatchMedia>> getFilteredBy(int page, MediaFilter mediaFilter) {
-    return cloudDataStore
-        .getFilteredMovies(page, mediaFilter)
-        .map(MovieResults::getMovieList)
-        .flatMap(Observable::from)
-        .map(WatchMedia::valueOf)
-        .toList();
-  }
 }

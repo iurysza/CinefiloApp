@@ -1,6 +1,5 @@
 package site.iurysouza.cinefilo.model.services;
 
-import java.util.Date;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -44,8 +43,8 @@ public interface MovieService {
   Observable<MovieResults> getFilteredMovies(
       @Query("api_key") String apiKey,
       @Query("page")int page,
-      @Query("primary_release_date.lte") Date startDate,
-      @Query("primary_release_date.lte") Date endDate,
+      @Query("primary_release_date.gte") int startDate,
+      @Query("primary_release_date.lte") int endDate,
       @Query("with_genres")String genres,
-      int minScore);
+      @Query("vote_average.lte") int minScore);
 }

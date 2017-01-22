@@ -20,5 +20,5 @@ public interface WatchMediaRepository {
 
   Observable<List<WatchMedia>> getFilteredMoviesSubject();
 
-  Observable<List<WatchMedia>> getFilteredBy(int page, MediaFilter mediaFilter);
+  void getFilteredBy(int page, MediaFilter mediaFilter);
 }

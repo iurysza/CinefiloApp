@@ -70,8 +70,8 @@ public class CloudMovieDataSource {
     return movieService.getFilteredMovies(
         Constants.MOVIE_DB_API.API_KEY,
         page,
-        startDate,
-        endDate,
+        startDate.getYear(),
+        2017,
         genreList,
         minScore);
   }
