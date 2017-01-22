@@ -28,12 +28,14 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
   private List<GenderEnum> genderEnumList = Arrays.asList(GenderEnum.values());
   private GenderEnum selectedGenre;
   private Context context;
-  private OnAdapterClickListener listener;
+  private FilterViewManager.OnAdapterClickListener listener;
 
-  GenreGridAdapter(Context context, OnAdapterClickListener listener) {
+  GenreGridAdapter(Context context, FilterViewManager.OnAdapterClickListener listener) {
     this.context = context;
     this.listener = listener;
   }
+
+
 
   @Override
   public GenreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -59,11 +61,7 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
     return selectedGenre;
   }
 
-  interface OnAdapterClickListener {
-    void onItemSelected();
 
-    void onNoneSelected();
-  }
 
   class GenreViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.genre_item_btn) ImageView genreItemImageView;
@@ -113,9 +111,9 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
         selectedGenre = currentItemGender;
       }
       if (selectedGenre == null) {
-        listener.onNoneSelected();
+        listener.onItemSelected(GenderEnum.NONE_SELECTED);
       } else {
-        listener.onItemSelected();
+        listener.onItemSelected(selectedGenre);
       }
       //rebinds previous selected item
       if (previousPosition != -1) {
