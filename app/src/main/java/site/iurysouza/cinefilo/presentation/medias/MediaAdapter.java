@@ -1,5 +1,6 @@
 package site.iurysouza.cinefilo.presentation.medias;
 
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -67,13 +68,13 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     notifyItemRangeInserted(positionStart, mediaList.size());
   }
 
-  public void swapItems(List<WatchMediaValue> mediaValues) {
-    //final MediaDiffCallBack diffCallback = new MediaDiffCallBack(mediaValueList, mediaValues);
-    //final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+  public void replaceList(List<WatchMediaValue> mediaValues) {
+    final MediaDiffCallBack diffCallback = new MediaDiffCallBack(mediaValueList, mediaValues);
+    final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
     this.mediaValueList.clear();
     this.mediaValueList.addAll(mediaValues);
-    notifyDataSetChanged();
-    //diffResult.dispatchUpdatesTo(this);
+    //notifyDataSetChanged();
+    diffResult.dispatchUpdatesTo(this);
   }
 
 
@@ -93,14 +94,16 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     }
   }
 
-  public List<WatchMediaValue> getAdapterListFilteredBy(GenderEnum genderEnum) {
+  public List<WatchMediaValue> getAdapterListFilteredBy(List<GenderEnum> genderEnumList) {
     List<WatchMediaValue> filteredList = new ArrayList<>();
     for (WatchMediaValue media : mediaValueList) {
-        if (media.genre() == genderEnum.getGenreId()) {
+      for (GenderEnum gender : genderEnumList) {
+        if (media.genre() == gender.getGenreId()) {
           filteredList.add(media);
         }
       }
-    return filteredList;
+    }
+      return filteredList;
   }
 
   interface OnAdapterClickListener {

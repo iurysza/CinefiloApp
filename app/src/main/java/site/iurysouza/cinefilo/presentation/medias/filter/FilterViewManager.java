@@ -15,6 +15,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.github.mmin18.widget.RealtimeBlurView;
+import java.util.ArrayList;
+import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 import mehdi.sakout.fancybuttons.FancyButton;
 import org.greenrobot.eventbus.EventBus;
@@ -22,16 +24,18 @@ import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.presentation.main.FilterEvent;
 
 import static site.iurysouza.cinefilo.R.id.fabtoolbar;
-import static site.iurysouza.cinefilo.presentation.main.MainActivity.BLUR_VIEW_HIDE_DELAY;
-import static site.iurysouza.cinefilo.presentation.main.MainActivity.BLUR_VIEW_SHOW_DELAY;
 
 /**
  * Created by Iury Souza on 14/01/2017.
  */
 
 public class FilterViewManager {
+  private static final int BLUR_VIEW_HIDE_DELAY = 450;
+  private static final int BLUR_VIEW_SHOW_DELAY = 550;
+
   private final Resources resources;
-  private GenderEnum selectedGender = GenderEnum.NONE_SELECTED;
+  private List<GenderEnum> selectedGenreList = new ArrayList<>();
+
   @BindView(R.id.media_list_filter_viewpager) ViewPager viewPager;
   @BindView(R.id.media_list_page_indicator) CircleIndicator indicator;
   @BindView(R.id.fabtoolbar_fab) FloatingActionButton filterFab;
@@ -51,9 +55,9 @@ public class FilterViewManager {
   }
 
   @NonNull private OnAdapterClickListener createGenreSelectListener() {
-    return gender -> {
-      selectedGender = gender;
-      changeApplyColor(selectedGender);
+    return genderList -> {
+      selectedGenreList = genderList;
+      changeApplyColor(genderList);
     };
   }
 
@@ -73,9 +77,9 @@ public class FilterViewManager {
     blurredView.postDelayed(() -> blurredView.setVisibility(View.VISIBLE), BLUR_VIEW_SHOW_DELAY);
   }
 
-  private void changeFabColor(GenderEnum gender) {
+  private void changeFabColor(List<GenderEnum> genderList) {
     new Handler().postDelayed(() -> {
-      if (gender.equals(GenderEnum.NONE_SELECTED)) {
+      if (genderList.isEmpty()) {
         filterFab.setBackgroundTintList(
             ColorStateList.valueOf(resources.getColor(R.color.colorPrimary)));
         return;
@@ -86,8 +90,8 @@ public class FilterViewManager {
   }
 
 
-  private void changeApplyColor(GenderEnum gender) {
-    if (gender.equals(GenderEnum.NONE_SELECTED)) {
+  private void changeApplyColor(List<GenderEnum> genderList) {
+    if (genderList.isEmpty()) {
       btnApply.setBackgroundColor(resources.getColor(R.color.colorPrimary));
       return;
     }
@@ -107,8 +111,8 @@ public class FilterViewManager {
         break;
       case R.id.filter_btn_apply:
         hideFilterView();
-        changeFabColor(selectedGender);
-        EventBus.getDefault().post(new FilterEvent(selectedGender));
+        changeFabColor(selectedGenreList);
+        EventBus.getDefault().post(new FilterEvent(selectedGenreList));
         break;
       case R.id.fabtoolbar_fab:
         showFilterView();
@@ -117,6 +121,6 @@ public class FilterViewManager {
   }
 
   public interface OnAdapterClickListener {
-    void onItemSelected(GenderEnum gender);
+    void onItemSelected(List<GenderEnum> genderList);
   }
 }

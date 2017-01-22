@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import site.iurysouza.cinefilo.R;
@@ -26,6 +27,7 @@ import static site.iurysouza.cinefilo.util.ImageUtils.changeIconColor;
 class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHolder> {
 
   private List<GenderEnum> genderEnumList = Arrays.asList(GenderEnum.values());
+  private List<GenderEnum> selectedGenreList = new ArrayList<>();
   private GenderEnum selectedGenre;
   private Context context;
   private FilterViewManager.OnAdapterClickListener listener;
@@ -35,8 +37,6 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
     this.listener = listener;
   }
 
-
-
   @Override
   public GenreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater
@@ -44,7 +44,7 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
         .inflate(R.layout.genre_grid_item, parent, false);
 
     GenreViewHolder vh = new GenreViewHolder(view);
-    vh.genreItemRoot.setOnClickListener(v -> vh.onItemClicked());
+    vh.genreItemRoot.setOnClickListener(v -> vh.onItemSelected());
     return vh;
   }
 
@@ -56,12 +56,6 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
   public int getItemCount() {
     return genderEnumList.size();
   }
-
-  GenderEnum getSelectedGenres() {
-    return selectedGenre;
-  }
-
-
 
   class GenreViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.genre_item_btn) ImageView genreItemImageView;
@@ -87,7 +81,7 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
     }
 
     private void initItemState(GenderEnum currentGender, int iconRes) {
-      if (selectedGenre != null && selectedGenre.equals(currentGender)) {
+      if (selectedGenreList.contains(currentGender)) {
         Drawable unSelectedIcon = changeIconColor(context, iconRes, selectedColor);
         genreItemImageView.setImageDrawable(unSelectedIcon);
       } else {
@@ -96,29 +90,39 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
       }
     }
 
-    void onItemClicked() {
-      int previousPosition = -1;
-      if (selectedGenre != null) {
-        previousPosition = genderEnumList.indexOf(selectedGenre);
-      }
-      if (selectedGenre != null && selectedGenre.equals(currentItemGender)) {
-        Drawable unselectedIcon = changeIconColor(context, iconRes, defaultColor);
-        genreItemImageView.setImageDrawable(unselectedIcon);
-        selectedGenre = null;
+    void onItemSelected() {
+      if (selectedGenreList.contains(currentItemGender)) {
+        selectedGenreList.remove(currentItemGender);
       } else {
-        Drawable selectedIcon = changeIconColor(context, iconRes, selectedColor);
-        genreItemImageView.setImageDrawable(selectedIcon);
-        selectedGenre = currentItemGender;
+        selectedGenreList.add(currentItemGender);
       }
-      if (selectedGenre == null) {
-        listener.onItemSelected(GenderEnum.NONE_SELECTED);
-      } else {
-        listener.onItemSelected(selectedGenre);
-      }
-      //rebinds previous selected item
-      if (previousPosition != -1) {
-        notifyItemChanged(previousPosition);
-      }
+        listener.onItemSelected(selectedGenreList);
+      notifyItemChanged(getAdapterPosition());
     }
+
+    //void onItemClicked() {
+    //  int previousPosition = -1;
+    //  if (selectedGenre != null) {
+    //    previousPosition = genderEnumList.indexOf(selectedGenre);
+    //  }
+    //  if (selectedGenre != null && selectedGenre.equals(currentItemGender)) {
+    //    Drawable unselectedIcon = changeIconColor(context, iconRes, defaultColor);
+    //    genreItemImageView.setImageDrawable(unselectedIcon);
+    //    selectedGenre = null;
+    //  } else {
+    //    Drawable selectedIcon = changeIconColor(context, iconRes, selectedColor);
+    //    genreItemImageView.setImageDrawable(selectedIcon);
+    //    selectedGenre = currentItemGender;
+    //  }
+    //  if (selectedGenre == null) {
+    //    listener.onItemSelected(GenderEnum.NONE_SELECTED);
+    //  } else {
+    //    listener.onItemSelected(selectedGenre);
+    //  }
+    //  //rebinds previous selected item
+    //  if (previousPosition != -1) {
+    //    notifyItemChanged(previousPosition);
+    //  }
+    //}
   }
 }

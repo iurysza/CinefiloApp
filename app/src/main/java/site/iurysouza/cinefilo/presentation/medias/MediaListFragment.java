@@ -1,7 +1,6 @@
 package site.iurysouza.cinefilo.presentation.medias;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -22,7 +21,6 @@ import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
 import java.util.List;
 import javax.inject.Inject;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import rx.Subscription;
@@ -51,12 +49,14 @@ public class MediaListFragment extends BaseFragment
     implements MediaView,
     MediaAdapter.OnAdapterClickListener {
 
+  private static final String LIST_TYPE = "LIST_TYPE";
   public static final int INVALID_PAGE = -1;
   private static final int PAGE_SIZE = 20;
   private static final int MIN_ITEMS_THRESHOLD = 5;
-  private static final String LIST_TYPE = "LIST_TYPE";
   private static int currentPage = 1;
+
   private final MediaPresenter mediaPresenter = new MediaPresenter();
+
   @Inject MoviesUseCase moviesUseCase;
   @Inject SeriesUseCase seriesUseCase;
 
@@ -67,7 +67,6 @@ public class MediaListFragment extends BaseFragment
   SpaceNavigationView navigationView;
   private int listType;
   private MediaAdapter mediaAdapter;
-  private View view;
   private Subscription filterObserver;
   private LinearLayoutManager layoutManger;
 
@@ -105,16 +104,13 @@ public class MediaListFragment extends BaseFragment
 
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onFilterApplied(FilterEvent event) {
+    List<GenderEnum> genderList = event.genderEnum;
     if (isMenuVisible()) {
-      if (event == null) {
+      if (genderList.isEmpty()) {
         disableFilter();
       } else {
-      applyFilter(event);
+        applyFilter(event);
       }
-    //  GenderEnum genderEnum = event.genderEnum;
-    //  List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderEnum);
-    //  mediaAdapter.swapItems(filteredList);
-    //  mediaPresenter.loadByGender(genderEnum.getGenreId());
     }
   }
 
@@ -123,40 +119,14 @@ public class MediaListFragment extends BaseFragment
     mediaAdapter.clear();
     loadData(listType);
     movieList.setOnMoreListener(createOnMoreListener());
-    //movieList.setOnScrollListener(new RecyclerView.OnScrollListener() {
-    //  @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-    //    super.onScrollStateChanged(recyclerView, newState);
-    //    if (layoutManger.findFirstVisibleItemPosition() == 0
-    //        && newState == RecyclerView.SCROLL_STATE_IDLE) {
-    //      mediaAdapter.clear();
-    //      loadData(listType);
-    //      movieList.setOnMoreListener(createOnMoreListener());
-    //      movieList.getRecyclerView().removeOnScrollListener(this);
-    //    }
-    //  }
-    //});
   }
 
   private void applyFilter(FilterEvent event) {
-    //movieList.getRecyclerView().smoothScrollToPosition(0);
-
-    GenderEnum genderEnum = event.genderEnum;
-    List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderEnum);
-    mediaAdapter.swapItems(filteredList);
-    mediaPresenter.loadByGender(genderEnum.getGenreId());
+    List<GenderEnum> genderList = event.genderEnum;
+    List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderList);
+    mediaAdapter.replaceList(filteredList);
+    //mediaPresenter.loadByGender(genderList);
     movieList.setupMoreListener(null, 0);
-    //movieList.setOnScrollListener(new RecyclerView.OnScrollListener() {
-    //  @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-    //    super.onScrollStateChanged(recyclerView, newState);
-    //    if (layoutManger.findFirstVisibleItemPosition() == 0
-    //        && newState == RecyclerView.SCROLL_STATE_IDLE) {
-    //      mediaAdapter.swapItems(filteredList);
-    //      mediaPresenter.loadByGender(genderEnum.getGenreId());
-    //      movieList.setupMoreListener(null, 0);
-    //      movieList.getRecyclerView().removeOnScrollListener(this);
-    //    }
-    //  }
-    //});
   }
 
   private void setupRecyclerView() {
@@ -167,7 +137,6 @@ public class MediaListFragment extends BaseFragment
     mediaAdapter = new MediaAdapter(Picasso.with(getContext()), this);
     movieList.setAdapter(mediaAdapter);
     movieList.setupMoreListener(createOnMoreListener(), MIN_ITEMS_THRESHOLD);
-    movieList.setRefreshListener(this::refreshFeaturedMedia);
     movieList.getRecyclerView().addOnScrollListener(createFabScrollBehavior());
   }
 
@@ -188,7 +157,6 @@ public class MediaListFragment extends BaseFragment
 
   @NonNull private OnMoreListener createOnMoreListener() {
     return (overallItemsCount, itemsBeforeMore, maxLastVisiblePosition) -> {
-      movieList.showMoreProgress();
       currentPage++;
       if (overallItemsCount > currentPage * PAGE_SIZE) {
         currentPage = INVALID_PAGE;
@@ -207,13 +175,10 @@ public class MediaListFragment extends BaseFragment
     };
   }
 
-  private void refreshFeaturedMedia() {
-    new Handler().postDelayed(() -> {
-      WatchMediaValue featuredMovie = mediaAdapter.getFeauturedMovie();
-      EventBus.getDefault().post(new BackDropChangedEvent(featuredMovie));
-      movieList.setRefreshing(false);
-    }, 50);
+  @Override public void showMoreProgress() {
+    movieList.showMoreProgress();
   }
+
 
   private void loadData(int lisType) {
     switch (lisType) {
@@ -242,6 +207,7 @@ public class MediaListFragment extends BaseFragment
 
   @Override public void hideLoadingIndicator() {
     movieList.setVisibility(View.VISIBLE);
+    movieList.hideMoreProgress();
     loadingPlaceHolder.hide();
     Timber.e("Finished Loading");
   }
@@ -254,8 +220,6 @@ public class MediaListFragment extends BaseFragment
 
   @Override public void sendToListView(List<WatchMediaValue> watchMediaValuesList) {
     mediaAdapter.addAllMedia(watchMediaValuesList);
-    refreshFeaturedMedia();
-    movieList.hideMoreProgress();
   }
 
   @Override protected void setupFragmentComponent() {
@@ -270,7 +234,7 @@ public class MediaListFragment extends BaseFragment
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onItemReselected(ItemReselectedEvent event) {
     if (event.itemIndex == TAB1) {
-      movieList.scrollTo(0, 0);
+      layoutManger.scrollToPosition(0);
     }
   }
 }

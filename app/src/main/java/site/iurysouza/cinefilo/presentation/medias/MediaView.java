@@ -15,4 +15,6 @@ public interface MediaView extends BaseView {
   void showErrorIndicator();
 
   void sendToListView(List<WatchMediaValue> watchMediaValuesList);
+
+  void showMoreProgress();
 }

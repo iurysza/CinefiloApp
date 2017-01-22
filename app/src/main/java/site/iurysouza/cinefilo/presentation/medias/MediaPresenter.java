@@ -105,6 +105,7 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   }
 
   void loadNextNowPlaying(int page) {
+    getBaseView().showMoreProgress();
     resetSubscription(nowPlayingSubscription);
     nowPlayingSubscription = useCase
         .getNextNowPlaying(page)

@@ -5,16 +5,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import rx.Subscription;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.di.modules.RepositoryModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
@@ -27,18 +24,13 @@ import static com.ncapdevi.fragnav.FragNavController.TAB2;
 
 public class MainActivity extends BaseActivity implements BottomBarListener {
 
-  public static final int BLUR_VIEW_HIDE_DELAY = 350;
-  public static final int BLUR_VIEW_SHOW_DELAY = 450;
+
   @BindView(R.id.space_bottom_bar) SpaceNavigationView bottomBar;
 
   @Inject
   NavigationManager navigationManager;
 
-  @BindView(R.id.fabtoolbar_toolbar) RelativeLayout fabtoolbarToolbar;
-  @BindView(R.id.fabtoolbar) FABToolbarLayout fabtoolbar;
-
   private SharedViewsManager sharedViewsManager;
-  private Subscription filterObserver;
   private FilterViewManager filterViewManager;
 
   @Override
