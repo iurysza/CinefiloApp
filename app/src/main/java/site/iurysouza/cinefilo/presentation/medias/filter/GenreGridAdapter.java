@@ -96,7 +96,7 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
       } else {
         selectedGenreList.add(currentItemGender);
       }
-        listener.onItemSelected(selectedGenreList);
+        listener.onGenreSelected(selectedGenreList);
       notifyItemChanged(getAdapterPosition());
     }
 
@@ -115,9 +115,9 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
     //    selectedGenre = currentItemGender;
     //  }
     //  if (selectedGenre == null) {
-    //    listener.onItemSelected(GenderEnum.NONE_SELECTED);
+    //    listener.onGenreSelected(GenderEnum.NONE_SELECTED);
     //  } else {
-    //    listener.onItemSelected(selectedGenre);
+    //    listener.onGenreSelected(selectedGenre);
     //  }
     //  //rebinds previous selected item
     //  if (previousPosition != -1) {

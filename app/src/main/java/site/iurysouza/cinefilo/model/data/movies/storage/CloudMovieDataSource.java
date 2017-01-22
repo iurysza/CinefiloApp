@@ -1,9 +1,14 @@
 package site.iurysouza.cinefilo.model.data.movies.storage;
 
+import java.util.Date;
+import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
+import site.iurysouza.cinefilo.domain.MediaFilter;
+import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMoviesResults;
 import site.iurysouza.cinefilo.model.services.MovieService;
+import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 import site.iurysouza.cinefilo.util.Constants;
 import timber.log.Timber;
 
@@ -53,6 +58,32 @@ public class CloudMovieDataSource {
     return movieService.getMoviesByGenre(genreId, Constants.MOVIE_DB_API.API_KEY)
         .map(movieResults -> RealmMoviesResults.valueOf(movieResults, GENRE_QUERY))
         .doOnNext(this::printLoadedMovies);
+  }
+
+  public Observable<MovieResults> getFilteredMovies(int page, MediaFilter mediaFilter) {
+    Date endDate = mediaFilter.getEndDate();
+    Date startDate = mediaFilter.getStartDate();
+    List<GenderEnum> genderList = mediaFilter.getGenderList();
+    String genreList = getGenreListAsString(genderList);
+    int minScore = mediaFilter.getMinScore();
+
+    return movieService.getFilteredMovies(
+        Constants.MOVIE_DB_API.API_KEY,
+        page,
+        startDate,
+        endDate,
+        genreList,
+        minScore);
+  }
+
+  private String getGenreListAsString(List<GenderEnum> genderList) {
+    StringBuilder stringBuilder = new StringBuilder();
+    for (GenderEnum gender : genderList) {
+      stringBuilder
+          .append(",")
+          .append(String.valueOf(gender.getGenreId()));
+    }
+    return stringBuilder.toString();
   }
 
 

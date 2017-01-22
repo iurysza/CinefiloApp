@@ -5,6 +5,7 @@ import java.util.List;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.MoviesUseCase;
 import site.iurysouza.cinefilo.domain.SeriesUseCase;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
@@ -162,10 +163,10 @@ public class MediaPresenter extends BasePresenter<MediaView> {
         });
   }
 
-  void loadByGender(int gender) {
+  void loadFiltered(int page, MediaFilter filter) {
     resetSubscription(genderSubscription);
     genderSubscription = useCase
-        .getMediaByGender(gender)
+        .getFilteredMedia(page, filter)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {

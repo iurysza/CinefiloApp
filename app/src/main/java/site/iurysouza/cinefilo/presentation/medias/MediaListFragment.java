@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import rx.Subscription;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.MoviesUseCase;
 import site.iurysouza.cinefilo.domain.SeriesUseCase;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
@@ -49,8 +50,8 @@ public class MediaListFragment extends BaseFragment
     implements MediaView,
     MediaAdapter.OnAdapterClickListener {
 
-  private static final String LIST_TYPE = "LIST_TYPE";
   public static final int INVALID_PAGE = -1;
+  private static final String LIST_TYPE = "LIST_TYPE";
   private static final int PAGE_SIZE = 20;
   private static final int MIN_ITEMS_THRESHOLD = 5;
   private static int currentPage = 1;
@@ -69,6 +70,7 @@ public class MediaListFragment extends BaseFragment
   private MediaAdapter mediaAdapter;
   private Subscription filterObserver;
   private LinearLayoutManager layoutManger;
+  private MediaFilter filter = null;
 
   public static MediaListFragment newInstance(int movieListType, int mediaType) {
     MediaListFragment moviesFragment = new MediaListFragment();
@@ -104,9 +106,9 @@ public class MediaListFragment extends BaseFragment
 
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onFilterApplied(FilterEvent event) {
-    List<GenderEnum> genderList = event.genderEnum;
+    MediaFilter filter = event.filter;
     if (isMenuVisible()) {
-      if (genderList.isEmpty()) {
+      if (filter == null) {
         disableFilter();
       } else {
         applyFilter(event);
@@ -122,11 +124,11 @@ public class MediaListFragment extends BaseFragment
   }
 
   private void applyFilter(FilterEvent event) {
-    List<GenderEnum> genderList = event.genderEnum;
+    MediaFilter filter = event.filter;
+    List<GenderEnum> genderList = filter.getGenderList();
     List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderList);
     mediaAdapter.replaceList(filteredList);
-    //mediaPresenter.loadByGender(genderList);
-    movieList.setupMoreListener(null, 0);
+    this.filter = filter;
   }
 
   private void setupRecyclerView() {
@@ -161,16 +163,20 @@ public class MediaListFragment extends BaseFragment
       if (overallItemsCount > currentPage * PAGE_SIZE) {
         currentPage = INVALID_PAGE;
       }
-      switch (listType) {
-        case REC_MEDIA:
-          mediaPresenter.loadNextNowPlaying(currentPage);
-          break;
-        case POP_MEDIA:
-          mediaPresenter.loadNextMostPopularPlaying(currentPage);
-          break;
-        case TOP_MEDIA:
-          mediaPresenter.loadNextTopRated(currentPage);
-          break;
+      if (filter != null) {
+        mediaPresenter.loadFiltered(currentPage, filter);
+      } else {
+        switch (listType) {
+          case REC_MEDIA:
+            mediaPresenter.loadNextNowPlaying(currentPage);
+            break;
+          case POP_MEDIA:
+            mediaPresenter.loadNextMostPopularPlaying(currentPage);
+            break;
+          case TOP_MEDIA:
+            mediaPresenter.loadNextTopRated(currentPage);
+            break;
+        }
       }
     };
   }
@@ -178,7 +184,6 @@ public class MediaListFragment extends BaseFragment
   @Override public void showMoreProgress() {
     movieList.showMoreProgress();
   }
-
 
   private void loadData(int lisType) {
     switch (lisType) {

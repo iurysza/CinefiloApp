@@ -10,17 +10,19 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.github.mmin18.widget.RealtimeBlurView;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 import mehdi.sakout.fancybuttons.FancyButton;
 import org.greenrobot.eventbus.EventBus;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.presentation.main.FilterEvent;
 
 import static site.iurysouza.cinefilo.R.id.fabtoolbar;
@@ -34,8 +36,6 @@ public class FilterViewManager {
   private static final int BLUR_VIEW_SHOW_DELAY = 550;
 
   private final Resources resources;
-  private List<GenderEnum> selectedGenreList = new ArrayList<>();
-
   @BindView(R.id.media_list_filter_viewpager) ViewPager viewPager;
   @BindView(R.id.media_list_page_indicator) CircleIndicator indicator;
   @BindView(R.id.fabtoolbar_fab) FloatingActionButton filterFab;
@@ -46,6 +46,14 @@ public class FilterViewManager {
   @BindView(R.id.filter_view_header) FrameLayout filterViewHeader;
   @BindView(R.id.fabtoolbar_toolbar) RelativeLayout fabtoolbarToolbar;
 
+  @BindColor(R.color.colorPrimary) int defaultColor;
+  @BindColor(R.color.colorAccent) int selectedColor;
+
+  private List<GenderEnum> selectedGenreList = null;
+  private Integer mMinScore = null;
+  private Date mEndDate = null;
+  private Date mStartDate = null;
+
   public FilterViewManager(Activity activity) {
     ButterKnife.bind(this, activity);
     resources = activity.getResources();
@@ -55,11 +63,43 @@ public class FilterViewManager {
   }
 
   @NonNull private OnAdapterClickListener createGenreSelectListener() {
-    return genderList -> {
-      selectedGenreList = genderList;
-      changeApplyColor(genderList);
+    return new OnAdapterClickListener() {
+
+      @Override public void onGenreSelected(List<GenderEnum> genderList) {
+        selectedGenreList = genderList;
+        validateChanges();
+      }
+
+      @Override public void onStartDateChanged(Date startDate) {
+        mStartDate = startDate;
+        validateChanges();
+      }
+
+      @Override public void onEndDateChanged(Date endDate) {
+        mEndDate = endDate;
+        validateChanges();
+      }
+
+      @Override public void onMinScoreChanged(int minScore) {
+        mMinScore = minScore;
+        validateChanges();
+      }
     };
   }
+
+  void validateChanges() {
+    if (selectedGenreList == null &&
+        mStartDate == null &&
+        mEndDate == null &&
+        mMinScore == null
+        ) {
+      btnApply.setBackgroundColor(defaultColor);
+    } else {
+      btnApply.setBackgroundColor(selectedColor);
+    }
+  }
+
+
 
   public void onBackPressed() {
     if (blurredView.isShown()) {
@@ -80,23 +120,21 @@ public class FilterViewManager {
   private void changeFabColor(List<GenderEnum> genderList) {
     new Handler().postDelayed(() -> {
       if (genderList.isEmpty()) {
-        filterFab.setBackgroundTintList(
-            ColorStateList.valueOf(resources.getColor(R.color.colorPrimary)));
+        filterFab.setBackgroundTintList(ColorStateList.valueOf(defaultColor));
         return;
       }
-      filterFab.setBackgroundTintList(
-          ColorStateList.valueOf(resources.getColor(R.color.colorAccent)));
+      filterFab.setBackgroundTintList(ColorStateList.valueOf(selectedColor));
     }, BLUR_VIEW_HIDE_DELAY);
   }
 
-
-  private void changeApplyColor(List<GenderEnum> genderList) {
-    if (genderList.isEmpty()) {
-      btnApply.setBackgroundColor(resources.getColor(R.color.colorPrimary));
-      return;
+  private void checkFilterChanges(Object filterValue) {
+    if (filterValue == null) {
+      btnApply.setBackgroundColor(defaultColor);
+    } else {
+      btnApply.setBackgroundColor(selectedColor);
     }
-    btnApply.setBackgroundColor(resources.getColor(R.color.colorAccent));
   }
+
   @OnClick({
       R.id.filter_btn_close,
       R.id.filter_btn_apply,
@@ -110,9 +148,7 @@ public class FilterViewManager {
         hideFilterView();
         break;
       case R.id.filter_btn_apply:
-        hideFilterView();
-        changeFabColor(selectedGenreList);
-        EventBus.getDefault().post(new FilterEvent(selectedGenreList));
+        onApplyClicked();
         break;
       case R.id.fabtoolbar_fab:
         showFilterView();
@@ -120,7 +156,26 @@ public class FilterViewManager {
     }
   }
 
+  private void onApplyClicked() {
+    MediaFilter filter = MediaFilter
+        .builder()
+        .endDate(mEndDate)
+        .startDate(mStartDate)
+        .minScore(mMinScore)
+        .genderList(selectedGenreList)
+        .build();
+    hideFilterView();
+    changeFabColor(selectedGenreList);
+    EventBus.getDefault().post(new FilterEvent(filter));
+  }
+
   public interface OnAdapterClickListener {
-    void onItemSelected(List<GenderEnum> genderList);
+    void onGenreSelected(List<GenderEnum> genderList);
+
+    void onStartDateChanged(Date startDate);
+
+    void onEndDateChanged(Date endDate);
+
+    void onMinScoreChanged(int minScore);
   }
 }
