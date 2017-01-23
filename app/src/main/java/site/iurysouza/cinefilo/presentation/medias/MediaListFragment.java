@@ -128,6 +128,7 @@ public class MediaListFragment extends BaseFragment
     List<GenderEnum> genderList = filter.getGenderList();
     List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderList);
     mediaAdapter.replaceList(filteredList);
+    currentPage=0;
   }
 
   private void setupRecyclerView() {
@@ -163,7 +164,6 @@ public class MediaListFragment extends BaseFragment
         currentPage = INVALID_PAGE;
       }
       if (filter != null) {
-        currentPage--;
         mediaPresenter.loadFiltered(currentPage, filter);
       } else {
         switch (listType) {

@@ -59,8 +59,8 @@ public class WatchMedia {
       return mediaList;
     } else {
       for (Movie movie : movieList) {
-        if (movie.getOriginalTitle() != null ||
-            movie.getPosterPath() != null ||
+        if (movie.getOriginalTitle() != null &&
+            movie.getPosterPath() != null &&
             movie.getOverview() != null) {
 
           mediaList.add(valueOf(movie));
