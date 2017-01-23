@@ -120,7 +120,7 @@
             android:gravity="center"
             android:padding="10dp"
             fancy:fb_defaultColor="@color/appLightBlack"
-            fancy:fb_focusColor="@color/accent_color"
+            fancy:fb_focusColor="@color/colorPrimaryDark"
             fancy:fb_iconPaddingLeft="0dp"
             fancy:fb_iconPaddingRight="0dp"
             fancy:fb_iconResource="@drawable/ic_close_grey_500_24dp"

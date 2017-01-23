@@ -24,6 +24,16 @@
 
   </TextView>
 
+  <io.apptik.widget.MultiSlider
+      android:id="@+id/range_slider5"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
 
+      app:thumbNumber="2"
+      app:range1="@drawable/multislider_scrubber_track_holo_light"
+      app:stepsThumbsApart="5"
+      app:drawThumbsApart="true"
+
+      />
 
 </RelativeLayout>
