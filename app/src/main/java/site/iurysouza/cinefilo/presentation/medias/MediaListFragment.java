@@ -120,15 +120,14 @@ public class MediaListFragment extends BaseFragment
     movieList.getRecyclerView().smoothScrollToPosition(0);
     mediaAdapter.clear();
     loadData(listType);
-    movieList.setOnMoreListener(createOnMoreListener());
   }
 
   private void applyFilter(FilterEvent event) {
-    filter= event.filter;
+    filter = event.filter;
     List<GenderEnum> genderList = filter.getGenderList();
     List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderList);
     mediaAdapter.replaceList(filteredList);
-    currentPage=0;
+    currentPage = 0;
   }
 
   private void setupRecyclerView() {
@@ -160,7 +159,7 @@ public class MediaListFragment extends BaseFragment
   @NonNull private OnMoreListener createOnMoreListener() {
     return (overallItemsCount, itemsBeforeMore, maxLastVisiblePosition) -> {
       currentPage++;
-      if (overallItemsCount > currentPage * PAGE_SIZE) {
+      if (overallItemsCount > currentPage * PAGE_SIZE && filter == null) {
         currentPage = INVALID_PAGE;
       }
       if (filter != null) {

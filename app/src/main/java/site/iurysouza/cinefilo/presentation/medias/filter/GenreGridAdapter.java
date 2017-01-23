@@ -28,7 +28,6 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
 
   private List<GenderEnum> genderEnumList = Arrays.asList(GenderEnum.values());
   private List<GenderEnum> selectedGenreList = new ArrayList<>();
-  private GenderEnum selectedGenre;
   private Context context;
   private FilterViewManager.OnAdapterClickListener listener;
 
@@ -96,33 +95,12 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
       } else {
         selectedGenreList.add(currentItemGender);
       }
+      if (selectedGenreList.isEmpty()) {
+        listener.onGenreSelected(null);
+      } else {
         listener.onGenreSelected(selectedGenreList);
+      }
       notifyItemChanged(getAdapterPosition());
     }
-
-    //void onItemClicked() {
-    //  int previousPosition = -1;
-    //  if (selectedGenre != null) {
-    //    previousPosition = genderEnumList.indexOf(selectedGenre);
-    //  }
-    //  if (selectedGenre != null && selectedGenre.equals(currentItemGender)) {
-    //    Drawable unselectedIcon = changeIconColor(context, iconRes, defaultColor);
-    //    genreItemImageView.setImageDrawable(unselectedIcon);
-    //    selectedGenre = null;
-    //  } else {
-    //    Drawable selectedIcon = changeIconColor(context, iconRes, selectedColor);
-    //    genreItemImageView.setImageDrawable(selectedIcon);
-    //    selectedGenre = currentItemGender;
-    //  }
-    //  if (selectedGenre == null) {
-    //    listener.onGenreSelected(GenderEnum.NONE_SELECTED);
-    //  } else {
-    //    listener.onGenreSelected(selectedGenre);
-    //  }
-    //  //rebinds previous selected item
-    //  if (previousPosition != -1) {
-    //    notifyItemChanged(previousPosition);
-    //  }
-    //}
   }
 }

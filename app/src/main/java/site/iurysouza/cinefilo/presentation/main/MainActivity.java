@@ -24,7 +24,6 @@ import static com.ncapdevi.fragnav.FragNavController.TAB2;
 
 public class MainActivity extends BaseActivity implements BottomBarListener {
 
-
   @BindView(R.id.space_bottom_bar) SpaceNavigationView bottomBar;
 
   @Inject
@@ -55,7 +54,6 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
     sharedViewsManager = SharedViewsManager.createSharedViewsManager(this, bottomBar);
     filterViewManager = new FilterViewManager(this);
   }
-
 
   @Override protected void setupActivityComponent(Bundle savedInstanceState) {
     appInstance.createRepositoryComponent(new RepositoryModule(),
@@ -90,9 +88,9 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
   }
 
   @Override public void onBackPressed() {
-    filterViewManager.onBackPressed();
+    if (filterViewManager.hideFilterIfShown()) {
+      return;
+    }
     super.onBackPressed();
   }
-
-
 }

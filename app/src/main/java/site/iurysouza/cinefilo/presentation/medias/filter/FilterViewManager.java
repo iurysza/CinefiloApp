@@ -67,44 +67,46 @@ public class FilterViewManager {
 
       @Override public void onGenreSelected(List<GenderEnum> genderList) {
         selectedGenreList = genderList;
-        validateChanges();
+        wasFilterAdded();
       }
 
       @Override public void onStartDateChanged(Date startDate) {
         mStartDate = startDate;
-        validateChanges();
+        wasFilterAdded();
       }
 
       @Override public void onEndDateChanged(Date endDate) {
         mEndDate = endDate;
-        validateChanges();
+        wasFilterAdded();
       }
 
       @Override public void onMinScoreChanged(int minScore) {
         mMinScore = minScore;
-        validateChanges();
+        wasFilterAdded();
       }
     };
   }
 
-  void validateChanges() {
+  boolean wasFilterAdded() {
     if (selectedGenreList == null &&
         mStartDate == null &&
         mEndDate == null &&
         mMinScore == null
         ) {
       btnApply.setBackgroundColor(defaultColor);
+      return false;
     } else {
       btnApply.setBackgroundColor(selectedColor);
+      return true;
     }
   }
 
-
-
-  public void onBackPressed() {
+  public boolean hideFilterIfShown() {
     if (blurredView.isShown()) {
       hideFilterView();
+      return true;
     }
+    return false;
   }
 
   private void hideFilterView() {
@@ -119,20 +121,12 @@ public class FilterViewManager {
 
   private void changeFabColor(List<GenderEnum> genderList) {
     new Handler().postDelayed(() -> {
-      if (genderList.isEmpty()) {
+      if (genderList == null) {
         filterFab.setBackgroundTintList(ColorStateList.valueOf(defaultColor));
         return;
       }
       filterFab.setBackgroundTintList(ColorStateList.valueOf(selectedColor));
     }, BLUR_VIEW_HIDE_DELAY);
-  }
-
-  private void checkFilterChanges(Object filterValue) {
-    if (filterValue == null) {
-      btnApply.setBackgroundColor(defaultColor);
-    } else {
-      btnApply.setBackgroundColor(selectedColor);
-    }
   }
 
   @OnClick({
@@ -144,11 +138,13 @@ public class FilterViewManager {
   void onClick(View view) {
     switch (view.getId()) {
       case R.id.filter_btn_close:
+        removeFilters();
+        break;
       case R.id.main_blurred_view:
         hideFilterView();
         break;
       case R.id.filter_btn_apply:
-        onApplyClicked();
+        applyFilters();
         break;
       case R.id.fabtoolbar_fab:
         showFilterView();
@@ -156,14 +152,25 @@ public class FilterViewManager {
     }
   }
 
-  private void onApplyClicked() {
-    MediaFilter filter = MediaFilter
+  private void removeFilters() {
+    mEndDate = null;
+    mStartDate = null;
+    mMinScore = null;
+    selectedGenreList = null;
+    applyFilters();
+  }
+
+  private void applyFilters() {
+    MediaFilter filter = null;
+    if (wasFilterAdded()) {
+    filter = MediaFilter
         .builder()
         .endDate(mEndDate)
         .startDate(mStartDate)
         .minScore(mMinScore)
         .genderList(selectedGenreList)
         .build();
+    }
     hideFilterView();
     changeFabColor(selectedGenreList);
     EventBus.getDefault().post(new FilterEvent(filter));
