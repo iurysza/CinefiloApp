@@ -23,6 +23,10 @@ public class SeriesUseCase implements UseCase {
     //seriesRepository.getGenreList();
   }
 
+  @Override public Observable<List<WatchMediaValue>> getMediaByGender(int gender) {
+    return null;
+  }
+
   @Override
   public Observable<List<WatchMediaValue>> getMostPopular() {
     seriesRepository.getMostPopular(FIRST_PAGE, false);
@@ -50,13 +54,17 @@ public class SeriesUseCase implements UseCase {
         .map(WatchMediaValueMapper::mapToValueMedia);
   }
 
-  @Override
-  public Observable<List<WatchMediaValue>> getNextTopRated(int nextPage) {
+  @Override public Observable<List<WatchMediaValue>> getNextTopRated(int nextPage) {
     seriesRepository.getTopRated(nextPage, true);
 
     return seriesRepository
         .getTopRatedSubject()
         .map(WatchMediaValueMapper::mapToValueMedia);
+  }
+
+  @Override
+  public Observable<List<WatchMediaValue>> getFilteredMedia(int page, MediaFilter mediaFilter) {
+    return null;
   }
 
   @Override

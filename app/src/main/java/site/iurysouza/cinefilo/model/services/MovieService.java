@@ -14,6 +14,11 @@ public interface MovieService {
   Observable<Movie> getMovieById(
       @Path("movie_id") int movieId,
       @Query("api_key") String apiKey);
+  @GET("genre/{genre_id}/movies")
+
+  Observable<MovieResults> getMoviesByGenre(
+      @Path("genre_id") int genreId,
+      @Query("api_key") String apiKey);
 
   @GET("movie/popular")
   Observable<MovieResults> getMostPopularMovies(
@@ -33,4 +38,13 @@ public interface MovieService {
   Observable<MovieResults> getNowPlayingMovies(
       @Query("api_key") String apiKey,
       @Query("page") int page);
+
+  @GET("discover/movie")
+  Observable<MovieResults> getFilteredMovies(
+      @Query("api_key") String apiKey,
+      @Query("page")int page,
+      @Query("primary_release_date.gte") int startDate,
+      @Query("primary_release_date.lte") int endDate,
+      @Query("with_genres")String genres,
+      @Query("vote_average.lte") int minScore);
 }

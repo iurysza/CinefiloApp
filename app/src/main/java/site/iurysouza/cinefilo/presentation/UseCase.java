@@ -2,6 +2,7 @@ package site.iurysouza.cinefilo.presentation;
 
 import java.util.List;
 import rx.Observable;
+import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 
 /**
@@ -17,9 +18,14 @@ public interface UseCase {
    Observable<List<WatchMediaValue>> getTopRated();
 
 
+
    Observable<List<WatchMediaValue>> getNextTopRated(int nextPage);
+
+   Observable<List<WatchMediaValue>> getFilteredMedia(int page, MediaFilter mediaFilter);
 
    Observable<List<WatchMediaValue>> getNowPlaying();
 
    Observable<List<WatchMediaValue>> getNextNowPlaying(int nowPage);
+
+   Observable<List<WatchMediaValue>> getMediaByGender(int gender);
 }

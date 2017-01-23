@@ -2,6 +2,8 @@ package site.iurysouza.cinefilo.presentation.medias.pager;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,12 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import com.github.florent37.materialviewpager.MaterialViewPager;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import site.iurysouza.cinefilo.R;
@@ -29,13 +27,14 @@ import site.iurysouza.cinefilo.util.Utils;
  * Created by Iury Souza on 09/11/2016.
  */
 
-public class MediaPagerFragment extends BaseFragment  {
+public class MediaPagerFragment extends BaseFragment {
 
-  private static final int FRAGS_IN_MEMORY = 3;
   public static final String MEDIA_TYPE = "MEDIA_TYPE";
-
-  @BindView(R.id.viewpager_fragment_movies) MaterialViewPager materialViewPager;
-  @BindView(R.id.logo_white) TextView headerText;
+  private static final int FRAGS_IN_MEMORY = 3;
+  Toolbar toolbar;
+  TabLayout tabs;
+  AppBarLayout appbar;
+  @BindView(R.id.media_fragment_viewpager) ViewPager viewpager;
 
   public static MediaPagerFragment newInstance(int mediaType) {
     MediaPagerFragment mediaPagerFragment = new MediaPagerFragment();
@@ -48,7 +47,7 @@ public class MediaPagerFragment extends BaseFragment  {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.content_movies_fragment, container, false);
+    View view = inflater.inflate(R.layout.view_pager_fragment, container, false);
     ButterKnife.bind(this, view);
     Utils.safeRegisterEventBus(this);
 
@@ -57,11 +56,13 @@ public class MediaPagerFragment extends BaseFragment  {
     MediaPagerAdapter
         adapter = new MediaPagerAdapter(getChildFragmentManager(), getContext(), mediaType);
 
-    ViewPager viewPager = materialViewPager.getViewPager();
-    viewPager.setAdapter(adapter);
-    viewPager.setOffscreenPageLimit(FRAGS_IN_MEMORY);
-    materialViewPager.getPagerTitleStrip().setViewPager(viewPager);
-    handleToolbar(materialViewPager.getToolbar());
+    tabs = (TabLayout) getActivity().findViewById(R.id.media_fragment_tabs);
+    appbar = (AppBarLayout) getActivity().findViewById(R.id.media_fragment_appbar);
+    toolbar = (Toolbar) getActivity().findViewById(R.id.media_fragment_toolbar);
+    viewpager.setAdapter(adapter);
+    viewpager.setOffscreenPageLimit(FRAGS_IN_MEMORY);
+    tabs.setupWithViewPager(viewpager);
+    handleToolbar(toolbar);
     return view;
   }
 
@@ -79,15 +80,13 @@ public class MediaPagerFragment extends BaseFragment  {
   public void onBackDropChanged(BackDropChangedEvent event) {
     WatchMediaValue featuredMovie = event.featuredMovie;
     String backDropUrl = ImageUtils.getBackDropUrl(featuredMovie.backdropPath());
-    materialViewPager.setImageUrl(backDropUrl, 200);
-    headerText.setText(featuredMovie.name());
+    //backdrop.setImageDrawable(backDropUrl, 200);
+    //Picasso.with(getContext()).load(backDropUrl).into(backdrop);
+    //headerText.setText(featuredMovie.name());
   }
 
   @Override protected void setupFragmentComponent() {
     ((CineApplication) getContext().getApplicationContext()).getRepositoryComponent().inject(this);
   }
 
-  @OnClick(R.id.logo_white) public void onClick() {
-    Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-  }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.MoviesUseCase;
 import site.iurysouza.cinefilo.domain.SeriesUseCase;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
@@ -22,6 +23,8 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   private Subscription topRatedSubscription;
   private Subscription mostPopularSubscription;
   private RxFragment rxLifecycle;
+
+  private Subscription genderSubscription;
 
   MediaPresenter() {
   }
@@ -103,6 +106,7 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   }
 
   void loadNextNowPlaying(int page) {
+    getBaseView().showMoreProgress();
     resetSubscription(nowPlayingSubscription);
     nowPlayingSubscription = useCase
         .getNextNowPlaying(page)
@@ -144,6 +148,25 @@ public class MediaPresenter extends BasePresenter<MediaView> {
     resetSubscription(topRatedSubscription);
     topRatedSubscription = useCase
         .getNextTopRated(page)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
+          @Override public void onNext(List<WatchMediaValue> watchMediaValues) {
+            super.onNext(watchMediaValues);
+            sendMediaToView(watchMediaValues);
+          }
+
+          @Override public void onError(Throwable e) {
+            super.onError(e);
+            getBaseView().showErrorIndicator();
+          }
+        });
+  }
+
+  void loadFiltered(int page, MediaFilter filter) {
+    resetSubscription(genderSubscription);
+    genderSubscription = useCase
+        .getFilteredMedia(page, filter)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.experimental.Builder;
+import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmInteger;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmSeries;
@@ -25,7 +26,7 @@ public class WatchMedia {
 
   public static WatchMedia valueOf(RealmMovie movie) {
     Integer genreValue = getGenreIdValue(movie);
-    WatchMedia build = WatchMedia
+    return WatchMedia
         .builder()
         .id(movie.getId())
         .voteAverage(movie.getVoteAverage())
@@ -35,13 +36,52 @@ public class WatchMedia {
         .name(movie.getOriginalTitle())
         .genre(genreValue)
         .build();
-    return build;
   }
 
+  public static WatchMedia valueOf(Movie movie) {
+    Integer genreValue = getGenreIdValue(movie);
+    return WatchMedia
+        .builder()
+        .id(movie.getId())
+        .voteAverage(movie.getVoteAverage())
+        .overview(movie.getOverview())
+        .backdropPath(movie.getBackdropPath())
+        .posterPath(movie.getPosterPath())
+        .name(movie.getOriginalTitle())
+        .genre(genreValue)
+        .build();
+  }
+
+  public static List<WatchMedia> valueOfMovieList(List<Movie> movieList) {
+    List<WatchMedia> mediaList = new ArrayList<>();
+
+    if (movieList.isEmpty()) {
+      return mediaList;
+    } else {
+      for (Movie movie : movieList) {
+        if (movie.getOriginalTitle() != null &&
+            movie.getPosterPath() != null &&
+            movie.getOverview() != null) {
+
+          mediaList.add(valueOf(movie));
+        }
+      }
+    }
+    return mediaList;
+  }
+
+  private static Integer getGenreIdValue(Movie movie) {
+    Integer[] genreIdList = movie.getGenreIds();
+    Integer genreId = 0;
+    if (genreIdList.length > 0) {
+      genreId = genreIdList[0];
+    }
+    return genreId;
+  }
 
   public static WatchMedia valueOf(RealmSeries series) {
     Integer genreValue = getGenreIdValue(series);
-    WatchMedia build = WatchMedia
+    return WatchMedia
         .builder()
         .id(series.getId())
         .voteAverage(series.getVoteAverage())
@@ -51,7 +91,6 @@ public class WatchMedia {
         .name(series.getOriginalName())
         .genre(genreValue)
         .build();
-    return build;
   }
 
   private static Integer getGenreIdValue(RealmMovie movie) {

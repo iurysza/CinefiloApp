@@ -16,6 +16,7 @@ import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.di.modules.RepositoryModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
+import site.iurysouza.cinefilo.presentation.medias.filter.FilterViewManager;
 import site.iurysouza.cinefilo.presentation.medias.pager.MediaPagerFragment;
 
 import static com.ncapdevi.fragnav.FragNavController.TAB1;
@@ -29,13 +30,13 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
   NavigationManager navigationManager;
 
   private SharedViewsManager sharedViewsManager;
+  private FilterViewManager filterViewManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
-
     bottomBar.initWithSaveInstanceState(savedInstanceState);
     bottomBar.addSpaceItem(
         new SpaceItem(getString(R.string.bottombar_title_movies), R.drawable.ic_drawer_movies));
@@ -51,6 +52,7 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
     navigationManager.setupFragNavController(fragments, this);
     bottomBar.setSpaceOnClickListener(navigationManager);
     sharedViewsManager = SharedViewsManager.createSharedViewsManager(this, bottomBar);
+    filterViewManager = new FilterViewManager(this);
   }
 
   @Override protected void setupActivityComponent(Bundle savedInstanceState) {
@@ -83,5 +85,12 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
 
   @Override public void onTabSelected(Fragment currentFrag) {
     sharedViewsManager.updateViewsForFragment(currentFrag);
+  }
+
+  @Override public void onBackPressed() {
+    if (filterViewManager.hideFilterIfShown()) {
+      return;
+    }
+    super.onBackPressed();
   }
 }

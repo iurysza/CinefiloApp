@@ -16,6 +16,13 @@
     <color name="appOrange">#F57C00</color>
     <color name="appLightBlack">#212121</color>
 
+    <color name="appFirenze1">#1C1D21</color>
+    <color name="appFirenze3">#31353D</color>
+    <color name="appFirenze2">#445878</color>
+    <color name="appFirenze4">@color/appDarkBrown</color>
+    <color name="appFirenze5">@color/appLightBlack</color>
+
+
 
     <color name="colorAppBackground">@color/appLightYellow</color>
     <color name="colorGenreView">@color/appBrown</color>

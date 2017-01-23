@@ -52,10 +52,17 @@ public class MoviesUseCase implements UseCase {
 
   @Override
   public Observable<List<WatchMediaValue>> getNextTopRated(int nextPage) {
-    movieRepository.getTopRated(nextPage, true);
+      movieRepository.getTopRated(nextPage, true);
+      return movieRepository
+          .getTopRatedSubject()
+          .map(WatchMediaValueMapper::mapToValueMedia);
+  }
 
+  @Override
+  public Observable<List<WatchMediaValue>> getFilteredMedia(int page, MediaFilter mediaFilter) {
+    movieRepository.getFilteredBy(page, mediaFilter);
     return movieRepository
-        .getTopRatedSubject()
+        .getFilteredMoviesSubject()
         .map(WatchMediaValueMapper::mapToValueMedia);
   }
 
@@ -65,6 +72,13 @@ public class MoviesUseCase implements UseCase {
 
     return movieRepository
         .getNowPlayingSubject()
+        .map(WatchMediaValueMapper::mapToValueMedia);
+  }
+
+  @Override public Observable<List<WatchMediaValue>> getMediaByGender(int gender) {
+    movieRepository.getByGenre(gender);
+    return movieRepository
+        .getGenresSubject()
         .map(WatchMediaValueMapper::mapToValueMedia);
   }
 

@@ -14,8 +14,9 @@ public abstract class CineSubscriber<T> extends Subscriber<T> {
   }
 
   @Override public void onNext(T t) {
-    Timber.i("Data: %s \n", t.toString());
-
+    if (t != null) {
+      Timber.i("Data: %s \n", t.toString());
+    }
   }
 
   @Override public void onError(Throwable e) {

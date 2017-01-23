@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+  <!--<com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout-->
+      <!--android:id="@+id/fabtoolbar"-->
+      <!--android:layout_width="match_parent"-->
+      <!--android:layout_height="match_parent"-->
+      <!--app:containerId="@+id/fabtoolbar_container"-->
+      <!--app:fabId="@+id/fabtoolbar_fab"-->
+      <!--app:fabToolbarId="@+id/fabtoolbar_toolbar"-->
+      <!--app:fadeInFraction="0.2"-->
+      <!--app:hideDuration="200"-->
+      <!--app:horizontalMargin="30dp"-->
+      <!--app:showDuration="600"-->
+      <!--app:verticalMargin="30dp">-->
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/fabtoolbar_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true">-->
+
+      <!--<android.support.design.widget.FloatingActionButton-->
+          <!--android:id="@id/fabtoolbar_fab"-->
+          <!--android:layout_width="wrap_content"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:src="@drawable/abc_ic_menu_share_mtrl_alpha"-->
+          <!--app:fabSize="normal"/>-->
+
+    <!--</RelativeLayout>-->
+
+    <!--<RelativeLayout-->
+        <!--android:id="@id/fabtoolbar_toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@color/appLightBlack"-->
+        <!--android:gravity="bottom"-->
+        <!--android:orientation="horizontal">-->
+      <!--<FrameLayout android:id="@+id/filter_view_header"-->
+          <!--android:layout_width="match_parent"-->
+          <!--android:layout_height="wrap_content">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/filter_view_title"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_margin="4dp"-->
+            <!--android:text="Filter"-->
+            <!--android:textColor="@color/appWhite"-->
+            <!--android:textSize="@dimen/title_text_size"/>-->
+        <!--<mehdi.sakout.fancybuttons.FancyButton-->
+            <!--android:id="@+id/filter_btn_close"-->
+            <!--android:layout_width="48dp"-->
+            <!--android:layout_height="48dp"-->
+            <!--android:layout_gravity="right"-->
+            <!--android:gravity="center"-->
+            <!--android:padding="10dp"-->
+            <!--fancy:fb_defaultColor="@color/appLightBlack"-->
+            <!--fancy:fb_focusColor="@color/accent_color"-->
+            <!--fancy:fb_iconPaddingLeft="0dp"-->
+            <!--fancy:fb_iconPaddingRight="0dp"-->
+            <!--fancy:fb_iconResource="@drawable/ic_close_grey_500_24dp"-->
+            <!--fancy:fb_radius="64dp"-->
+            <!--fancy:fb_textColor="#FFFFFF"/>-->
+
+      <!--</FrameLayout>-->
+
+      <!--<me.relex.circleindicator.CircleIndicator-->
+          <!--android:id="@+id/media_list_page_indicator"-->
+          <!--android:layout_width="match_parent"-->
+          <!--android:layout_height="48dp"-->
+          <!--android:layout_below="@id/filter_view_header"-->
+      <!--/>-->
+      <!--<android.support.v4.view.ViewPager-->
+          <!--android:id="@+id/media_list_filter_viewpager"-->
+          <!--android:layout_width="match_parent"-->
+          <!--android:layout_height="300dp"-->
+          <!--android:layout_below="@id/media_list_page_indicator"-->
+      <!--&gt;-->
+      <!--</android.support.v4.view.ViewPager>-->
+
+      <!--<mehdi.sakout.fancybuttons.FancyButton-->
+          <!--android:id="@+id/filter_btn_apply"-->
+          <!--android:layout_width="match_parent"-->
+          <!--android:layout_height="48dp"-->
+          <!--android:layout_below="@id/media_list_filter_viewpager"-->
+          <!--android:gravity="bottom"-->
+          <!--android:padding="5dp"-->
+          <!--android:textAllCaps="true"-->
+          <!--android:textSize="@dimen/title_text_size"-->
+          <!--fancy:fb_borderWidth="0dp"-->
+          <!--fancy:fb_defaultColor="@color/colorPrimaryDark"-->
+          <!--fancy:fb_focusColor="@color/colorPrimary"-->
+          <!--fancy:fb_text="Apply Filters"-->
+          <!--fancy:fb_textColor="#FFFFFF"/>-->
+    <!--</RelativeLayout>-->
+
+  <!--</com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout>-->
+</merge>

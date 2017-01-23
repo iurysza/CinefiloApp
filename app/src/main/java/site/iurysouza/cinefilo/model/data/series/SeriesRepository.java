@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.joda.time.DateTime;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
+import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.WatchMediaRepository;
 import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
 import site.iurysouza.cinefilo.model.data.series.storage.CloudSeriesDataSource;
@@ -42,6 +43,10 @@ public class SeriesRepository implements WatchMediaRepository {
     this.cloudDataStore = cloudDataStore;
   }
 
+  @Override public void getByGenre(int genreId) {
+
+  }
+
   @Override
   public void getMostPopular(int page, boolean forceRemote) {
     boolean firstPageWasLoadedFromLocalStorage = page == INVALID_PAGE && forceRemote;
@@ -55,6 +60,7 @@ public class SeriesRepository implements WatchMediaRepository {
     queryLocalAndRemoteData(getMostPopularFromRealm(forceRemote),
         getMostPopularFromApi(page, MOST_POPULAR_LIST), mostPopularSubject);
   }
+
 
   @Override
   public void getTopRated(int page, boolean forceRemote) {
@@ -84,6 +90,13 @@ public class SeriesRepository implements WatchMediaRepository {
     queryLocalAndRemoteData(getNowPlayingFromRealm(forceRemote),
         getNowPlayingFromApi(page, NOW_PLAYING_LIST),
         nowPlayingSubject);
+  }
+
+  @Override public Observable<List<WatchMedia>> getFilteredMoviesSubject() {
+    return null;
+  }
+
+  @Override public void getFilteredBy(int page, MediaFilter mediaFilter) {
   }
 
   private int getNextPageFor(int listId) {
@@ -180,9 +193,6 @@ public class SeriesRepository implements WatchMediaRepository {
   }
 
 
-  @Override
-  public void getGenreList() {
-  }
 
   public Observable<List<WatchMedia>> getTopRatedSubject() {
     return topRatedSubject.asObservable();
