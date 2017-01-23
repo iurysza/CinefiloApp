@@ -2,7 +2,6 @@ package site.iurysouza.cinefilo.presentation.medias.filter;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -35,7 +34,6 @@ public class FilterViewManager {
   private static final int BLUR_VIEW_HIDE_DELAY = 450;
   private static final int BLUR_VIEW_SHOW_DELAY = 550;
 
-  private final Resources resources;
   @BindView(R.id.media_list_filter_viewpager) ViewPager viewPager;
   @BindView(R.id.media_list_page_indicator) CircleIndicator indicator;
   @BindView(R.id.fabtoolbar_fab) FloatingActionButton filterFab;
@@ -53,10 +51,16 @@ public class FilterViewManager {
   private Integer mMinScore = null;
   private Date mEndDate = null;
   private Date mStartDate = null;
+  private Activity activity;
 
   public FilterViewManager(Activity activity) {
+    this.activity = activity;
     ButterKnife.bind(this, activity);
-    resources = activity.getResources();
+    filterFab.setBackgroundTintList(ColorStateList.valueOf(defaultColor));
+    createViewPager(activity);
+  }
+
+  private void createViewPager(Activity activity) {
     FilterPagerAdapter filterAdater = new FilterPagerAdapter(activity, createGenreSelectListener());
     viewPager.setAdapter(filterAdater);
     indicator.setViewPager(viewPager);
@@ -87,7 +91,7 @@ public class FilterViewManager {
     };
   }
 
-  boolean wasFilterAdded() {
+  private boolean wasFilterAdded() {
     if (selectedGenreList == null &&
         mStartDate == null &&
         mEndDate == null &&
@@ -153,30 +157,36 @@ public class FilterViewManager {
   }
 
   private void removeFilters() {
-    mEndDate = null;
-    mStartDate = null;
-    mMinScore = null;
-    selectedGenreList = null;
-    applyFilters();
+    createViewPager(activity);
+    hideFilterView();
+    changeFabColor(null);
+    if (wasFilterAdded()) {
+      mEndDate = null;
+      mStartDate = null;
+      mMinScore = null;
+      selectedGenreList = null;
+      wasFilterAdded();
+      EventBus.getDefault().post(new FilterEvent(null));
+    }
   }
 
   private void applyFilters() {
     MediaFilter filter = null;
     if (wasFilterAdded()) {
-    filter = MediaFilter
-        .builder()
-        .endDate(mEndDate)
-        .startDate(mStartDate)
-        .minScore(mMinScore)
-        .genderList(selectedGenreList)
-        .build();
+      filter = MediaFilter
+          .builder()
+          .endDate(mEndDate)
+          .startDate(mStartDate)
+          .minScore(mMinScore)
+          .genderList(selectedGenreList)
+          .build();
     }
     hideFilterView();
     changeFabColor(selectedGenreList);
     EventBus.getDefault().post(new FilterEvent(filter));
   }
 
-  public interface OnAdapterClickListener {
+  interface OnAdapterClickListener {
     void onGenreSelected(List<GenderEnum> genderList);
 
     void onStartDateChanged(Date startDate);
