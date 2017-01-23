@@ -7,7 +7,7 @@ import site.iurysouza.cinefilo.R;
  */
 
 public enum FilterPagerEnum {
-  GENRE_FILTER(R.string.genre_page_title, R.layout.genre_filter_layout),
+  GENRE_FILTER(R.string.genre_page_title, R.layout.filter_genre_layout),
   GENERAL_FILTER(R.string.filter_page_title, R.layout.page_filter_layout);
 
   private int titleResId;
