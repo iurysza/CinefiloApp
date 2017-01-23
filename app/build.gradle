@@ -58,6 +58,7 @@ dependencies {
   compile 'com.github.fafaldo:fab-toolbar:1.2.0'
   compile 'com.github.mmin18:realtimeblurview:1.1.0'
   compile 'com.github.medyo:fancybuttons:1.8.3'
+  compile 'com.flaviofaria:kenburnsview:1.0.7'
 
 
   //Value Type Generator

@@ -29,4 +29,5 @@
   <string name="genre_thriller">Thriller</string>
   <string name="genre_war">War</string>
   <string name="genre_Western">Western</string>
+  <string name="genre_none">None</string>
 </resources>

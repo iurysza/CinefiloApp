@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import site.iurysouza.cinefilo.R;
@@ -26,11 +27,11 @@ import static site.iurysouza.cinefilo.util.ImageUtils.changeIconColor;
 class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHolder> {
 
   private List<GenderEnum> genderEnumList = Arrays.asList(GenderEnum.values());
-  private GenderEnum selectedGenre;
+  private List<GenderEnum> selectedGenreList = new ArrayList<>();
   private Context context;
-  private OnAdapterClickListener listener;
+  private FilterViewManager.OnAdapterClickListener listener;
 
-  GenreGridAdapter(Context context, OnAdapterClickListener listener) {
+  GenreGridAdapter(Context context, FilterViewManager.OnAdapterClickListener listener) {
     this.context = context;
     this.listener = listener;
   }
@@ -42,7 +43,7 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
         .inflate(R.layout.genre_grid_item, parent, false);
 
     GenreViewHolder vh = new GenreViewHolder(view);
-    vh.genreItemRoot.setOnClickListener(v -> vh.onItemClicked());
+    vh.genreItemRoot.setOnClickListener(v -> vh.onItemSelected());
     return vh;
   }
 
@@ -53,16 +54,6 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
   @Override
   public int getItemCount() {
     return genderEnumList.size();
-  }
-
-  GenderEnum getSelectedGenres() {
-    return selectedGenre;
-  }
-
-  interface OnAdapterClickListener {
-    void onItemSelected();
-
-    void onNoneSelected();
   }
 
   class GenreViewHolder extends RecyclerView.ViewHolder {
@@ -89,7 +80,7 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
     }
 
     private void initItemState(GenderEnum currentGender, int iconRes) {
-      if (selectedGenre != null && selectedGenre.equals(currentGender)) {
+      if (selectedGenreList.contains(currentGender)) {
         Drawable unSelectedIcon = changeIconColor(context, iconRes, selectedColor);
         genreItemImageView.setImageDrawable(unSelectedIcon);
       } else {
@@ -98,30 +89,18 @@ class GenreGridAdapter extends RecyclerView.Adapter<GenreGridAdapter.GenreViewHo
       }
     }
 
-    void onItemClicked() {
-      int previousPosition = -1;
-      if (selectedGenre != null) {
-        previousPosition = genderEnumList.indexOf(selectedGenre);
-      }
-      //currentItemGender = genderEnumList.get(adapterPosition);
-      if (selectedGenre != null && selectedGenre.equals(currentItemGender)) {
-        Drawable unselectedIcon = changeIconColor(context, iconRes, defaultColor);
-        genreItemImageView.setImageDrawable(unselectedIcon);
-        selectedGenre = null;
+    void onItemSelected() {
+      if (selectedGenreList.contains(currentItemGender)) {
+        selectedGenreList.remove(currentItemGender);
       } else {
-        Drawable selectedIcon = changeIconColor(context, iconRes, selectedColor);
-        genreItemImageView.setImageDrawable(selectedIcon);
-        selectedGenre = currentItemGender;
+        selectedGenreList.add(currentItemGender);
       }
-      if (selectedGenre == null) {
-        listener.onNoneSelected();
+      if (selectedGenreList.isEmpty()) {
+        listener.onGenreSelected(null);
       } else {
-        listener.onItemSelected();
+        listener.onGenreSelected(selectedGenreList);
       }
-      //rebinds previous selected item
-      if (previousPosition != -1) {
-        notifyItemChanged(previousPosition);
-      }
+      notifyItemChanged(getAdapterPosition());
     }
   }
 }

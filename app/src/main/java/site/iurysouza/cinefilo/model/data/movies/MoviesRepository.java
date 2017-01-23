@@ -16,10 +16,12 @@ import org.joda.time.DateTime;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
+import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.WatchMediaRepository;
 import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
 import site.iurysouza.cinefilo.model.data.movies.storage.CloudMovieDataSource;
 import site.iurysouza.cinefilo.model.data.movies.storage.LocalMovieDataSource;
+import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
 import site.iurysouza.cinefilo.model.entities.realm.RealmGenre;
 import site.iurysouza.cinefilo.util.CineSubscriber;
 import site.iurysouza.cinefilo.util.Constants;
@@ -46,6 +48,7 @@ public class MoviesRepository implements WatchMediaRepository {
   private BehaviorSubject<List<WatchMedia>> topRatedSubject = BehaviorSubject.create();
   private BehaviorSubject<List<WatchMedia>> mostPopularSubject = BehaviorSubject.create();
   private BehaviorSubject<List<WatchMedia>> genreSubject = BehaviorSubject.create();
+  private BehaviorSubject<List<WatchMedia>> filteredSubject = BehaviorSubject.create();
 
   @Inject
   public MoviesRepository(LocalMovieDataSource localDataStore,
@@ -147,6 +150,25 @@ public class MoviesRepository implements WatchMediaRepository {
         });
   }
 
+  @Override
+  public void getFilteredBy(int page, MediaFilter mediaFilter) {
+    cloudDataStore
+        .getFilteredMovies(page, mediaFilter)
+        .map(MovieResults::getMovieList)
+        .map(WatchMedia::valueOfMovieList)
+        .onErrorResumeNext(e -> {
+          Timber.e("Failed to get filtered movies from api :", e.getMessage());
+          return Observable.just(Collections.emptyList());
+        })
+        .doOnNext(watchMedias -> Timber.i("Loaded filtered movies from api: %s",
+            watchMedias.size()))
+        .subscribe(new CineSubscriber<List<WatchMedia>>() {
+          @Override public void onNext(List<WatchMedia> watchMedias) {
+            super.onNext(watchMedias);
+            filteredSubject.onNext(watchMedias);
+          }
+        });
+  }
   @NonNull
   private Observable<List<WatchMedia>> getTopRatedFromApi(int page, int pageId) {
     return cloudDataStore
@@ -211,7 +233,6 @@ public class MoviesRepository implements WatchMediaRepository {
                 watchMedias.size()));
   }
 
-
   private List<RealmGenre> readJsonStream(InputStream in) throws IOException {
     JsonReader reader = new JsonReader(new InputStreamReader(in, Constants.JSON_CHAR_SET));
     List<RealmGenre> genreList = new ArrayList<>();
@@ -256,7 +277,13 @@ public class MoviesRepository implements WatchMediaRepository {
   public Observable<List<WatchMedia>> getNowPlayingSubject() {
     return nowPlayingSubject.asObservable();
   }
+
   public Observable<List<WatchMedia>> getGenresSubject() {
     return genreSubject.asObservable();
   }
+
+  @Override public Observable<List<WatchMedia>> getFilteredMoviesSubject() {
+    return filteredSubject.asObservable();
+  }
+
 }

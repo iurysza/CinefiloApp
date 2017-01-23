@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.joda.time.DateTime;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
+import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.WatchMediaRepository;
 import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
 import site.iurysouza.cinefilo.model.data.series.storage.CloudSeriesDataSource;
@@ -89,6 +90,13 @@ public class SeriesRepository implements WatchMediaRepository {
     queryLocalAndRemoteData(getNowPlayingFromRealm(forceRemote),
         getNowPlayingFromApi(page, NOW_PLAYING_LIST),
         nowPlayingSubject);
+  }
+
+  @Override public Observable<List<WatchMedia>> getFilteredMoviesSubject() {
+    return null;
+  }
+
+  @Override public void getFilteredBy(int page, MediaFilter mediaFilter) {
   }
 
   private int getNextPageFor(int listId) {

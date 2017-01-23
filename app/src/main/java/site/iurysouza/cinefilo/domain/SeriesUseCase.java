@@ -62,6 +62,10 @@ public class SeriesUseCase implements UseCase {
         .map(WatchMediaValueMapper::mapToValueMedia);
   }
 
+  @Override
+  public Observable<List<WatchMediaValue>> getFilteredMedia(int page, MediaFilter mediaFilter) {
+    return null;
+  }
 
   @Override
   public Observable<List<WatchMediaValue>> getNowPlaying() {

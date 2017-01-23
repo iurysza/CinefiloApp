@@ -67,7 +67,7 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     notifyItemRangeInserted(positionStart, mediaList.size());
   }
 
-  public void swapItems(List<WatchMediaValue> mediaValues) {
+  public void replaceList(List<WatchMediaValue> mediaValues) {
     //final MediaDiffCallBack diffCallback = new MediaDiffCallBack(mediaValueList, mediaValues);
     //final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
     this.mediaValueList.clear();
@@ -93,14 +93,16 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     }
   }
 
-  public List<WatchMediaValue> getAdapterListFilteredBy(GenderEnum genderEnum) {
+  public List<WatchMediaValue> getAdapterListFilteredBy(List<GenderEnum> genderEnumList) {
     List<WatchMediaValue> filteredList = new ArrayList<>();
     for (WatchMediaValue media : mediaValueList) {
-        if (media.genre() == genderEnum.getGenreId()) {
+      for (GenderEnum gender : genderEnumList) {
+        if (media.genre() == gender.getGenreId()) {
           filteredList.add(media);
         }
       }
-    return filteredList;
+    }
+      return filteredList;
   }
 
   interface OnAdapterClickListener {

@@ -1,124 +1,188 @@
 package site.iurysouza.cinefilo.presentation.medias.filter;
 
-import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.PagerAdapter;
+import android.app.Activity;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import butterknife.BindColor;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
+import com.github.mmin18.widget.RealtimeBlurView;
+import java.util.Date;
+import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 import mehdi.sakout.fancybuttons.FancyButton;
-import rx.Observable;
-import rx.subjects.PublishSubject;
+import org.greenrobot.eventbus.EventBus;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.domain.MediaFilter;
+import site.iurysouza.cinefilo.presentation.main.FilterEvent;
+
+import static site.iurysouza.cinefilo.R.id.fabtoolbar;
 
 /**
  * Created by Iury Souza on 14/01/2017.
  */
 
 public class FilterViewManager {
+  private static final int BLUR_VIEW_HIDE_DELAY = 450;
+  private static final int BLUR_VIEW_SHOW_DELAY = 550;
 
-  private PublishSubject<GenderEnum> filterSubject = PublishSubject.create();
+  private final Resources resources;
+  @BindView(R.id.media_list_filter_viewpager) ViewPager viewPager;
+  @BindView(R.id.media_list_page_indicator) CircleIndicator indicator;
+  @BindView(R.id.fabtoolbar_fab) FloatingActionButton filterFab;
+  @BindView(R.id.main_blurred_view) RealtimeBlurView blurredView;
+  @BindView(R.id.filter_btn_close) FancyButton btnClose;
+  @BindView(R.id.filter_btn_apply) FancyButton btnApply;
+  @BindView(fabtoolbar) FABToolbarLayout fabToolbar;
+  @BindView(R.id.filter_view_header) FrameLayout filterViewHeader;
+  @BindView(R.id.fabtoolbar_toolbar) RelativeLayout fabtoolbarToolbar;
 
-  ViewPager viewPager;
-  CircleIndicator indicator;
-  private FancyButton btnApply;
-  private FancyButton btnClose;
+  @BindColor(R.color.colorPrimary) int defaultColor;
+  @BindColor(R.color.colorAccent) int selectedColor;
 
+  private List<GenderEnum> selectedGenreList = null;
+  private Integer mMinScore = null;
+  private Date mEndDate = null;
+  private Date mStartDate = null;
 
-  public FilterViewManager(FragmentActivity activity) {
-
-    viewPager = (ViewPager) activity.findViewById(R.id.media_list_filter_viewpager);
-    indicator = (CircleIndicator) activity.findViewById(R.id.media_list_page_indicator);
-    btnApply = (FancyButton) activity.findViewById(R.id.filter_btn_apply);
-    btnClose = (FancyButton) activity.findViewById(R.id.filter_btn_close);
-
-    FilterPagerAdapter filterAdater = new FilterPagerAdapter(activity.getApplicationContext());
+  public FilterViewManager(Activity activity) {
+    ButterKnife.bind(this, activity);
+    resources = activity.getResources();
+    FilterPagerAdapter filterAdater = new FilterPagerAdapter(activity, createGenreSelectListener());
     viewPager.setAdapter(filterAdater);
     indicator.setViewPager(viewPager);
-    btnClose.setOnClickListener(v -> filterSubject.onNext(null));
   }
 
-  public Observable<GenderEnum> getFilterSubjectAsObservable() {
-    return filterSubject.asObservable();
-  }
+  @NonNull private OnAdapterClickListener createGenreSelectListener() {
+    return new OnAdapterClickListener() {
 
-  public class FilterPagerAdapter extends PagerAdapter {
-
-    private Context context;
-
-    public FilterPagerAdapter(Context context) {
-      this.context = context;
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup collection, int position) {
-      FilterPagerEnum currentFilter = FilterPagerEnum.values()[position];
-      ViewGroup layout = getView(collection, currentFilter.getLayoutResId());
-
-      if (currentFilter.getLayoutResId() == FilterPagerEnum.GENRE_FILTER.getLayoutResId()) {
-        bindGenreFilterLayout(layout);
-      } else {
-        bindGeneralFilterLayout(layout);
+      @Override public void onGenreSelected(List<GenderEnum> genderList) {
+        selectedGenreList = genderList;
+        wasFilterAdded();
       }
-      return layout;
+
+      @Override public void onStartDateChanged(Date startDate) {
+        mStartDate = startDate;
+        wasFilterAdded();
+      }
+
+      @Override public void onEndDateChanged(Date endDate) {
+        mEndDate = endDate;
+        wasFilterAdded();
+      }
+
+      @Override public void onMinScoreChanged(int minScore) {
+        mMinScore = minScore;
+        wasFilterAdded();
+      }
+    };
+  }
+
+  boolean wasFilterAdded() {
+    if (selectedGenreList == null &&
+        mStartDate == null &&
+        mEndDate == null &&
+        mMinScore == null
+        ) {
+      btnApply.setBackgroundColor(defaultColor);
+      return false;
+    } else {
+      btnApply.setBackgroundColor(selectedColor);
+      return true;
     }
+  }
 
-    private void bindGeneralFilterLayout(ViewGroup layout) {
-
+  public boolean hideFilterIfShown() {
+    if (blurredView.isShown()) {
+      hideFilterView();
+      return true;
     }
+    return false;
+  }
 
-    private void bindGenreFilterLayout(ViewGroup layout) {
-      RecyclerView gridList = (RecyclerView) layout.findViewById(R.id.genre_filter_list);
-      gridList.addItemDecoration(new GridSpacingItemDecoration(3, 50, true));
-      gridList.setHasFixedSize(true);
-      gridList.setLayoutManager(new GridLayoutManager(context, 3));
+  private void hideFilterView() {
+    fabToolbar.hide();
+    blurredView.postDelayed(() -> blurredView.setVisibility(View.GONE), BLUR_VIEW_HIDE_DELAY);
+  }
 
-      GenreGridAdapter adapter = new GenreGridAdapter(context,
-          new GenreGridAdapter.OnAdapterClickListener() {
-            @Override public void onItemSelected() {
-              btnApply.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
-            }
+  private void showFilterView() {
+    fabToolbar.show();
+    blurredView.postDelayed(() -> blurredView.setVisibility(View.VISIBLE), BLUR_VIEW_SHOW_DELAY);
+  }
 
-            @Override public void onNoneSelected() {
-              btnApply.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
-            }
-          });
+  private void changeFabColor(List<GenderEnum> genderList) {
+    new Handler().postDelayed(() -> {
+      if (genderList == null) {
+        filterFab.setBackgroundTintList(ColorStateList.valueOf(defaultColor));
+        return;
+      }
+      filterFab.setBackgroundTintList(ColorStateList.valueOf(selectedColor));
+    }, BLUR_VIEW_HIDE_DELAY);
+  }
 
-      gridList.setAdapter(adapter);
-      btnApply.setOnClickListener(v -> filterSubject.onNext(adapter.getSelectedGenres()));
+  @OnClick({
+      R.id.filter_btn_close,
+      R.id.filter_btn_apply,
+      R.id.fabtoolbar_fab,
+      R.id.main_blurred_view
+  })
+  void onClick(View view) {
+    switch (view.getId()) {
+      case R.id.filter_btn_close:
+        removeFilters();
+        break;
+      case R.id.main_blurred_view:
+        hideFilterView();
+        break;
+      case R.id.filter_btn_apply:
+        applyFilters();
+        break;
+      case R.id.fabtoolbar_fab:
+        showFilterView();
+        break;
     }
+  }
 
-    private ViewGroup getView(ViewGroup collection, @LayoutRes int layoutResId) {
-      LayoutInflater inflater = LayoutInflater.from(context);
-      ViewGroup layout = (ViewGroup) inflater.inflate(layoutResId, collection, false);
-      collection.addView(layout);
-      return layout;
-    }
+  private void removeFilters() {
+    mEndDate = null;
+    mStartDate = null;
+    mMinScore = null;
+    selectedGenreList = null;
+    applyFilters();
+  }
 
-    @Override
-    public void destroyItem(ViewGroup collection, int position, Object view) {
-      collection.removeView((View) view);
+  private void applyFilters() {
+    MediaFilter filter = null;
+    if (wasFilterAdded()) {
+    filter = MediaFilter
+        .builder()
+        .endDate(mEndDate)
+        .startDate(mStartDate)
+        .minScore(mMinScore)
+        .genderList(selectedGenreList)
+        .build();
     }
+    hideFilterView();
+    changeFabColor(selectedGenreList);
+    EventBus.getDefault().post(new FilterEvent(filter));
+  }
 
-    @Override
-    public int getCount() {
-      return FilterPagerEnum.values().length;
-    }
+  public interface OnAdapterClickListener {
+    void onGenreSelected(List<GenderEnum> genderList);
 
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-      return view == object;
-    }
+    void onStartDateChanged(Date startDate);
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-      FilterPagerEnum customPagerEnum = FilterPagerEnum.values()[position];
-      return context.getString(customPagerEnum.getTitleResId());
-    }
+    void onEndDateChanged(Date endDate);
+
+    void onMinScoreChanged(int minScore);
   }
 }

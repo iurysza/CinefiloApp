@@ -38,4 +38,13 @@ public interface MovieService {
   Observable<MovieResults> getNowPlayingMovies(
       @Query("api_key") String apiKey,
       @Query("page") int page);
+
+  @GET("discover/movie")
+  Observable<MovieResults> getFilteredMovies(
+      @Query("api_key") String apiKey,
+      @Query("page")int page,
+      @Query("primary_release_date.gte") int startDate,
+      @Query("primary_release_date.lte") int endDate,
+      @Query("with_genres")String genres,
+      @Query("vote_average.lte") int minScore);
 }

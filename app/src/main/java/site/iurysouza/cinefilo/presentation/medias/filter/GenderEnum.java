@@ -28,7 +28,8 @@ public enum GenderEnum {
   TV_MOVIE(R.string.genre_tv_movie, R.drawable.ic_tv_movie, 10770, R.color.appFirenze1),
   THRILLER(R.string.genre_thriller, R.drawable.ic_thriller, 53, R.color.appFirenze2),
   WAR(R.string.genre_war, R.drawable.ic_war, 10752, R.color.appFirenze3),
-  Western(R.string.genre_Western, R.drawable.ic_western, 37, R.color.appFirenze4);
+  Western(R.string.genre_Western, R.drawable.ic_western, 37, R.color.appFirenze4),
+  NONE_SELECTED(R.string.genre_none, R.drawable.ic_western, 0,R.color.appFirenze4 );
 
   private int genreId;
   private int colorRes;

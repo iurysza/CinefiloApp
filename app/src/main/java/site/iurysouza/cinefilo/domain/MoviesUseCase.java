@@ -59,6 +59,14 @@ public class MoviesUseCase implements UseCase {
   }
 
   @Override
+  public Observable<List<WatchMediaValue>> getFilteredMedia(int page, MediaFilter mediaFilter) {
+    movieRepository.getFilteredBy(page, mediaFilter);
+    return movieRepository
+        .getFilteredMoviesSubject()
+        .map(WatchMediaValueMapper::mapToValueMedia);
+  }
+
+  @Override
   public Observable<List<WatchMediaValue>> getNowPlaying() {
     movieRepository.getNowPlaying(FIRST_PAGE, false);
 
