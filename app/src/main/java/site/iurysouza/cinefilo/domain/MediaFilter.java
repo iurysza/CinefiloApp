@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
-import org.joda.time.DateTime;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 
 /**
@@ -15,17 +14,13 @@ import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 public class MediaFilter {
 
   //initialize default data
-  private static final int START_DAY = 1;
-  private static final int START_MONTH = 1;
-  private static final int START_YEAR = 1990;
-  private Date startDate = new DateTime()
-      .withDate(START_YEAR,START_DAY ,START_MONTH )
-      .toDate();
-  private Date endDate = new Date();
+  public static final int START_YEAR = 1990;
+  private Integer startDate = START_YEAR;
+  private Integer endDate = new Date().getYear();
   private Integer minScore = 0;
   private List<GenderEnum> genderList = new ArrayList<>(Arrays.asList(GenderEnum.NONE_SELECTED));
 
-  MediaFilter(Date startDate, Date endDate, int minScore, List<GenderEnum> genderList) {
+  MediaFilter(int startDate, int endDate, int minScore, List<GenderEnum> genderList) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.minScore = minScore;
@@ -37,24 +32,22 @@ public class MediaFilter {
   }
 
   public static class MediaFilterBuilder {
-    private Date startDate = new DateTime()
-        .withDate(START_YEAR,START_DAY ,START_MONTH )
-        .toDate();
-    private Date endDate = new Date();
+    private int startDate = START_YEAR;
+    private int endDate = new Date().getYear();
     private Integer minScore = 0;
     private List<GenderEnum> genderList = new ArrayList<>(Arrays.asList(GenderEnum.NONE_SELECTED));
 
     MediaFilterBuilder() {
     }
 
-    public MediaFilter.MediaFilterBuilder startDate(Date startDate) {
+    public MediaFilter.MediaFilterBuilder startDate(Integer startDate) {
       if (startDate != null) {
         this.startDate = startDate;
       }
       return this;
     }
 
-    public MediaFilter.MediaFilterBuilder endDate(Date endDate) {
+    public MediaFilter.MediaFilterBuilder endDate(Integer endDate) {
       if (endDate != null) {
         this.endDate = endDate;
       }

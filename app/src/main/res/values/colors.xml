@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryLight">#5c77ce</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">@color/appRed</color>
 
@@ -13,8 +14,13 @@
     <color name="appRed">#f44336</color>
     <color name="appWhite">#ffffff</color>
     <color name="appGrey">#66615a</color>
+    <color name="appGreyAlpha80">#BF66615a</color>
     <color name="appOrange">#F57C00</color>
     <color name="appLightBlack">#212121</color>
+
+    <color name="appFilterBackGround">#28282a</color>
+    <color name="appFilterPageBackGround">#212129</color>
+    <color name="appFilterTextColor">#575a64</color>
 
     <color name="appFirenze1">#1C1D21</color>
     <color name="appFirenze3">#31353D</color>

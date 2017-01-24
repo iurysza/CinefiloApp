@@ -13,7 +13,6 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.malinskiy.superrecyclerview.OnMoreListener;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
@@ -134,7 +133,6 @@ public class MediaListFragment extends BaseFragment
     movieList.getRecyclerView().setHasFixedSize(true);
     layoutManger = new LinearLayoutManager(getContext());
     movieList.setLayoutManager(layoutManger);
-    movieList.addItemDecoration(new MaterialViewPagerHeaderDecorator());
     mediaAdapter = new MediaAdapter(Picasso.with(getContext()), this);
     movieList.setAdapter(mediaAdapter);
     movieList.setupMoreListener(createOnMoreListener(), MIN_ITEMS_THRESHOLD);

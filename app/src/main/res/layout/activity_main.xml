@@ -108,14 +108,14 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:text="Filter"
-            android:textColor="@color/appWhite"
+            android:textColor="@color/appFilterTextColor"
             android:textSize="@dimen/title_text_size"
             />
 
         <mehdi.sakout.fancybuttons.FancyButton
             android:id="@+id/filter_btn_close"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="right"
             android:gravity="center"
             android:padding="10dp"
@@ -134,6 +134,10 @@
           android:id="@+id/media_list_page_indicator"
           android:layout_width="match_parent"
           android:layout_height="48dp"
+          app:ci_width="8dp"
+          app:ci_height="2dp"
+          app:ci_drawable="@drawable/ic_selected_page_indicator"
+          app:ci_drawable_unselected="@drawable/ic_page_indicator"
           android:layout_marginTop="20dp"
           />
 
@@ -143,7 +147,7 @@
           android:layout_height="@dimen/filter_viewpager_size"
           android:layout_below="@id/filter_view_header"
           android:layout_centerHorizontal="true"
-          android:layout_marginTop="22dp"
+
           >
       </android.support.v4.view.ViewPager>
 

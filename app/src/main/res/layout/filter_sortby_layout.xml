@@ -1,39 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
+    android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    tools:background="@color/appLightBlack"
+    android:orientation="vertical"
+    tools:background="@color/appFilterPageBackGround"
     >
 
   <TextView
+      android:id="@+id/filter_title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="4dp"
-      android:layout_marginTop="4dp"
       android:layout_marginLeft="16dp"
+      android:layout_marginTop="4dp"
       android:alpha=".8"
-      android:id="@+id/genre_filter_title"
-      android:text="Sort by"
-      android:textColor="@color/appGrey"
+      android:text="Movies released in"
+      android:textColor="@color/appFilterTextColor"
       android:textSize="@dimen/standard_text_size"
       >
 
   </TextView>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="12dp"
+    android:background="@color/appFilterBackGround"
+    >
 
+  <TextView
+      android:id="@+id/filter_init_date"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:alpha=".8"
+      android:layout_marginLeft="8dp"
+      android:layout_alignParentLeft="true"
+      android:text="1990"
+      android:layout_marginBottom="4dp"
+      android:textColor="@color/colorPrimaryLight"
+      android:textSize="@dimen/title_text_size"
+      >
+
+  </TextView>
+  <TextView
+      android:id="@+id/filter_final_date"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:alpha=".8"
+      android:text="2017"
+      android:layout_marginRight="8dp"
+      android:layout_marginBottom="4dp"
+      android:textColor="@color/colorPrimaryLight"
+      android:textSize="@dimen/title_text_size"
+      >
+
+  </TextView>
   <io.apptik.widget.MultiSlider
-      android:id="@+id/range_slider5"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-
-      app:thumbNumber="2"
-      app:range1="@drawable/multislider_scrubber_track_holo_light"
-      app:stepsThumbsApart="5"
+      android:layout_below="@id/filter_init_date"
       app:drawThumbsApart="true"
-
+      android:thumb="@drawable/multi_slider_custom_scrubber"
+      android:track="@drawable/track_behind"
+      app:range="@drawable/track_drawable"
+      app:thumbNumber="0"
+      android:layout_alignTop="@+id/filter_date_slider"
+      android:layout_alignBottom="@+id/filter_date_slider"
+      app:scaleStep="1"
       />
-
+  <io.apptik.widget.MultiSlider
+      android:id="@+id/filter_date_slider"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/filter_init_date"
+      app:drawThumbsApart="true"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:thumb="@drawable/multi_slider_custom_scrubber"
+      android:track="@drawable/track_behind"
+      app:range="@drawable/track_drawable"
+      app:thumbNumber="2"
+      app:scaleStep="1"
+      />
 </RelativeLayout>
+
+</LinearLayout>

@@ -15,7 +15,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.github.mmin18.widget.RealtimeBlurView;
-import java.util.Date;
 import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 import mehdi.sakout.fancybuttons.FancyButton;
@@ -49,8 +48,8 @@ public class FilterViewManager {
 
   private List<GenderEnum> selectedGenreList = null;
   private Integer mMinScore = null;
-  private Date mEndDate = null;
-  private Date mStartDate = null;
+  private Integer mEndDate = null;
+  private Integer mStartDate = null;
   private Activity activity;
 
   public FilterViewManager(Activity activity) {
@@ -74,17 +73,17 @@ public class FilterViewManager {
         wasFilterAdded();
       }
 
-      @Override public void onStartDateChanged(Date startDate) {
+      @Override public void onStartDateChanged(Integer startDate) {
         mStartDate = startDate;
         wasFilterAdded();
       }
 
-      @Override public void onEndDateChanged(Date endDate) {
+      @Override public void onEndDateChanged(Integer endDate) {
         mEndDate = endDate;
         wasFilterAdded();
       }
 
-      @Override public void onMinScoreChanged(int minScore) {
+      @Override public void onMinScoreChanged(Integer minScore) {
         mMinScore = minScore;
         wasFilterAdded();
       }
@@ -189,10 +188,10 @@ public class FilterViewManager {
   interface OnAdapterClickListener {
     void onGenreSelected(List<GenderEnum> genderList);
 
-    void onStartDateChanged(Date startDate);
+    void onStartDateChanged(Integer startDate);
 
-    void onEndDateChanged(Date endDate);
+    void onEndDateChanged(Integer endDate);
 
-    void onMinScoreChanged(int minScore);
+    void onMinScoreChanged(Integer minScore);
   }
 }

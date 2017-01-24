@@ -15,8 +15,8 @@
 -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:state_enabled="false" android:drawable="@drawable/example_scrubber_control_disabled_holo" />
-  <item android:state_pressed="true" android:drawable="@drawable/example_scrubber_control_pressed_holo" />
-  <item android:state_selected="true" android:drawable="@drawable/example_scrubber_control_focused_holo" />
-  <item android:drawable="@drawable/example_scrubber_control_normal_holo" />
+  <item android:state_enabled="false" android:drawable="@drawable/ic_thumb_button" />
+  <item android:state_pressed="true" android:drawable="@drawable/ic_selected_thumb_button" />
+  <item android:state_selected="true" android:drawable="@drawable/ic_selected_thumb_button" />
+  <item android:drawable="@drawable/ic_thumb_button" />
 </selector>
