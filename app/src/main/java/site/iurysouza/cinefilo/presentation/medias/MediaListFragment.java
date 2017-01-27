@@ -124,8 +124,10 @@ public class MediaListFragment extends BaseFragment
   private void applyFilter(FilterEvent event) {
     filter = event.filter;
     List<GenderEnum> genderList = filter.getGenderList();
-    List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderList);
-    mediaAdapter.replaceList(filteredList);
+    if (genderList != null) {
+      List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderList);
+      mediaAdapter.replaceList(filteredList);
+    }
     currentPage = 0;
   }
 

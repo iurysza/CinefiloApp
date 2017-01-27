@@ -1,11 +1,10 @@
 package site.iurysouza.cinefilo.domain;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
+import site.iurysouza.cinefilo.presentation.medias.filter.SortingMethod;
 
 /**
  * Created by Iury Souza on 22/01/2017.
@@ -18,24 +17,30 @@ public class MediaFilter {
   private Integer startDate = START_YEAR;
   private Integer endDate = new Date().getYear();
   private Integer minScore = 0;
-  private List<GenderEnum> genderList = new ArrayList<>(Arrays.asList(GenderEnum.NONE_SELECTED));
+  private SortingMethod sortBy = null;
+  private List<GenderEnum> genderList = null;
 
-  MediaFilter(int startDate, int endDate, int minScore, List<GenderEnum> genderList) {
+  MediaFilter(int startDate, int endDate, int minScore, List<GenderEnum> genderList,
+      SortingMethod sortBy) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.minScore = minScore;
     this.genderList = genderList;
+    this.sortBy = sortBy;
   }
 
   public static MediaFilterBuilder builder() {
     return new MediaFilterBuilder();
   }
 
+
+
   public static class MediaFilterBuilder {
     private int startDate = START_YEAR;
     private int endDate = new Date().getYear();
     private Integer minScore = 0;
-    private List<GenderEnum> genderList = new ArrayList<>(Arrays.asList(GenderEnum.NONE_SELECTED));
+    private SortingMethod sortBy = null;
+    private List<GenderEnum> genderList = null;
 
     MediaFilterBuilder() {
     }
@@ -43,6 +48,13 @@ public class MediaFilter {
     public MediaFilter.MediaFilterBuilder startDate(Integer startDate) {
       if (startDate != null) {
         this.startDate = startDate;
+      }
+      return this;
+    }
+
+    public MediaFilter.MediaFilterBuilder sortBy(SortingMethod sortBy) {
+      if (sortBy != null) {
+        this.sortBy = sortBy;
       }
       return this;
     }
@@ -69,7 +81,7 @@ public class MediaFilter {
     }
 
     public MediaFilter build() {
-      return new MediaFilter(startDate, endDate, minScore, genderList);
+      return new MediaFilter(startDate, endDate, minScore, genderList, sortBy);
     }
 
     public String toString() {

@@ -19,9 +19,13 @@ import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 import mehdi.sakout.fancybuttons.FancyButton;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.presentation.main.FilterEvent;
+import site.iurysouza.cinefilo.presentation.medias.pager.MediaPageChangedEvent;
+import site.iurysouza.cinefilo.util.Utils;
 
 import static site.iurysouza.cinefilo.R.id.fabtoolbar;
 
@@ -30,8 +34,8 @@ import static site.iurysouza.cinefilo.R.id.fabtoolbar;
  */
 
 public class FilterViewManager {
-  private static final int BLUR_VIEW_HIDE_DELAY = 450;
-  private static final int BLUR_VIEW_SHOW_DELAY = 550;
+  private static final int BLUR_VIEW_HIDE_DELAY = 350;
+  private static final int BLUR_VIEW_SHOW_DELAY = 250;
 
   @BindView(R.id.media_list_filter_viewpager) ViewPager viewPager;
   @BindView(R.id.media_list_page_indicator) CircleIndicator indicator;
@@ -48,6 +52,7 @@ public class FilterViewManager {
 
   private List<GenderEnum> selectedGenreList = null;
   private Integer mMinScore = null;
+  private SortingMethod mSortBy = null;
   private Integer mEndDate = null;
   private Integer mStartDate = null;
   private Activity activity;
@@ -55,6 +60,7 @@ public class FilterViewManager {
   public FilterViewManager(Activity activity) {
     this.activity = activity;
     ButterKnife.bind(this, activity);
+    Utils.safeRegisterEventBus(this);
     filterFab.setBackgroundTintList(ColorStateList.valueOf(defaultColor));
     createViewPager(activity);
   }
@@ -87,6 +93,15 @@ public class FilterViewManager {
         mMinScore = minScore;
         wasFilterAdded();
       }
+
+      @Override public void onSortingMethodChanged(SortingMethod sortBy) {
+        mSortBy = sortBy;
+        wasFilterAdded();
+      }
+
+      @Override public void closeOnRefresh() {
+        hideFilterView();
+      }
     };
   }
 
@@ -94,7 +109,8 @@ public class FilterViewManager {
     if (selectedGenreList == null &&
         mStartDate == null &&
         mEndDate == null &&
-        mMinScore == null
+        mMinScore == null &&
+        mSortBy == null
         ) {
       btnApply.setBackgroundColor(defaultColor);
       return false;
@@ -122,9 +138,9 @@ public class FilterViewManager {
     blurredView.postDelayed(() -> blurredView.setVisibility(View.VISIBLE), BLUR_VIEW_SHOW_DELAY);
   }
 
-  private void changeFabColor(List<GenderEnum> genderList) {
+  private void changeFabColor() {
     new Handler().postDelayed(() -> {
-      if (genderList == null) {
+      if (!wasFilterAdded()) {
         filterFab.setBackgroundTintList(ColorStateList.valueOf(defaultColor));
         return;
       }
@@ -155,15 +171,23 @@ public class FilterViewManager {
     }
   }
 
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onPageChangedEvent(MediaPageChangedEvent event) {
+    if (wasFilterAdded()) {
+    removeFilters();
+    }
+  }
+
   private void removeFilters() {
     createViewPager(activity);
     hideFilterView();
-    changeFabColor(null);
+    changeFabColor();
     if (wasFilterAdded()) {
       mEndDate = null;
       mStartDate = null;
       mMinScore = null;
       selectedGenreList = null;
+      mSortBy = null;
       wasFilterAdded();
       EventBus.getDefault().post(new FilterEvent(null));
     }
@@ -177,11 +201,12 @@ public class FilterViewManager {
           .endDate(mEndDate)
           .startDate(mStartDate)
           .minScore(mMinScore)
+          .sortBy(mSortBy)
           .genderList(selectedGenreList)
           .build();
     }
     hideFilterView();
-    changeFabColor(selectedGenreList);
+    changeFabColor();
     EventBus.getDefault().post(new FilterEvent(filter));
   }
 
@@ -193,5 +218,10 @@ public class FilterViewManager {
     void onEndDateChanged(Integer endDate);
 
     void onMinScoreChanged(Integer minScore);
+
+    void onSortingMethodChanged(SortingMethod sortBy);
+
+    void closeOnRefresh();
+
   }
 }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import site.iurysouza.cinefilo.R;
@@ -27,7 +28,7 @@ import site.iurysouza.cinefilo.util.Utils;
  * Created by Iury Souza on 09/11/2016.
  */
 
-public class MediaPagerFragment extends BaseFragment {
+public class MediaPagerFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
   public static final String MEDIA_TYPE = "MEDIA_TYPE";
   private static final int FRAGS_IN_MEMORY = 3;
@@ -60,6 +61,7 @@ public class MediaPagerFragment extends BaseFragment {
     appbar = (AppBarLayout) getActivity().findViewById(R.id.media_fragment_appbar);
     toolbar = (Toolbar) getActivity().findViewById(R.id.media_fragment_toolbar);
     viewpager.setAdapter(adapter);
+    viewpager.addOnPageChangeListener(this);
     viewpager.setOffscreenPageLimit(FRAGS_IN_MEMORY);
     tabs.setupWithViewPager(viewpager);
     handleToolbar(toolbar);
@@ -85,8 +87,23 @@ public class MediaPagerFragment extends BaseFragment {
     //headerText.setText(featuredMovie.name());
   }
 
+
+
   @Override protected void setupFragmentComponent() {
     ((CineApplication) getContext().getApplicationContext()).getRepositoryComponent().inject(this);
   }
 
+  @Override
+  public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+  }
+
+  @Override public void onPageSelected(int position) {
+    EventBus.getDefault().post(new MediaPageChangedEvent());
+
+  }
+
+  @Override public void onPageScrollStateChanged(int state) {
+
+  }
 }
