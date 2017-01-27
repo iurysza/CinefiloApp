@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:orientation="vertical"
-    tools:layout_gravity="bottom"
     tools:background="@color/appFilterPageBackGround"
+    tools:layout_gravity="bottom"
     >
 
   <TextView
@@ -42,7 +42,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginRight="20dp"
         android:alpha=".8"
-        android:text="0"
+        android:text="6"
         android:textColor="@color/colorPrimaryLight"
         android:textSize="@dimen/title_text_size"
         >
@@ -52,8 +52,8 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
         android:layout_marginBottom="4dp"
+        android:layout_marginLeft="12dp"
         android:src="@drawable/ic_imdb_logo"
         />
 
@@ -67,11 +67,11 @@
         android:thumb="@drawable/multi_slider_custom_scrubber"
         android:track="@drawable/track_behind"
         app:drawThumbsApart="true"
-        app:scaleMax="10"
-
         app:range="@drawable/track_drawable"
+        app:scaleMax="10"
         app:scaleStep="1"
         app:thumbNumber="1"
+        app:thumbValue1="6"
         />
   </RelativeLayout>
 

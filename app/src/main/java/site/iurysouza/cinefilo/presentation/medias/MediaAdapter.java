@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 
@@ -61,6 +62,7 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     mediaValueList.clear();
     notifyDataSetChanged();
   }
+
   private void appendMedia(List<WatchMediaValue> mediaList) {
     int positionStart = mediaValueList.size() - 1;
     mediaValueList.addAll(mediaList);
@@ -75,7 +77,6 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     notifyDataSetChanged();
     //diffResult.dispatchUpdatesTo(this);
   }
-
 
   WatchMediaValue getFeauturedMovie() {
     return getRandomMovieWithBackDrop(mediaValueList);
@@ -102,7 +103,39 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
         }
       }
     }
-      return filteredList;
+    return filteredList;
+  }
+
+  public List<WatchMediaValue> filterAdapter(MediaFilter filter) {
+    List<WatchMediaValue> filteredList = new ArrayList<>();
+
+    boolean isGenderFilterValid = filter.getGenderList() != null;
+
+    for (WatchMediaValue media : mediaValueList) {
+      if (isGenderFilterValid) {
+        for (GenderEnum gender : filter.getGenderList()) {
+          if (media.genre() == gender.getGenreId()) {
+            if (media.voteAverage() >= filter.getMinScore()) {
+              isDateValid(filter, filteredList, media);
+            }
+          }
+        }
+      } else {
+        if (media.voteAverage() >= filter.getMinScore()) {
+          isDateValid(filter, filteredList, media);
+        }
+      }
+    }
+    return filteredList;
+  }
+
+  private void isDateValid(MediaFilter filter, List<WatchMediaValue> filteredList,
+      WatchMediaValue media) {
+    int releaseYear = media.releaseDate().getYear();
+    if (releaseYear >= filter.getStartDate()
+        && releaseYear <= filter.getEndDate()) {
+      filteredList.add(media);
+    }
   }
 
   interface OnAdapterClickListener {

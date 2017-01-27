@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +32,6 @@ import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
 import site.iurysouza.cinefilo.presentation.main.FilterEvent;
-import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 import site.iurysouza.cinefilo.util.Utils;
 import timber.log.Timber;
 
@@ -65,6 +65,7 @@ public class MediaListFragment extends BaseFragment
   @BindView(R.id.movie_list_recyclerview) SuperRecyclerView movieList;
   FloatingActionButton fabFilter;
   SpaceNavigationView navigationView;
+  @BindView(R.id.empty_list_layout) RelativeLayout emptyListLayout;
   private int listType;
   private MediaAdapter mediaAdapter;
   private Subscription filterObserver;
@@ -108,6 +109,7 @@ public class MediaListFragment extends BaseFragment
     MediaFilter filter = event.filter;
     if (isMenuVisible()) {
       if (filter == null) {
+        this.filter = filter;
         disableFilter();
       } else {
         applyFilter(event);
@@ -123,9 +125,8 @@ public class MediaListFragment extends BaseFragment
 
   private void applyFilter(FilterEvent event) {
     filter = event.filter;
-    List<GenderEnum> genderList = filter.getGenderList();
-    if (genderList != null) {
-      List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderList);
+    if (filter != null) {
+      List<WatchMediaValue> filteredList = mediaAdapter.filterAdapter(filter);
       mediaAdapter.replaceList(filteredList);
     }
     currentPage = 0;
@@ -224,6 +225,13 @@ public class MediaListFragment extends BaseFragment
 
   @Override public void sendToListView(List<WatchMediaValue> watchMediaValuesList) {
     mediaAdapter.addAllMedia(watchMediaValuesList);
+    if (watchMediaValuesList.isEmpty() && mediaAdapter.getItemCount() == 0) {
+      emptyListLayout.setVisibility(View.VISIBLE);
+      movieList.setVisibility(View.GONE);
+    } else {
+      emptyListLayout.setVisibility(View.GONE);
+      movieList.setVisibility(View.VISIBLE);
+    }
   }
 
   @Override protected void setupFragmentComponent() {

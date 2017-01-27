@@ -68,6 +68,9 @@ public class RealmMovie implements RealmModel {
 
     if (isMovieInvalid(originalTitle, posterPath, genreIds, voteAverage, overview)) return null;
 
+    if (movie.getReleaseDate() == null) {
+      return null;
+    }
     RealmMovie realmMovie = new RealmMovie();
     realmMovie.setAdult(movie.getAdult());
     realmMovie.setBackdropPath("");

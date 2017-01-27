@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container_movie_list"
     android:layout_width="match_parent"
+    android:layout_gravity="center"
     android:layout_height="match_parent"
     android:layout_margin="8dp"
-    android:orientation="vertical">
+    >
 
 
   <com.malinskiy.superrecyclerview.SuperRecyclerView
@@ -14,11 +15,13 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:scrollbars="none"
+
       app:layout_moreProgress="@layout/layout_more_progress"
       app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
       app:recyclerClipToPadding="true"
       tools:listitem="@layout/list_item_movie"
-  />
+      />
+
   <com.wang.avi.AVLoadingIndicatorView
       android:id="@+id/movie_list_progressImage"
       android:layout_width="wrap_content"
@@ -26,7 +29,15 @@
       android:layout_gravity="center"
       app:indicatorColor="@color/colorPrimary"
       app:indicatorName="BallClipRotatePulseIndicator"
-  />
+      />
+
+  <include
+      layout="@layout/empty_list"
+     android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:layout_gravity="center_vertical"
+      >
+  </include>
 
 
 </FrameLayout>

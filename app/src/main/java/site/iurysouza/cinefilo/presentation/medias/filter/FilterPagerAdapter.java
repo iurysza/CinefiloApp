@@ -53,11 +53,11 @@ public class FilterPagerAdapter extends PagerAdapter {
   private void bindSliderFilterLayout(ViewGroup layout) {
     MultiSlider ratingSlider = (MultiSlider) layout.findViewById(R.id.filter_min_rate_slider);
     TextView minRate = (TextView) layout.findViewById(R.id.filter_min_rate);
-    ratingSlider.getThumb(0).setValue(0);
     ratingSlider.setOnThumbValueChangeListener((multiSlider, thumb, thumbIndex, value) -> {
       minRate.setText(String.valueOf(value));
       listener.onMinScoreChanged(value);
     });
+    ratingSlider.getThumb(0).setValue(6);
     MultiSlider dateSlider = (MultiSlider) layout.findViewById(R.id.filter_date_slider);
     TextView initialDate = (TextView) layout.findViewById(R.id.filter_init_date);
     TextView finalDate = (TextView) layout.findViewById(R.id.filter_final_date);

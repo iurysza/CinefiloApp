@@ -69,6 +69,9 @@ public class RealmSeries implements RealmModel {
     String overview = series.getOverview();
 
     if (isSeriesInvalid(originalTitle, posterPath, genreIds, voteAverage, overview)) return null;
+    if (series.getFirstAirDate() == null) {
+      return null;
+    }
 
     RealmSeries realmSeries = new RealmSeries();
     realmSeries.setBackdropPath("");

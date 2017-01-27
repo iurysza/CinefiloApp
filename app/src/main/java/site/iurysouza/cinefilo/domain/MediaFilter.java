@@ -3,6 +3,7 @@ package site.iurysouza.cinefilo.domain;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
+import org.joda.time.DateTime;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 import site.iurysouza.cinefilo.presentation.medias.filter.SortingMethod;
 
@@ -15,8 +16,8 @@ public class MediaFilter {
   //initialize default data
   public static final int START_YEAR = 1990;
   private Integer startDate = START_YEAR;
-  private Integer endDate = new Date().getYear();
-  private Integer minScore = 0;
+  private Integer endDate = new DateTime(new Date()).getYear();
+  private Integer minScore = 6;
   private SortingMethod sortBy = null;
   private List<GenderEnum> genderList = null;
 
@@ -37,8 +38,8 @@ public class MediaFilter {
 
   public static class MediaFilterBuilder {
     private int startDate = START_YEAR;
-    private int endDate = new Date().getYear();
-    private Integer minScore = 0;
+    private int endDate = new DateTime(new Date()).getYear();
+    private Integer minScore = 6;
     private SortingMethod sortBy = null;
     private List<GenderEnum> genderList = null;
 

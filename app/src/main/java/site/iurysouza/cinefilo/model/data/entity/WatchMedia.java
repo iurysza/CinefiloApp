@@ -2,10 +2,12 @@ package site.iurysouza.cinefilo.model.data.entity;
 
 import io.realm.RealmList;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import lombok.Data;
 import lombok.experimental.Builder;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
+import site.iurysouza.cinefilo.model.entities.pojo.Series;
 import site.iurysouza.cinefilo.model.entities.realm.RealmInteger;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmSeries;
@@ -22,6 +24,7 @@ public class WatchMedia {
   private String posterPath;
   private String name;
   private Integer genre;
+  private Date releaseDate;
   private String backdropPath;
 
   public static WatchMedia valueOf(RealmMovie movie) {
@@ -31,6 +34,7 @@ public class WatchMedia {
         .id(movie.getId())
         .voteAverage(movie.getVoteAverage())
         .overview(movie.getOverview())
+        .releaseDate(movie.getReleaseDate())
         .backdropPath(movie.getBackdropPath())
         .posterPath(movie.getPosterPath())
         .name(movie.getOriginalTitle())
@@ -44,10 +48,26 @@ public class WatchMedia {
         .builder()
         .id(movie.getId())
         .voteAverage(movie.getVoteAverage())
+        .releaseDate(movie.getReleaseDate())
         .overview(movie.getOverview())
         .backdropPath(movie.getBackdropPath())
         .posterPath(movie.getPosterPath())
         .name(movie.getOriginalTitle())
+        .genre(genreValue)
+        .build();
+  }
+
+  public static WatchMedia valueOf(Series series) {
+    Integer genreValue = getGenreIdValue(series);
+    return WatchMedia
+        .builder()
+        .id(series.getId())
+        .voteAverage(series.getVoteAverage())
+        .releaseDate(series.getFirstAirDate())
+        .overview(series.getOverview())
+        .backdropPath(series.getBackdropPath())
+        .posterPath(series.getPosterPath())
+        .name(series.getOriginalName())
         .genre(genreValue)
         .build();
   }
@@ -61,9 +81,29 @@ public class WatchMedia {
       for (Movie movie : movieList) {
         if (movie.getOriginalTitle() != null &&
             movie.getPosterPath() != null &&
+            movie.getReleaseDate() != null &&
             movie.getOverview() != null) {
 
           mediaList.add(valueOf(movie));
+        }
+      }
+    }
+    return mediaList;
+  }
+
+  public static List<WatchMedia> valueOfSeriesList(List<Series> seriesList) {
+    List<WatchMedia> mediaList = new ArrayList<>();
+
+    if (seriesList.isEmpty()) {
+      return mediaList;
+    } else {
+      for (Series series : seriesList) {
+        if (series.getOriginalName() != null &&
+            series.getPosterPath() != null &&
+            series.getFirstAirDate() != null &&
+            series.getOverview() != null) {
+
+          mediaList.add(valueOf(series));
         }
       }
     }
@@ -79,6 +119,16 @@ public class WatchMedia {
     return genreId;
   }
 
+
+  private static Integer getGenreIdValue(Series series) {
+    Integer[] genreIdList = series.getGenres();
+    Integer genreId = 0;
+    if (genreIdList.length > 0) {
+      genreId = genreIdList[0];
+    }
+    return genreId;
+  }
+
   public static WatchMedia valueOf(RealmSeries series) {
     Integer genreValue = getGenreIdValue(series);
     return WatchMedia
@@ -87,6 +137,7 @@ public class WatchMedia {
         .voteAverage(series.getVoteAverage())
         .overview(series.getOverview())
         .backdropPath(series.getBackdropPath())
+        .releaseDate(series.getFirstAirDate())
         .posterPath(series.getPosterPath())
         .name(series.getOriginalName())
         .genre(genreValue)
