@@ -22,7 +22,7 @@ public class RealmMovie implements RealmModel {
   public static final String RELEASE_DATE = "releaseDate";
   public static final String VOTE_COUNT = "voteCount";
   public static final String QUERY_DATE = "queryDate";
-  public static final int NOW_QUERY= 2;
+  public static final int NOW_QUERY = 2;
   public static final int POP_QUERY = 1;
   public static final int TOP_QUERY = 0;
   public static final int GENRE_QUERY = 3;
@@ -65,44 +65,45 @@ public class RealmMovie implements RealmModel {
     Integer[] genreIds = movie.getGenreIds();
     Double voteAverage = movie.getVoteAverage();
     String overview = movie.getOverview();
+    Date releaseDate = movie.getReleaseDate();
 
-    if (isMovieInvalid(originalTitle, posterPath, genreIds, voteAverage, overview)) return null;
-
-    if (movie.getReleaseDate() == null) {
+    if (isMovieInvalid(originalTitle, posterPath, genreIds, voteAverage, overview, releaseDate)) {
       return null;
     }
+
     RealmMovie realmMovie = new RealmMovie();
     realmMovie.setAdult(movie.getAdult());
     realmMovie.setBackdropPath("");
-
-    if (movie.getBackdropPath() != null) {
-      realmMovie.setBackdropPath(movie.getBackdropPath());
-    }
-
+    realmMovie.setBackdropPath(movie.getBackdropPath());
     realmMovie.setBackdropPath(movie.getBackdropPath());
     realmMovie.setId(movie.getId().intValue());
-    realmMovie.setOriginalLanguage(movie.getOriginalLanguage());
     realmMovie.setOriginalTitle(originalTitle);
     realmMovie.setOverview(overview);
-    realmMovie.setPopularity(movie.getPopularity());
     realmMovie.setPosterPath(posterPath);
-    realmMovie.setVideo(movie.getVideo());
     realmMovie.setVoteAverage(voteAverage);
+
+    realmMovie.setOriginalLanguage(movie.getOriginalLanguage());
+    realmMovie.setPopularity(movie.getPopularity());
+    realmMovie.setVideo(movie.getVideo());
     realmMovie.setVoteCount(movie.getVoteCount());
-    realmMovie.setReleaseDate(movie.getReleaseDate());
+    realmMovie.setReleaseDate(releaseDate);
     realmMovie.setGenreIds(RealmIntegerMapper.map(genreIds));
     realmMovie.setQueryDate(System.currentTimeMillis());
     realmMovie.setQueryType(queryType);
+    if (movie.getBackdropPath() == null) {
+      movie.setBackdropPath("");
+    }
     return realmMovie;
   }
 
   private static boolean isMovieInvalid(String originalTitle, String posterPath, Integer[] genreIds,
-      Double voteAverage, String overview) {
+      Double voteAverage, String overview, Date releaseDate) {
     return isStringFieldInvalid(originalTitle) ||
         isStringFieldInvalid(posterPath) ||
         isStringFieldInvalid(overview) ||
         genreIds.length == 0 ||
-        voteAverage == null;
+        voteAverage == null ||
+        releaseDate == null;
   }
 
   private static boolean isStringFieldInvalid(String field) {

@@ -17,7 +17,9 @@ import site.iurysouza.cinefilo.util.Constants;
 import timber.log.Timber;
 
 import static site.iurysouza.cinefilo.model.entities.realm.RealmCurrentPage.MEDIA_MOVIE;
+import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.NOW_QUERY;
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.POPULARITY;
+import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.POP_QUERY;
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.QUERY_TYPE;
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.TOP_QUERY;
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.VOTE_AVG;
@@ -95,7 +97,7 @@ public class LocalMovieDataSource {
     Realm realm = Realm.getDefaultInstance();
     List<RealmMovie> movieList = realm.copyFromRealm(
         realm.where(RealmMovie.class)
-            .equalTo(QUERY_TYPE, TOP_QUERY)
+            .equalTo(QUERY_TYPE, POP_QUERY)
             .greaterThan(VOTE_COUNT, Constants.Media.MIN_VOTE_COUNT)
             .findAllSorted(POPULARITY, Sort.DESCENDING));
     realm.close();
@@ -106,7 +108,7 @@ public class LocalMovieDataSource {
     Realm realm = Realm.getDefaultInstance();
     List<RealmMovie> movieList = realm.copyFromRealm(
         realm.where(RealmMovie.class)
-            .greaterThan(QUERY_TYPE, TOP_QUERY)
+            .equalTo(QUERY_TYPE, NOW_QUERY)
             .greaterThan(VOTE_AVG, Constants.Media.MIN_VOTE_AVG)
             .findAll());
 

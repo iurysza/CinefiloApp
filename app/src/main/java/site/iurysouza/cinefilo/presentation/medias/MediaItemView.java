@@ -50,6 +50,7 @@ public final class MediaItemView extends FrameLayout {
       String posterUrl = ImageUtils.getPosterUrl(posterPath);
       picasso.load(posterUrl)
           .fit()
+          .placeholder(R.drawable.placeholder)
           .into(movieImage);
     }
     DateTime movieReleaseDate = new DateTime(realmMovie.releaseDate());

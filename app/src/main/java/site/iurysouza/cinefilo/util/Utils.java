@@ -1,5 +1,6 @@
 package site.iurysouza.cinefilo.util;
 
+import java.util.Random;
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -11,5 +12,10 @@ public class Utils {
     if (!EventBus.getDefault().isRegistered(classToRegister)) {
       EventBus.getDefault().register(classToRegister);
     }
+  }
+  public static int getRandomNumberInRange(int range) {
+    int min = 0;
+    Random r = new Random();
+    return r.nextInt(range - min + 1) + min;
   }
 }

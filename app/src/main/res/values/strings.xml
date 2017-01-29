@@ -30,4 +30,9 @@
   <string name="genre_war">War</string>
   <string name="genre_Western">Western</string>
   <string name="genre_none">None</string>
+  <string name="empty_pulpfiction"> - Filter that thing again!\n - I dare you!\n - I double dare you mother***r!</string>
+  <string name="empty_clockworkorange">- Naughty, naughty, naughty.\n- You filthy old soomka!</string>
+  <string name="empty_taxidriver">- You talkin\' to me?\n- You talkin\' to me?\n- We don\'t have that!</string>
+  <string name="empty_nemo">- Uh...uh...\n- What you said?</string>
+  <string name="empty_toyalien">- Oooooooooooooooh\n - Even The Great Claw could not find these!</string>
 </resources>

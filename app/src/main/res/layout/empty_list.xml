@@ -3,17 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/empty_list_layout"
+    android:layout_gravity="top"
     android:visibility="gone"
     >
 
   <ImageView
       android:id="@+id/empty_list_background_image"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="140dp"
+      android:layout_height="140dp"
       android:layout_alignParentTop="true"
       android:layout_centerHorizontal="true"
       android:scaleType="centerCrop"
-      android:src="@drawable/pulpfiction"
       />
 
   <TextView
@@ -24,7 +24,6 @@
       android:textStyle="italic"
       android:layout_centerHorizontal="true"
       android:layout_below="@id/empty_list_background_image"
-      android:text=" - Filter that thing again!\n - I dare you!\n - I double dare you!"
       />
 
 </RelativeLayout>
