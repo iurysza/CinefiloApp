@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- repeat state -->
+  <attr name="sort_state">
+    <enum name="off" value="0" />
+    <enum name="top" value="1" />
+    <enum name="bottom" value="2" />
+  </attr>
+
+  <!-- custom repeat button -->
+  <declare-styleable name="SortButton">
+    <attr name="src_sort_off" format="integer" />
+    <attr name="src_sort_top" format="integer" />
+    <attr name="src_sort_bottom" format="integer" />
+  </declare-styleable>
+
+</resources>

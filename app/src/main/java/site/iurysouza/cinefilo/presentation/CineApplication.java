@@ -5,6 +5,8 @@ import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import rx.plugins.RxJavaErrorHandler;
+import rx.plugins.RxJavaPlugins;
 import site.iurysouza.cinefilo.BuildConfig;
 import site.iurysouza.cinefilo.di.components.AppComponent;
 import site.iurysouza.cinefilo.di.components.DaggerAppComponent;
@@ -36,7 +38,12 @@ public class CineApplication extends Application {
     realm = initRealm();
     initTimber();
     createAppComponent();
-
+    RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
+      @Override public void handleError(Throwable e) {
+        super.handleError(e);
+        Timber.v(e.toString());
+      }
+    });
   }
 
   private void initTimber() {

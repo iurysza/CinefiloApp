@@ -10,11 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
-import com.luseen.spacenavigation.SpaceNavigationView;
 import com.malinskiy.superrecyclerview.OnMoreListener;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.squareup.picasso.Picasso;
@@ -23,7 +24,6 @@ import java.util.List;
 import javax.inject.Inject;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import rx.Subscription;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.MoviesUseCase;
@@ -32,7 +32,6 @@ import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
 import site.iurysouza.cinefilo.presentation.main.FilterEvent;
-import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 import site.iurysouza.cinefilo.util.Utils;
 import timber.log.Timber;
 
@@ -65,11 +64,13 @@ public class MediaListFragment extends BaseFragment
   @BindView(R.id.movie_list_progressImage) AVLoadingIndicatorView loadingPlaceHolder;
   @BindView(R.id.movie_list_recyclerview) SuperRecyclerView movieList;
   FloatingActionButton fabFilter;
-  SpaceNavigationView navigationView;
+  @BindView(R.id.empty_list_layout) RelativeLayout emptyListLayout;
+  @BindView(R.id.empty_list_background_image) ImageView warningCharacterImage;
+  @BindView(R.id.empty_list_background_text) TextView warningCharacterQuote;
+  private LinearLayoutManager layoutManger;
+
   private int listType;
   private MediaAdapter mediaAdapter;
-  private Subscription filterObserver;
-  private LinearLayoutManager layoutManger;
   private MediaFilter filter = null;
 
   public static MediaListFragment newInstance(int movieListType, int mediaType) {
@@ -84,19 +85,16 @@ public class MediaListFragment extends BaseFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-
     View view = inflater.inflate(R.layout.movie_list_fragment, container, false);
     ButterKnife.bind(this, view);
     Utils.safeRegisterEventBus(this);
+    fabFilter = (FloatingActionButton) getActivity().findViewById(R.id.fabtoolbar_fab);
 
     listType = getArguments().getInt(LIST_TYPE);
     int mediaType = getArguments().getInt(MEDIA_TYPE);
 
     mediaPresenter.createPresenter(moviesUseCase, seriesUseCase, mediaType);
     mediaPresenter.attachView(this);
-
-    fabFilter = (FloatingActionButton) getActivity().findViewById(R.id.fabtoolbar_fab);
-    navigationView = (SpaceNavigationView) getActivity().findViewById(R.id.space_bottom_bar);
 
     setupRecyclerView();
     loadData(listType);
@@ -106,12 +104,12 @@ public class MediaListFragment extends BaseFragment
 
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onFilterApplied(FilterEvent event) {
-    MediaFilter filter = event.filter;
+    this.filter = event.filter;
     if (isMenuVisible()) {
       if (filter == null) {
         disableFilter();
       } else {
-        applyFilter(event);
+        applyFilter();
       }
     }
   }
@@ -122,10 +120,8 @@ public class MediaListFragment extends BaseFragment
     loadData(listType);
   }
 
-  private void applyFilter(FilterEvent event) {
-    filter = event.filter;
-    List<GenderEnum> genderList = filter.getGenderList();
-    List<WatchMediaValue> filteredList = mediaAdapter.getAdapterListFilteredBy(genderList);
+  private void applyFilter() {
+    List<WatchMediaValue> filteredList = mediaAdapter.filterAdapter(filter);
     mediaAdapter.replaceList(filteredList);
     currentPage = 0;
   }
@@ -134,7 +130,6 @@ public class MediaListFragment extends BaseFragment
     movieList.getRecyclerView().setHasFixedSize(true);
     layoutManger = new LinearLayoutManager(getContext());
     movieList.setLayoutManager(layoutManger);
-    movieList.addItemDecoration(new MaterialViewPagerHeaderDecorator());
     mediaAdapter = new MediaAdapter(Picasso.with(getContext()), this);
     movieList.setAdapter(mediaAdapter);
     movieList.setupMoreListener(createOnMoreListener(), MIN_ITEMS_THRESHOLD);
@@ -150,7 +145,6 @@ public class MediaListFragment extends BaseFragment
         } else {
           fabFilter.hide();
         }
-
         super.onScrollStateChanged(recyclerView, newState);
       }
     };
@@ -185,6 +179,7 @@ public class MediaListFragment extends BaseFragment
   }
 
   private void loadData(int lisType) {
+    currentPage = 1;
     switch (lisType) {
       case REC_MEDIA:
         mediaPresenter.loadNowPlaying();
@@ -224,6 +219,24 @@ public class MediaListFragment extends BaseFragment
 
   @Override public void sendToListView(List<WatchMediaValue> watchMediaValuesList) {
     mediaAdapter.addAllMedia(watchMediaValuesList);
+    if (watchMediaValuesList.isEmpty() && mediaAdapter.getItemCount() == 0) {
+      showEmptyListWarning();
+      movieList.setVisibility(View.GONE);
+    } else {
+      emptyListLayout.setVisibility(View.GONE);
+      movieList.setVisibility(View.VISIBLE);
+    }
+  }
+
+  private void showEmptyListWarning() {
+    EmptyListCharacter randomCharacter = EmptyListCharacter.getRandomCharacter();
+    warningCharacterImage
+        .setImageDrawable(
+            getResources().getDrawable(randomCharacter.getCharacterArt()));
+    warningCharacterQuote
+        .setText(
+            getResources().getString(randomCharacter.getCharacterQuote()));
+    emptyListLayout.setVisibility(View.VISIBLE);
   }
 
   @Override protected void setupFragmentComponent() {

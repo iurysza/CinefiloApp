@@ -11,6 +11,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
+import org.joda.time.DateTime;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
@@ -28,6 +29,7 @@ public final class MediaItemView extends FrameLayout {
   @BindView(R.id.movie_item_overview_text) TextView overviewText;
   @BindView(R.id.movie_item_rating) RatingBar movieRating;
   @BindView(R.id.movie_item_title_text) TextView movieTitle;
+  @BindView(R.id.movie_item_date) TextView movieDate;
   @BindView(R.id.movie_item_card) CardView backgroundCard;
 
   public MediaItemView(Context context, AttributeSet attrs) {
@@ -48,9 +50,11 @@ public final class MediaItemView extends FrameLayout {
       String posterUrl = ImageUtils.getPosterUrl(posterPath);
       picasso.load(posterUrl)
           .fit()
+          .placeholder(R.drawable.placeholder)
           .into(movieImage);
     }
-
+    DateTime movieReleaseDate = new DateTime(realmMovie.releaseDate());
+    movieDate.setText("("+movieReleaseDate.getYear()+")");
     movieTitle.setText(realmMovie.name());
 
     float movieRating = (float) (realmMovie.voteAverage() / 2);

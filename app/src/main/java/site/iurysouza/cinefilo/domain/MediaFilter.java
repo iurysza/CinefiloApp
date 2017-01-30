@@ -1,12 +1,11 @@
 package site.iurysouza.cinefilo.domain;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
 import org.joda.time.DateTime;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
+import site.iurysouza.cinefilo.presentation.medias.filter.SortingMethod;
 
 /**
  * Created by Iury Souza on 22/01/2017.
@@ -15,46 +14,53 @@ import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 public class MediaFilter {
 
   //initialize default data
-  private static final int START_DAY = 1;
-  private static final int START_MONTH = 1;
-  private static final int START_YEAR = 1990;
-  private Date startDate = new DateTime()
-      .withDate(START_YEAR,START_DAY ,START_MONTH )
-      .toDate();
-  private Date endDate = new Date();
-  private Integer minScore = 0;
-  private List<GenderEnum> genderList = new ArrayList<>(Arrays.asList(GenderEnum.NONE_SELECTED));
+  public static final int START_YEAR = 1990;
+  private Integer startDate = START_YEAR;
+  private Integer endDate = new DateTime(new Date()).getYear();
+  private Integer minScore = 6;
+  private SortingMethod sortBy = null;
+  private List<GenderEnum> genderList = null;
 
-  MediaFilter(Date startDate, Date endDate, int minScore, List<GenderEnum> genderList) {
+  MediaFilter(int startDate, int endDate, int minScore, List<GenderEnum> genderList,
+      SortingMethod sortBy) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.minScore = minScore;
     this.genderList = genderList;
+    this.sortBy = sortBy;
   }
 
   public static MediaFilterBuilder builder() {
     return new MediaFilterBuilder();
   }
 
+
+
   public static class MediaFilterBuilder {
-    private Date startDate = new DateTime()
-        .withDate(START_YEAR,START_DAY ,START_MONTH )
-        .toDate();
-    private Date endDate = new Date();
-    private Integer minScore = 0;
-    private List<GenderEnum> genderList = new ArrayList<>(Arrays.asList(GenderEnum.NONE_SELECTED));
+    private int startDate = START_YEAR;
+    private int endDate = new DateTime(new Date()).getYear();
+    private Integer minScore = 6;
+    private SortingMethod sortBy = null;
+    private List<GenderEnum> genderList = null;
 
     MediaFilterBuilder() {
     }
 
-    public MediaFilter.MediaFilterBuilder startDate(Date startDate) {
+    public MediaFilter.MediaFilterBuilder startDate(Integer startDate) {
       if (startDate != null) {
         this.startDate = startDate;
       }
       return this;
     }
 
-    public MediaFilter.MediaFilterBuilder endDate(Date endDate) {
+    public MediaFilter.MediaFilterBuilder sortBy(SortingMethod sortBy) {
+      if (sortBy != null) {
+        this.sortBy = sortBy;
+      }
+      return this;
+    }
+
+    public MediaFilter.MediaFilterBuilder endDate(Integer endDate) {
       if (endDate != null) {
         this.endDate = endDate;
       }
@@ -76,7 +82,7 @@ public class MediaFilter {
     }
 
     public MediaFilter build() {
-      return new MediaFilter(startDate, endDate, minScore, genderList);
+      return new MediaFilter(startDate, endDate, minScore, genderList, sortBy);
     }
 
     public String toString() {

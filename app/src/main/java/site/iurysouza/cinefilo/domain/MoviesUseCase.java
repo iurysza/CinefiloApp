@@ -34,7 +34,7 @@ public class MoviesUseCase implements UseCase {
 
   @Override
   public Observable<List<WatchMediaValue>> getNextPopular(int nextPage) {
-    movieRepository.getMostPopular(nextPage, false);
+    movieRepository.getMostPopular(nextPage, true);
 
     return movieRepository
         .getMostPopularSubject()

@@ -45,7 +45,8 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:visibility="gone"
-      app:realtimeBlurRadius="20dp"
+      app:realtimeBlurRadius="10dp"
+      app:realtimeDownsampleFactor="6"
       app:realtimeOverlayColor="#8000"
       />
 
@@ -108,19 +109,19 @@
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:text="Filter"
-            android:textColor="@color/appWhite"
+            android:textColor="@color/appFilterTextColor"
             android:textSize="@dimen/title_text_size"
             />
 
         <mehdi.sakout.fancybuttons.FancyButton
             android:id="@+id/filter_btn_close"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="right"
             android:gravity="center"
             android:padding="10dp"
             fancy:fb_defaultColor="@color/appLightBlack"
-            fancy:fb_focusColor="@color/accent_color"
+            fancy:fb_focusColor="@color/colorPrimaryDark"
             fancy:fb_iconPaddingLeft="0dp"
             fancy:fb_iconPaddingRight="0dp"
             fancy:fb_iconResource="@drawable/ic_close_grey_500_24dp"
@@ -130,12 +131,6 @@
 
       </FrameLayout>
 
-      <me.relex.circleindicator.CircleIndicator
-          android:id="@+id/media_list_page_indicator"
-          android:layout_width="match_parent"
-          android:layout_height="48dp"
-          android:layout_marginTop="20dp"
-          />
 
       <android.support.v4.view.ViewPager
           android:id="@+id/media_list_filter_viewpager"
@@ -143,9 +138,19 @@
           android:layout_height="@dimen/filter_viewpager_size"
           android:layout_below="@id/filter_view_header"
           android:layout_centerHorizontal="true"
-          android:layout_marginTop="22dp"
+
           >
       </android.support.v4.view.ViewPager>
+      <me.relex.circleindicator.CircleIndicator
+          android:id="@+id/media_list_page_indicator"
+          android:layout_width="match_parent"
+          android:layout_height="48dp"
+          app:ci_width="8dp"
+          app:ci_height="2dp"
+          app:ci_drawable="@drawable/ic_selected_page_indicator"
+          app:ci_drawable_unselected="@drawable/ic_page_indicator"
+          android:layout_marginTop="20dp"
+          />
 
       <mehdi.sakout.fancybuttons.FancyButton
           android:id="@+id/filter_btn_apply"

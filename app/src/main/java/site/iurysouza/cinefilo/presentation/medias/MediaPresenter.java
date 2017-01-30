@@ -184,9 +184,6 @@ public class MediaPresenter extends BasePresenter<MediaView> {
 
   private void sendMediaToView(List<WatchMediaValue> watchMediaValues) {
     getBaseView().hideLoadingIndicator();
-    if (watchMediaValues.isEmpty()) {
-      return;
-    }
     getBaseView().sendToListView(watchMediaValues);
   }
 

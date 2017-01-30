@@ -1,6 +1,7 @@
 package site.iurysouza.cinefilo.domain.entity;
 
 import com.google.auto.value.AutoValue;
+import java.util.Date;
 import javax.annotation.Nullable;
 
 /**
@@ -23,6 +24,8 @@ public abstract class WatchMediaValue {
 
   public abstract String overview();
 
+  public abstract Date releaseDate();
+
   public abstract String posterPath();
 
   @Nullable public abstract String backdropPath();
@@ -40,6 +43,8 @@ public abstract class WatchMediaValue {
     abstract Builder id(long id);
 
     abstract Builder name(String name);
+
+    abstract Builder releaseDate(Date date);
 
     abstract Builder overview(String overview);
 

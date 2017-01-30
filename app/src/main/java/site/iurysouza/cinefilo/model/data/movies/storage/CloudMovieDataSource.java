@@ -1,6 +1,5 @@
 package site.iurysouza.cinefilo.model.data.movies.storage;
 
-import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
@@ -9,6 +8,7 @@ import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMoviesResults;
 import site.iurysouza.cinefilo.model.services.MovieService;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
+import site.iurysouza.cinefilo.presentation.medias.filter.SortingMethod;
 import site.iurysouza.cinefilo.util.Constants;
 import timber.log.Timber;
 
@@ -61,22 +61,32 @@ public class CloudMovieDataSource {
   }
 
   public Observable<MovieResults> getFilteredMovies(int page, MediaFilter mediaFilter) {
-    Date endDate = mediaFilter.getEndDate();
-    Date startDate = mediaFilter.getStartDate();
+    int endDate = mediaFilter.getEndDate();
+    int startDate = mediaFilter.getStartDate();
     List<GenderEnum> genderList = mediaFilter.getGenderList();
     String genreList = getGenreListAsString(genderList);
     int minScore = mediaFilter.getMinScore();
+    String sortMethod = getSortingMethod(mediaFilter);
 
     return movieService.getFilteredMovies(
         Constants.MOVIE_DB_API.API_KEY,
         page,
-        startDate.getYear(),
-        2017,
+        startDate,
+        endDate,
         genreList,
-        minScore);
+        minScore,
+        sortMethod);
+  }
+
+  private String getSortingMethod(MediaFilter mediaFilter) {
+    SortingMethod sortBy = mediaFilter.getSortBy();
+    return sortBy == null ? null : sortBy.getSortMethod();
   }
 
   private String getGenreListAsString(List<GenderEnum> genderList) {
+    if (genderList == null) {
+      return null;
+    }
     StringBuilder stringBuilder = new StringBuilder();
     for (GenderEnum gender : genderList) {
       stringBuilder

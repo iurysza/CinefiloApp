@@ -42,9 +42,10 @@ public interface MovieService {
   @GET("discover/movie")
   Observable<MovieResults> getFilteredMovies(
       @Query("api_key") String apiKey,
-      @Query("page")int page,
+      @Query("page") int page,
       @Query("primary_release_date.gte") int startDate,
       @Query("primary_release_date.lte") int endDate,
-      @Query("with_genres")String genres,
-      @Query("vote_average.lte") int minScore);
+      @Query("with_genres") String genres,
+      @Query("vote_average.gte") int minScore,
+      @Query("sort_by") String sortMethod);
 }

@@ -18,6 +18,7 @@ public class WatchMediaValueMapper {
         .overview(media.getOverview())
         .backdropPath(media.getBackdropPath())
         .posterPath(media.getPosterPath())
+        .releaseDate(media.getReleaseDate())
         .name(media.getName())
         .genre(media.getGenre())
         .build();
