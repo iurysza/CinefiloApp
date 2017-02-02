@@ -5,17 +5,11 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.entities.pojo.GenreResult;
-import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
 
 public interface MovieService {
 
-  @GET("movie/{movie_id}")
-  Observable<Movie> getMovieById(
-      @Path("movie_id") int movieId,
-      @Query("api_key") String apiKey);
   @GET("genre/{genre_id}/movies")
-
   Observable<MovieResults> getMoviesByGenre(
       @Path("genre_id") int genreId,
       @Query("api_key") String apiKey);

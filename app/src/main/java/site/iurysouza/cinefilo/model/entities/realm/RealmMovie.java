@@ -5,8 +5,10 @@ import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 import site.iurysouza.cinefilo.model.entities.mapper.RealmIntegerMapper;
+import site.iurysouza.cinefilo.model.entities.pojo.Genre;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 
 /**
@@ -20,6 +22,7 @@ public class RealmMovie implements RealmModel {
   public static final String POPULARITY = "popularity";
   public static final String VOTE_AVG = "voteAverage";
   public static final String RELEASE_DATE = "releaseDate";
+  public static final int QUERY_TYPE_DETAIL = 5;
   public static final String VOTE_COUNT = "voteCount";
   public static final String QUERY_DATE = "queryDate";
   public static final int NOW_QUERY = 2;
@@ -59,15 +62,15 @@ public class RealmMovie implements RealmModel {
   private RealmList<RealmProductionCountry> productionCountryList = new RealmList<>();
 
   public static RealmMovie valueOf(Movie movie, int queryType) {
-
     String originalTitle = movie.getOriginalTitle();
     String posterPath = movie.getPosterPath();
     Integer[] genreIds = movie.getGenreIds();
     Double voteAverage = movie.getVoteAverage();
     String overview = movie.getOverview();
     Date releaseDate = movie.getReleaseDate();
-
-    if (isMovieInvalid(originalTitle, posterPath, genreIds, voteAverage, overview, releaseDate)) {
+    List<Genre> genreList = movie.getGenreList();
+    if (isMovieInvalid(originalTitle, posterPath, genreIds, voteAverage, overview, releaseDate,
+        genreList)) {
       return null;
     }
 
@@ -82,11 +85,20 @@ public class RealmMovie implements RealmModel {
     realmMovie.setPosterPath(posterPath);
     realmMovie.setVoteAverage(voteAverage);
 
+    realmMovie.setImdbId(movie.getImdbId());
+    realmMovie.setBudget(movie.getBudget().intValue());
+    realmMovie.setRevenue(movie.getRevenue().intValue());
+    realmMovie.setRuntime(movie.getRuntime());
+    realmMovie.setStatus(movie.getStatus());
+    realmMovie.setHomepage(movie.getHomepage());
+    realmMovie.setTagline(movie.getTagline());
+
     realmMovie.setOriginalLanguage(movie.getOriginalLanguage());
     realmMovie.setPopularity(movie.getPopularity());
     realmMovie.setVideo(movie.getVideo());
     realmMovie.setVoteCount(movie.getVoteCount());
     realmMovie.setReleaseDate(releaseDate);
+
     realmMovie.setGenreIds(RealmIntegerMapper.map(genreIds));
     realmMovie.setQueryDate(System.currentTimeMillis());
     realmMovie.setQueryType(queryType);
@@ -97,11 +109,11 @@ public class RealmMovie implements RealmModel {
   }
 
   private static boolean isMovieInvalid(String originalTitle, String posterPath, Integer[] genreIds,
-      Double voteAverage, String overview, Date releaseDate) {
+      Double voteAverage, String overview, Date releaseDate, List<Genre> genreList) {
     return isStringFieldInvalid(originalTitle) ||
         isStringFieldInvalid(posterPath) ||
         isStringFieldInvalid(overview) ||
-        genreIds.length == 0 ||
+        (genreIds == null && genreList == null) ||
         voteAverage == null ||
         releaseDate == null;
   }

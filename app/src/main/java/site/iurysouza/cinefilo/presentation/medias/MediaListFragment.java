@@ -85,7 +85,7 @@ public class MediaListFragment extends BaseFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.movie_list_fragment, container, false);
+    View view = inflater.inflate(R.layout.media_list_fragment, container, false);
     ButterKnife.bind(this, view);
     Utils.safeRegisterEventBus(this);
     fabFilter = (FloatingActionButton) getActivity().findViewById(R.id.fabtoolbar_fab);
@@ -240,12 +240,11 @@ public class MediaListFragment extends BaseFragment
   }
 
   @Override protected void setupFragmentComponent() {
-    ((CineApplication) getContext().getApplicationContext()).getRepositoryComponent().inject(this);
+    ((CineApplication) getContext().getApplicationContext()).getMediaListComponent().inject(this);
   }
 
-  @Override public void onRealmMovieClick(WatchMediaValue mediaValue) {
-    Timber.e("Clicked %s item", mediaValue.name());
-    Toast.makeText(getContext(), mediaValue.name(), Toast.LENGTH_SHORT).show();
+  @Override public void onItemClicked(WatchMediaValue mediaValue) {
+
   }
 
   @Subscribe(threadMode = ThreadMode.MAIN)

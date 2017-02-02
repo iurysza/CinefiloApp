@@ -98,7 +98,7 @@ public class CloudMovieDataSource {
 
 
   /*
-  public void movieById(int movieId) {
+  public void getMovieById(int movieId) {
     //movieService
     //    .getMovieById(movieId, Constants.MOVIE_DB_API.API_KEY)
     //    .map(MovieDataMapper::map)

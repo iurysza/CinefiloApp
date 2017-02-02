@@ -90,7 +90,7 @@ public class MediaPagerFragment extends BaseFragment implements ViewPager.OnPage
 
 
   @Override protected void setupFragmentComponent() {
-    ((CineApplication) getContext().getApplicationContext()).getRepositoryComponent().inject(this);
+    ((CineApplication) getContext().getApplicationContext()).getMediaListComponent().inject(this);
   }
 
   @Override

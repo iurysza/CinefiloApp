@@ -12,6 +12,9 @@ public class RealmIntegerMapper {
 
   public static RealmList<RealmInteger> map(Integer[] valueArray) {
     RealmList<RealmInteger> realmGenreList = new RealmList<>();
+    if (valueArray == null) {
+      return realmGenreList;
+    }
     for (int index = 0; index < valueArray.length; index++) {
       realmGenreList.add(map(valueArray[index]));
     }

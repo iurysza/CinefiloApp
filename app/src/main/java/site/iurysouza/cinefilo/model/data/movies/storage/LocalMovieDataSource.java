@@ -1,14 +1,11 @@
 package site.iurysouza.cinefilo.model.data.movies.storage;
 
-import android.support.annotation.UiThread;
 import io.realm.Realm;
-import io.realm.RealmObject;
 import io.realm.Sort;
 import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 import org.joda.time.DateTime;
-import rx.Observable;
 import site.iurysouza.cinefilo.model.entities.realm.RealmCurrentPage;
 import site.iurysouza.cinefilo.model.entities.realm.RealmGenre;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
@@ -33,18 +30,6 @@ public class LocalMovieDataSource {
 
   @Inject
   public LocalMovieDataSource() {
-  }
-
-  @UiThread
-  public Observable<RealmMovie> movieById(int movieId) {
-
-    RealmMovie realmMovie = Realm.getDefaultInstance()
-        .where(RealmMovie.class)
-        .equalTo(RealmMovie.ID, movieId)
-        .findFirstAsync();
-
-    return RealmObject
-        .asObservable(realmMovie);
   }
 
   public void storeMoviesAndCurrentPageInRealm(RealmMoviesResults realmMoviesResults, int listType) {

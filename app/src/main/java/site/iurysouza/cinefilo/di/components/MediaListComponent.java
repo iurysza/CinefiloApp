@@ -2,7 +2,7 @@ package site.iurysouza.cinefilo.di.components;
 
 import dagger.Subcomponent;
 import site.iurysouza.cinefilo.di.ActivityScope;
-import site.iurysouza.cinefilo.di.modules.RepositoryModule;
+import site.iurysouza.cinefilo.di.modules.MediaListModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import site.iurysouza.cinefilo.presentation.main.MainActivity;
 import site.iurysouza.cinefilo.presentation.medias.MediaListFragment;
@@ -14,10 +14,10 @@ import site.iurysouza.cinefilo.presentation.medias.pager.MediaPagerFragment;
 @ActivityScope
 @Subcomponent(
     modules = {
-        RepositoryModule.class, UtilityModule.class
+        MediaListModule.class, UtilityModule.class
     })
 
-public interface RepositoryComponent {
+public interface MediaListComponent {
     void inject(MainActivity mainActivity);
     void inject(MediaPagerFragment target);
     void inject(MediaListFragment target);

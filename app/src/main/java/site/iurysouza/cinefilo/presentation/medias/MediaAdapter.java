@@ -1,7 +1,14 @@
 package site.iurysouza.cinefilo.presentation.medias;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -11,6 +18,7 @@ import java.util.Random;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.mediadetail.MediaDetailActivity;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 
 /**
@@ -31,7 +39,7 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
     MediaItemView view = (MediaItemView) LayoutInflater.from(viewGroup.getContext())
-        .inflate(R.layout.list_item_movie, viewGroup, false);
+        .inflate(R.layout.media_list_item, viewGroup, false);
     return new ViewHolder(view);
   }
 
@@ -139,7 +147,7 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
   }
 
   interface OnAdapterClickListener {
-    void onRealmMovieClick(WatchMediaValue mediaValue);
+    void onItemClicked(WatchMediaValue mediaValue);
   }
 
   final class ViewHolder extends RecyclerView.ViewHolder {
@@ -149,9 +157,34 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
       super(itemView);
       this.itemView = itemView;
       this.itemView.setOnClickListener(v -> {
+        Context context = v.getContext();
         WatchMediaValue movie = mediaValueList.get(getAdapterPosition());
-        movieClickListener.onRealmMovieClick(movie);
+        openDetailActivityWithSharedElements(movie, context);
       });
+    }
+
+    private void openDetailActivityWithSharedElements(WatchMediaValue movie, Context context) {
+      Intent startIntent = MediaDetailActivity.getStartIntent(context, movie);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        View posterView = itemView.findViewById(R.id.movie_item_picture_card);
+        String posterTransition = context.getResources().getString(R.string.poster_card_transition);
+        Pair<View, String> posterPair = new android.util.Pair<>(posterView, posterTransition);
+        View titleView = itemView.findViewById(R.id.movie_item_title_text);
+        String titleTransition = context.getResources().getString(R.string.media_title_transition);
+        Pair<View, String> titlePair = new android.util.Pair<>(titleView, titleTransition);
+        View cardView = itemView.findViewById(R.id.movie_item_card);
+        String cardTransition = context.getResources().getString(R.string.detail_card_transition);
+        Pair<View, String> cardPair = new android.util.Pair<>(cardView, cardTransition);
+        View genreView = itemView.findViewById(R.id.movie_item_genre);
+        String genreTransition = context.getResources().getString(R.string.detail_genre_transition);
+        Pair<View, String> genrePair = new android.util.Pair<>(genreView, genreTransition);
+
+        ActivityOptions options = ActivityOptions
+            .makeSceneTransitionAnimation((Activity) context, posterPair, cardPair, titlePair, genrePair);
+        context.startActivity(startIntent, options.toBundle());
+      } else {
+        context.startActivity(startIntent);
+      }
     }
 
     void bindTo(WatchMediaValue movie) {

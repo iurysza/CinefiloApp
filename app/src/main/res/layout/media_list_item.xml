@@ -16,6 +16,7 @@
       android:layout_height="@dimen/movie_card_item_height"
       android:layout_gravity="center"
       android:layout_marginBottom="4dp"
+      android:transitionName="@string/detail_card_transition"
       android:layout_marginTop="32dp"
       card_view:cardCornerRadius="@dimen/default_card_radius"
       card_view:cardElevation="@dimen/base_card_elevation"
@@ -42,6 +43,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:ellipsize = "end"
+            android:transitionName="@string/media_title_transition"
             android:layout_weight="10"
             android:textColor="@color/colorMovieTitle"
             android:textSize="@dimen/title_text_size"
@@ -94,13 +96,13 @@
       android:layout_marginLeft="16dp"
       android:layout_marginTop="16dp"
       card_view:cardCornerRadius="@dimen/small_card_radius"
+      android:transitionName="@string/poster_card_transition"
       card_view:cardElevation="@dimen/mid_card_elevation"
       >
 
     <ImageView
         android:id="@+id/movie_item_picture_imageview"
         android:layout_width="match_parent"
-
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/placeholder"
@@ -112,6 +114,7 @@
       android:layout_width="60dp"
       android:layout_height="18dp"
       android:layout_marginLeft="95dp"
+      android:transitionName="@string/detail_genre_transition"
       android:layout_marginTop="38dp"
       card_view:cardBackgroundColor="@color/colorGenreView"
       card_view:cardCornerRadius="@dimen/small_card_radius"

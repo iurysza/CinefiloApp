@@ -19,7 +19,7 @@
       app:layout_moreProgress="@layout/layout_more_progress"
       app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
       app:recyclerClipToPadding="true"
-      tools:listitem="@layout/list_item_movie"
+      tools:listitem="@layout/media_list_item"
       />
 
   <com.wang.avi.AVLoadingIndicatorView

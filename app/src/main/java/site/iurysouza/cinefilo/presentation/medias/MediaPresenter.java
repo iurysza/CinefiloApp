@@ -12,6 +12,9 @@ import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.UseCase;
 import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
 import site.iurysouza.cinefilo.util.CineSubscriber;
+import site.iurysouza.cinefilo.util.Utils;
+
+import static site.iurysouza.cinefilo.util.Utils.resetSubscription;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -164,7 +167,7 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   }
 
   void loadFiltered(int page, MediaFilter filter) {
-    resetSubscription(genderSubscription);
+    Utils.resetSubscription(genderSubscription);
     genderSubscription = useCase
         .getFilteredMedia(page, filter)
         .subscribeOn(Schedulers.io())
@@ -187,9 +190,5 @@ public class MediaPresenter extends BasePresenter<MediaView> {
     getBaseView().sendToListView(watchMediaValues);
   }
 
-  private void resetSubscription(Subscription subscription) {
-    if (subscription != null && !subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
-    }
+
   }
-}

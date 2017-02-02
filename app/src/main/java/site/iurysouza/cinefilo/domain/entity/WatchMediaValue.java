@@ -1,14 +1,18 @@
 package site.iurysouza.cinefilo.domain.entity;
 
+import android.os.Parcelable;
 import com.google.auto.value.AutoValue;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.Nullable;
+import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
 
 /**
  * Created by Iury Souza on 06/01/2017.
  */
 @AutoValue
-public abstract class WatchMediaValue {
+public abstract class WatchMediaValue implements Parcelable{
 
   static Builder builder() {
     return new AutoValue_WatchMediaValue.Builder();
@@ -35,7 +39,7 @@ public abstract class WatchMediaValue {
   }
 
   @AutoValue.Builder
-  abstract static class Builder {
+ public abstract static class Builder {
     abstract Builder voteAverage(Double overview);
 
     abstract Builder genre(Integer overview);
@@ -53,5 +57,33 @@ public abstract class WatchMediaValue {
     abstract Builder backdropPath(String overview);
 
     abstract WatchMediaValue build();
+  }
+
+  public static WatchMediaValue mapToValueMedia(WatchMedia media) {
+    WatchMediaValue build = WatchMediaValue
+        .builder()
+        .id(media.getId())
+        .voteAverage(media.getVoteAverage())
+        .overview(media.getOverview())
+        .backdropPath(media.getBackdropPath())
+        .posterPath(media.getPosterPath())
+        .releaseDate(media.getReleaseDate())
+        .name(media.getName())
+        .genre(media.getGenre())
+        .build();
+    return build;
+  }
+
+  public static List<WatchMediaValue> mapToValueMedia(List<WatchMedia> mediaList) {
+    List<WatchMediaValue> valueMediaList = new ArrayList<>();
+
+    if (mediaList.isEmpty()) {
+      return valueMediaList;
+    }
+
+    for (WatchMedia media : mediaList) {
+      valueMediaList.add(mapToValueMedia(media));
+    }
+    return valueMediaList;
   }
 }

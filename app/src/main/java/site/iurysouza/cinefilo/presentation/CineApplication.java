@@ -10,10 +10,12 @@ import rx.plugins.RxJavaPlugins;
 import site.iurysouza.cinefilo.BuildConfig;
 import site.iurysouza.cinefilo.di.components.AppComponent;
 import site.iurysouza.cinefilo.di.components.DaggerAppComponent;
-import site.iurysouza.cinefilo.di.components.RepositoryComponent;
+import site.iurysouza.cinefilo.di.components.MediaDetailComponent;
+import site.iurysouza.cinefilo.di.components.MediaListComponent;
 import site.iurysouza.cinefilo.di.modules.ApiModule;
 import site.iurysouza.cinefilo.di.modules.AppModule;
-import site.iurysouza.cinefilo.di.modules.RepositoryModule;
+import site.iurysouza.cinefilo.di.modules.MediaDetailModule;
+import site.iurysouza.cinefilo.di.modules.MediaListModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import timber.log.Timber;
 
@@ -25,7 +27,8 @@ public class CineApplication extends Application {
 
   private static CineApplication appInstance;
   private AppComponent appComponent;
-  private RepositoryComponent repositoryComponent;
+  private MediaListComponent mediaListComponent;
+  private MediaDetailComponent mediaDetailComponent;
   private Realm realm;
 
   public static CineApplication getAppInstance() {
@@ -85,16 +88,23 @@ public class CineApplication extends Application {
         .build();
   }
 
-  public RepositoryComponent createRepositoryComponent(RepositoryModule repositoryModule, UtilityModule utilityModule) {
-    repositoryComponent = getAppComponent().plus(repositoryModule, utilityModule);
-    return repositoryComponent;
+  public MediaListComponent createMediaListComponent(MediaListModule mediaListModule, UtilityModule utilityModule) {
+    mediaListComponent = getAppComponent().plus(mediaListModule, utilityModule);
+    return mediaListComponent;
   }
+
+  public MediaDetailComponent createMediaDetailComponent(MediaDetailModule mediaDetailModule) {
+    mediaDetailComponent = getAppComponent().plus(mediaDetailModule);
+    return mediaDetailComponent;
+  }
+
+
 
   public AppComponent getAppComponent() {
     return appComponent;
   }
-  public RepositoryComponent getRepositoryComponent() {
-    return repositoryComponent;
+  public MediaListComponent getMediaListComponent() {
+    return mediaListComponent;
   }
 
   public void releaseAppComponent() {
@@ -102,7 +112,7 @@ public class CineApplication extends Application {
   }
 
   public void releaseRepositoryComponent() {
-    repositoryComponent = null;
+    mediaListComponent = null;
   }
 }
 

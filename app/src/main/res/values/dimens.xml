@@ -14,7 +14,7 @@
   <dimen name="media_picture_detail_card_width">165dp</dimen>
   <dimen name="movie_picture_card_height">150dp</dimen>
   <dimen name="movie_card_item_height">150dp</dimen>
-  <dimen name="detail_appbar_size">200dp</dimen>
+  <dimen name="detail_appbar_size">260dp</dimen>
 
   <dimen name="default_card_radius">4dp</dimen>
   <dimen name="small_card_radius">2dp</dimen>

@@ -44,6 +44,7 @@ dependencies {
   compile "com.android.support:design:$rootProject.ext.supportLibrary"
   compile "com.android.support:cardview-v7:$rootProject.ext.supportLibrary"
   compile "com.android.support:recyclerview-v7:$rootProject.ext.supportLibrary"
+  compile "com.android.support:palette-v7:$rootProject.ext.supportLibrary"
 
 
 
@@ -60,9 +61,12 @@ dependencies {
 
 
 
+
   //Value Type Generator
   provided "com.google.auto.value:auto-value:1.2"
   apt "com.google.auto.value:auto-value:1.2"
+  apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
+
   //FragmentStackManagement
   compile 'com.ncapdevi:frag-nav:1.2.5'
 

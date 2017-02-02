@@ -35,4 +35,11 @@
   <string name="empty_taxidriver">- You talkin\' to me?\n- You talkin\' to me?\n- We don\'t have that!</string>
   <string name="empty_nemo">- Uh...uh...\n- What you said?</string>
   <string name="empty_toyalien">- Oooooooooooooooh\n - Even The Great Claw could not find these!</string>
+  <string name="title_activity_media_detail">MediaDetail</string>
+  <string name="detail_card_transition">detail_transition</string>
+  <string name="poster_card_transition">poster_card</string>
+  <string name="media_title_transition">media_title_transition</string>
+  <string name="detail_genre_transition">detail_genre_transition</string>
+  <string name="detail_page_people_title">People</string>
+  <string name="detail_page_overview_title">Overview</string>
 </resources>

@@ -19,7 +19,7 @@ import site.iurysouza.cinefilo.model.services.SeriesService;
  * Created by Iury Souza on 12/10/2016.
  */
 @Module
-public class RepositoryModule {
+public class MediaListModule {
   @Provides
   MovieService providesMovieService(Retrofit retrofit) {
     return retrofit.create(MovieService.class);
