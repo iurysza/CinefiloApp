@@ -1,11 +1,13 @@
 package site.iurysouza.cinefilo.model.data.moviedetail;
 
 import android.support.annotation.NonNull;
+import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
+import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
 import site.iurysouza.cinefilo.model.data.moviedetail.storage.CloudMovieDetailDataSource;
 import site.iurysouza.cinefilo.model.data.moviedetail.storage.LocalDetailDataSource;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
@@ -28,7 +30,7 @@ public class MovieDetailRepository {
 
   public Observable<MovieDetailValue> getMovieById(int movieId) {
 
-    Observable<RealmMovie> movieFromLocalSource = localDetailDataSource.getMovieById(movieId).subscribeOn(Schedulers.computation());
+    //Observable<RealmMovie> movieFromLocalSource = localDetailDataSource.getMovieById(movieId).subscribeOn(Schedulers.computation());
     Observable<RealmMovie> cloudFromLocalSource = getNowPlayingFromApi(movieId).subscribeOn(Schedulers.io());
 
     return cloudFromLocalSource
@@ -44,5 +46,14 @@ public class MovieDetailRepository {
           localDetailDataSource.storeMovie(movie);
           return RealmMovie.valueOf(movie, QUERY_TYPE_DETAIL);
         });
+  }
+
+  @NonNull
+  public Observable<List<WatchMedia>> getMoviesSimilarTo(int movieId, int page) {
+    return cloudMovieDetailDataSource
+        .getMoviesSimilarTo(movieId,page)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .map(WatchMedia::valueOfMovieList);
   }
 }

@@ -12,10 +12,11 @@ public class LocalDetailDataSource {
 
   public Observable<RealmMovie> getMovieById(int movieId) {
     Realm realm = Realm.getDefaultInstance();
-    RealmMovie movie = realm.copyFromRealm(realm
+    RealmMovie movieQuery = realm
         .where(RealmMovie.class)
         .equalTo(RealmMovie.ID, movieId)
-        .findFirst());
+        .findFirst();
+    RealmMovie movie = realm.copyFromRealm(movieQuery);
     realm.close();
     return Observable.just(movie);
   }

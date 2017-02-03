@@ -77,10 +77,7 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
     return super.onOptionsItemSelected(item);
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    appInstance.releaseRepositoryComponent();
-  }
+
 
   @Override public void onTabSelected(Fragment currentFrag) {
     sharedViewsManager.updateViewsForFragment(currentFrag);

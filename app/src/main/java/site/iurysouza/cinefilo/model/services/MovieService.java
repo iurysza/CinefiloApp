@@ -33,6 +33,7 @@ public interface MovieService {
       @Query("api_key") String apiKey,
       @Query("page") int page);
 
+
   @GET("discover/movie")
   Observable<MovieResults> getFilteredMovies(
       @Query("api_key") String apiKey,

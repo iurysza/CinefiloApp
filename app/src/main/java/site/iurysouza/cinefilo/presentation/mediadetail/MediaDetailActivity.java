@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -18,7 +19,10 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.flaviofaria.kenburnsview.KenBurnsView;
+import com.malinskiy.superrecyclerview.OnMoreListener;
+import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.squareup.picasso.Picasso;
+import java.util.List;
 import javax.inject.Inject;
 import org.joda.time.DateTime;
 import site.iurysouza.cinefilo.R;
@@ -26,12 +30,14 @@ import site.iurysouza.cinefilo.di.modules.MediaDetailModule;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
+import site.iurysouza.cinefilo.presentation.mediadetail.similarmovies.SimilarMoviesAdapter;
 import site.iurysouza.cinefilo.util.ImageUtils;
 import timber.log.Timber;
 
 public class MediaDetailActivity extends BaseActivity implements MovieDetailView {
 
   public static final String WATCH_MEDIA_DATA = "WATCH_MEDIA_DATA";
+  private static final int MIN_ITEMS_THRESHOLD = 5;
   @BindView(R.id.image_backdrop_detail_media) KenBurnsView imageBackdropDetailMedia;
   @BindView(R.id.toolbar_detail_media) Toolbar toolbarDetailMedia;
   @BindView(R.id.collapsing_detail_media) CollapsingToolbarLayout collapsingDetailMedia;
@@ -50,10 +56,14 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   @BindView(R.id.media_detail_picture_imageview) ImageView mediaDetailPictureImageview;
   @BindView(R.id.media_detail_picture_card) CardView mediaDetailPictureCard;
   @BindView(R.id.media_detail_like_fab) FloatingActionButton likeFab;
+
   @Inject
   MovieDetailPresenter presenter;
+  @BindView(R.id.media_detail_similar_movies) SuperRecyclerView similiarMoviesList;
   private WatchMediaValue watchMedia;
   private MediaDetailPagerAdapter pagerAdapter;
+  private int similarMoviesPage = 0;
+  private SimilarMoviesAdapter adapter;
 
   public static Intent getStartIntent(Context context, WatchMediaValue watchMedia) {
     Intent intent = new Intent(context, MediaDetailActivity.class);
@@ -72,11 +82,14 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     Bundle bundle = getIntent().getBundleExtra(WATCH_MEDIA_DATA);
     watchMedia = bundle.getParcelable(WATCH_MEDIA_DATA);
     presenter.attachView(this);
-    presenter.getMovieDetailById((int) watchMedia.id());
+    int movieId = (int) watchMedia.id();
+    presenter.getMovieDetailById(movieId);
+    presenter.getMoviesSimilarTo(movieId, 1);
     mediaDetailTabs.setupWithViewPager(mediaDetailViewpager);
     pagerAdapter = new MediaDetailPagerAdapter(this);
     mediaDetailViewpager.setAdapter(pagerAdapter);
 
+    setupSimilarMoviesList();
 
     bindViewToData(watchMedia);
     appbarDetailMedia.addOnOffsetChangedListener(new AppBarStateChangeListener() {
@@ -92,8 +105,32 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     });
   }
 
+  private void setupSimilarMoviesList() {
+    LinearLayoutManager layout =
+        new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+    similiarMoviesList.setLayoutManager(
+        layout);
+    adapter = new SimilarMoviesAdapter(this);
+    similiarMoviesList.setAdapter(adapter);
+    similiarMoviesList.setupMoreListener(onMoreSimilarMoviesAsked(), MIN_ITEMS_THRESHOLD);
+
+  }
+
+  private OnMoreListener onMoreSimilarMoviesAsked() {
+    return (overallItemsCount, itemsBeforeMore, maxLastVisiblePosition) -> {
+      similarMoviesPage++;
+      presenter.getMoviesSimilarTo((int) watchMedia.id(), similarMoviesPage);
+    };
+  }
+
   @Override protected void setupActivityComponent(Bundle savedInstanceState) {
+
     appInstance.createMediaDetailComponent(new MediaDetailModule()).inject(this);
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    appInstance.releaseDetailComponent();
   }
 
   @Override
@@ -148,7 +185,11 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
         .loadBitmapAndCreateColorPallete();
 
     pagerAdapter.updateOverViewPage(movieDetailValue);
+  }
 
+  @Override public void showSimilarMovies(List<WatchMediaValue> mediaValues) {
+    Timber.e("Similar movies arrived: %s", mediaValues.size());
+    adapter.addSimilarMovies(mediaValues);
   }
 
   @Override public void showErrorWarning() {

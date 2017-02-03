@@ -127,7 +127,7 @@ public class MediaListFragment extends BaseFragment
   }
 
   private void setupRecyclerView() {
-    movieList.getRecyclerView().setHasFixedSize(true);
+    movieList.getRecyclerView().setHasFixedSize(false);
     layoutManger = new LinearLayoutManager(getContext());
     movieList.setLayoutManager(layoutManger);
     mediaAdapter = new MediaAdapter(Picasso.with(getContext()), this);
@@ -138,16 +138,25 @@ public class MediaListFragment extends BaseFragment
 
   @NonNull private RecyclerView.OnScrollListener createFabScrollBehavior() {
     return new RecyclerView.OnScrollListener() {
+
       @Override
       public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+
+        //Tocheck if  recycler is on bottom
+        boolean isNotAtBottom =
+            layoutManger
+                .findLastCompletelyVisibleItemPosition() != mediaAdapter.getItemCount() - 1;
+        if (newState == RecyclerView.SCROLL_STATE_IDLE && isNotAtBottom) {
           fabFilter.show();
         } else {
           fabFilter.hide();
         }
         super.onScrollStateChanged(recyclerView, newState);
       }
+
+
     };
+
   }
 
   @NonNull private OnMoreListener createOnMoreListener() {
@@ -244,6 +253,11 @@ public class MediaListFragment extends BaseFragment
   }
 
   @Override public void onItemClicked(WatchMediaValue mediaValue) {
+
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
 
   }
 

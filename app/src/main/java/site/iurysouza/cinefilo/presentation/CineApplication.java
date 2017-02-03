@@ -106,6 +106,9 @@ public class CineApplication extends Application {
   public MediaListComponent getMediaListComponent() {
     return mediaListComponent;
   }
+  public MediaDetailComponent getMediaDetailComponent() {
+    return mediaDetailComponent;
+  }
 
   public void releaseAppComponent() {
     appComponent = null;
@@ -113,6 +116,9 @@ public class CineApplication extends Application {
 
   public void releaseRepositoryComponent() {
     mediaListComponent = null;
+  }
+  public void releaseDetailComponent() {
+    mediaDetailComponent = null;
   }
 }
 

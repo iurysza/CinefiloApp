@@ -1,5 +1,7 @@
 package site.iurysouza.cinefilo.presentation.mediadetail;
 
+import java.util.List;
+import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
 import site.iurysouza.cinefilo.presentation.base.mvp.BaseView;
 
@@ -11,4 +13,5 @@ public interface MovieDetailView extends BaseView{
 
   void showErrorWarning();
 
+  void showSimilarMovies(List<WatchMediaValue> mediaValues);
 }
