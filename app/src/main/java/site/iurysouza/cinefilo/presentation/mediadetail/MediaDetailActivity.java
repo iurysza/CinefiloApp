@@ -10,6 +10,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -38,6 +40,7 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
 
   public static final String WATCH_MEDIA_DATA = "WATCH_MEDIA_DATA";
   private static final int MIN_ITEMS_THRESHOLD = 5;
+
   @BindView(R.id.image_backdrop_detail_media) KenBurnsView imageBackdropDetailMedia;
   @BindView(R.id.toolbar_detail_media) Toolbar toolbarDetailMedia;
   @BindView(R.id.collapsing_detail_media) CollapsingToolbarLayout collapsingDetailMedia;
@@ -56,10 +59,10 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   @BindView(R.id.media_detail_picture_imageview) ImageView mediaDetailPictureImageview;
   @BindView(R.id.media_detail_picture_card) CardView mediaDetailPictureCard;
   @BindView(R.id.media_detail_like_fab) FloatingActionButton likeFab;
-
-  @Inject
-  MovieDetailPresenter presenter;
   @BindView(R.id.media_detail_similar_movies) SuperRecyclerView similiarMoviesList;
+
+  @Inject MovieDetailPresenter presenter;
+
   private WatchMediaValue watchMedia;
   private MediaDetailPagerAdapter pagerAdapter;
   private int similarMoviesPage = 0;
@@ -80,18 +83,21 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     ButterKnife.bind(this);
     setupActionBar();
     Bundle bundle = getIntent().getBundleExtra(WATCH_MEDIA_DATA);
+
     watchMedia = bundle.getParcelable(WATCH_MEDIA_DATA);
     presenter.attachView(this);
     int movieId = (int) watchMedia.id();
+
     presenter.getMovieDetailById(movieId);
     presenter.getMoviesSimilarTo(movieId, 1);
+
     mediaDetailTabs.setupWithViewPager(mediaDetailViewpager);
     pagerAdapter = new MediaDetailPagerAdapter(this);
+
     mediaDetailViewpager.setAdapter(pagerAdapter);
-
     setupSimilarMoviesList();
-
     bindViewToData(watchMedia);
+
     appbarDetailMedia.addOnOffsetChangedListener(new AppBarStateChangeListener() {
       @Override
       public void onStateChanged(AppBarLayout appBarLayout, State state) {
@@ -112,8 +118,9 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
         layout);
     adapter = new SimilarMoviesAdapter(this);
     similiarMoviesList.setAdapter(adapter);
+    SnapHelper snapHelper = new LinearSnapHelper();
+    snapHelper.attachToRecyclerView(similiarMoviesList.getRecyclerView());
     similiarMoviesList.setupMoreListener(onMoreSimilarMoviesAsked(), MIN_ITEMS_THRESHOLD);
-
   }
 
   private OnMoreListener onMoreSimilarMoviesAsked() {
