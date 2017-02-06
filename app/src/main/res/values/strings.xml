@@ -42,4 +42,6 @@
   <string name="detail_genre_transition">detail_genre_transition</string>
   <string name="detail_page_people_title">Cast</string>
   <string name="detail_page_overview_title">Overview</string>
+  <string name="detail_activity_liked_snackbar">Added to Favorites</string>
+  <string name="detail_activity_liked_removed">Removed from Favorites</string>
 </resources>

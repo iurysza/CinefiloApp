@@ -22,7 +22,7 @@ public class RealmMovie implements RealmModel {
   public static final String POPULARITY = "popularity";
   public static final String VOTE_AVG = "voteAverage";
   public static final String RELEASE_DATE = "releaseDate";
-  public static final int QUERY_TYPE_DETAIL = 5;
+  public static final int DEFAULT_QUERY = 5;
   public static final String VOTE_COUNT = "voteCount";
   public static final String QUERY_DATE = "queryDate";
   public static final int NOW_QUERY = 2;
@@ -107,11 +107,14 @@ public class RealmMovie implements RealmModel {
     realmMovie.setVideo(movie.getVideo());
     realmMovie.setVoteCount(movie.getVoteCount());
     realmMovie.setReleaseDate(releaseDate);
+    realmMovie.setSpokenLanguageList(RealmSpokenLanguage.valueOf(movie.getSpokenLanguageList()));
+    realmMovie.setProductionCompanyList(RealmProductionCompany.valueOf(movie.getProductionCompanyList()));
+    realmMovie.setProductionCountryList(RealmProductionCountry.valueOf(movie.getProductionCountryList()));
 
     realmMovie.setGenreIds(RealmIntegerMapper.map(genreIds));
     realmMovie.setGenreList(RealmGenre.map(genreList));
     realmMovie.setQueryDate(System.currentTimeMillis());
-    if (queryType != QUERY_TYPE_DETAIL) {
+    if (queryType != DEFAULT_QUERY) {
       realmMovie.setQueryType(queryType);
     }
     if (movie.getBackdropPath() == null) {

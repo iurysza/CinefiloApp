@@ -12,7 +12,7 @@ import site.iurysouza.cinefilo.model.data.moviedetail.storage.CloudMovieDetailDa
 import site.iurysouza.cinefilo.model.data.moviedetail.storage.LocalDetailDataSource;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 
-import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.QUERY_TYPE_DETAIL;
+import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.DEFAULT_QUERY;
 
 /**
  * Created by Iury Souza on 31/01/2017.
@@ -46,7 +46,7 @@ public class MovieDetailRepository {
     return cloudMovieDetailDataSource
         .getMovieById(movieId)
         .map(movie -> {
-          RealmMovie realmMovie = RealmMovie.valueOf(movie, QUERY_TYPE_DETAIL);
+          RealmMovie realmMovie = RealmMovie.valueOf(movie, DEFAULT_QUERY);
           localDetailDataSource.storeMovie(realmMovie);
           return realmMovie;
         });

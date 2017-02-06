@@ -1,13 +1,18 @@
 package site.iurysouza.cinefilo.presentation.mediadetail;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,13 +21,16 @@ import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.malinskiy.superrecyclerview.OnMoreListener;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
@@ -66,11 +74,16 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   @BindView(R.id.media_detail_similar_movies) SuperRecyclerView similiarMoviesList;
 
   @Inject MovieDetailPresenter presenter;
+  @BindView(R.id.detail_backdrop_play_btn) ImageView detailBackdropPlayBtn;
+  @BindView(R.id.media_detail_similar_title) TextView mediaDetailSimilarTitle;
+  @BindView(R.id.media_detail_like_overlay) FrameLayout mediaDetailLikeOverlay;
+  @BindView(R.id.media_detail_coord) CoordinatorLayout mediaDetailCoord;
 
   private WatchMediaValue watchMedia;
   private MediaDetailPagerAdapter pagerAdapter;
   private int similarMoviesPage = 0;
   private SimilarMoviesAdapter adapter;
+  private boolean movieLiked = false;
 
   public static Intent getStartIntent(Context context, WatchMediaValue watchMedia) {
     Intent intent = new Intent(context, MediaDetailActivity.class);
@@ -222,21 +235,23 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   }
 
   @Override public void updateMovieData(MovieDetailValue movieDetailValue) {
-    Timber.e("MOVIE UPDATED: %s", movieDetailValue);
+    Timber.e("MOVIE DETAIL LOADED: %s", movieDetailValue);
     String runTime = String.valueOf(movieDetailValue.runTime().intValue()) + "min";
     mediaDetailPlaytime.setText(runTime);
+
     HashMap<String, Integer> stringIntegerHashMap = movieDetailValue.genreList();
     String genreText = "";
     for (String genreName : stringIntegerHashMap.keySet()) {
       genreText = genreText + ", " + genreName;
     }
+    mediaDetailGenreText.setText(genreText.substring(2));
     movieDetailValue.tagLine();
-    mediaDetailGenreText.setText(genreText.substring(2)
-    );
     DetailStyleManager
         .builder()
         .context(this)
+        .appBarLayout(appbarDetailMedia)
         .backDropPath(movieDetailValue.backdropPath())
+        .posterPath(movieDetailValue.posterPath())
         .collapsingToolbarLayout(collapsingDetailMedia)
         .kenBurnsView(imageBackdropDetailMedia)
         .toolbar(toolbarDetailMedia)
@@ -254,5 +269,117 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
 
   @Override public void showErrorWarning() {
 
+  }
+
+  @OnClick(R.id.media_detail_like_fab) public void onClick(View view) {
+    if (movieLiked) {
+      mediaDetailLikeOverlay.setBackgroundColor(getResources().getColor(R.color.white));
+    } else {
+      mediaDetailLikeOverlay.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+    }
+
+    int x = mediaDetailPictureImageview.getRight() / 2;
+    int y = mediaDetailPictureImageview.getBottom();
+
+    int startRadius = 0;
+    int endRadius =
+        (int) Math.hypot(mediaDetailPictureCard.getWidth(), mediaDetailPictureCard.getHeight());
+
+    Animator anim = ViewAnimationUtils.createCircularReveal(
+        mediaDetailLikeOverlay,
+        x,
+        y,
+        startRadius,
+        endRadius);
+
+    mediaDetailLikeOverlay.setVisibility(View.VISIBLE);
+    anim
+        .setDuration(300)
+        .addListener(new Animator.AnimatorListener() {
+          @Override public void onAnimationStart(Animator animation) {
+          }
+
+          @Override public void onAnimationEnd(Animator animation) {
+            removeOverlayWithReveal();
+          }
+
+          @Override public void onAnimationCancel(Animator animation) {
+
+          }
+
+          @Override public void onAnimationRepeat(Animator animation) {
+
+          }
+        });
+    anim.start();
+  }
+
+  private void setLikedColor() {
+    likeFab.setImageDrawable(ContextCompat.getDrawable(MediaDetailActivity.this,
+        R.drawable.ic_favorite_red_500_24dp));
+    int whiteColor = MediaDetailActivity.this.getResources().getColor(R.color.white);
+    likeFab.setBackgroundTintList(ColorStateList.valueOf(whiteColor));
+  }
+
+  private void setUnlikedColor() {
+    likeFab.setImageDrawable(ContextCompat.getDrawable(MediaDetailActivity.this,
+        R.drawable.ic_favorite_border_white_24dp));
+    int whiteColor = MediaDetailActivity.this.getResources().getColor(R.color.colorAccent);
+    likeFab.setBackgroundTintList(ColorStateList.valueOf(whiteColor));
+  }
+
+  private void removeOverlayWithReveal() {
+    int x = mediaDetailPictureImageview.getRight() / 2;
+    int y = mediaDetailPictureImageview.getBottom();
+
+    int endRadius = 0;
+    int startRadius =
+        (int) Math.hypot(mediaDetailPictureCard.getWidth(), mediaDetailPictureCard.getHeight());
+
+    Animator anim = ViewAnimationUtils.createCircularReveal(
+        mediaDetailLikeOverlay,
+        x,
+        y,
+        startRadius,
+        endRadius);
+    anim.setStartDelay(150);
+    anim
+        .setDuration(450)
+        .addListener(new Animator.AnimatorListener() {
+          @Override public void onAnimationStart(Animator animation) {
+
+          }
+
+          @Override public void onAnimationEnd(Animator animation) {
+            mediaDetailLikeOverlay.setVisibility(View.GONE);
+            movieLiked = !movieLiked;
+            createLikedSnackBar(movieLiked);
+            if (movieLiked) {
+              setLikedColor();
+            } else {
+              setUnlikedColor();
+            }
+          }
+
+          @Override public void onAnimationCancel(Animator animation) {
+
+          }
+
+          @Override public void onAnimationRepeat(Animator animation) {
+
+          }
+        });
+    anim.start();
+  }
+
+  private void createLikedSnackBar(boolean movieLiked) {
+    String text;
+    if (movieLiked) {
+      text = getString(R.string.detail_activity_liked_snackbar);
+    } else {
+      text = getString(R.string.detail_activity_liked_removed);
+    }
+
+    Snackbar.make(mediaDetailCoord, text, Snackbar.LENGTH_SHORT).show();
   }
 }
