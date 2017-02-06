@@ -230,9 +230,9 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     for (String genreName : stringIntegerHashMap.keySet()) {
       genreText = genreText + ", " + genreName;
     }
-
     movieDetailValue.tagLine();
-    //mediaDetailGenreText.setText(genreText);
+    mediaDetailGenreText.setText(genreText.substring(2)
+    );
     DetailStyleManager
         .builder()
         .context(this)

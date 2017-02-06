@@ -2,7 +2,6 @@ package site.iurysouza.cinefilo.model.data.moviedetail.storage;
 
 import io.realm.Realm;
 import rx.Observable;
-import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 
 /**
@@ -16,12 +15,19 @@ public class LocalDetailDataSource {
         .where(RealmMovie.class)
         .equalTo(RealmMovie.ID, movieId)
         .findFirst();
-    RealmMovie movie = realm.copyFromRealm(movieQuery);
+    RealmMovie unmanagedMovie = null;
+    if (movieQuery != null) {
+      unmanagedMovie = realm.copyFromRealm(movieQuery);
+    }
     realm.close();
-    return Observable.just(movie);
+    return Observable.just(unmanagedMovie);
   }
 
-  public void storeMovie(Movie movie) {
-
+  public void storeMovie(RealmMovie movie) {
+    Realm realm = Realm.getDefaultInstance();
+    if (movie != null) {
+      realm.executeTransaction(transaction -> transaction.copyToRealmOrUpdate(movie));
+    }
+    realm.close();
   }
 }

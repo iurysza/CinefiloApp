@@ -100,6 +100,7 @@ public class RealmMovie implements RealmModel {
     realmMovie.setReleaseDate(releaseDate);
 
     realmMovie.setGenreIds(RealmIntegerMapper.map(genreIds));
+    realmMovie.setGenreList(RealmGenre.map(genreList));
     realmMovie.setQueryDate(System.currentTimeMillis());
     realmMovie.setQueryType(queryType);
     if (movie.getBackdropPath() == null) {

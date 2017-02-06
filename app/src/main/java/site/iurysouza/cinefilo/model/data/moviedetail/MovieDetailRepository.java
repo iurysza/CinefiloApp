@@ -30,10 +30,13 @@ public class MovieDetailRepository {
 
   public Observable<MovieDetailValue> getMovieById(int movieId) {
 
-    //Observable<RealmMovie> movieFromLocalSource = localDetailDataSource.getMovieById(movieId).subscribeOn(Schedulers.computation());
-    Observable<RealmMovie> cloudFromLocalSource = getNowPlayingFromApi(movieId).subscribeOn(Schedulers.io());
+    Observable<RealmMovie> movieFromLocalSource =
+        localDetailDataSource.getMovieById(movieId).subscribeOn(Schedulers.computation());
+    Observable<RealmMovie> cloudFromLocalSource =
+        getNowPlayingFromApi(movieId).subscribeOn(Schedulers.io());
 
-    return cloudFromLocalSource
+    return Observable.concat(movieFromLocalSource, cloudFromLocalSource)
+        .first(realmMovie -> realmMovie != null)
         .map(MovieDetailValue::mapToValueMedia)
         .observeOn(AndroidSchedulers.mainThread());
   }
@@ -43,15 +46,16 @@ public class MovieDetailRepository {
     return cloudMovieDetailDataSource
         .getMovieById(movieId)
         .map(movie -> {
-          localDetailDataSource.storeMovie(movie);
-          return RealmMovie.valueOf(movie, QUERY_TYPE_DETAIL);
+          RealmMovie realmMovie = RealmMovie.valueOf(movie, QUERY_TYPE_DETAIL);
+          localDetailDataSource.storeMovie(realmMovie);
+          return realmMovie;
         });
   }
 
   @NonNull
   public Observable<List<WatchMedia>> getMoviesSimilarTo(int movieId, int page) {
     return cloudMovieDetailDataSource
-        .getMoviesSimilarTo(movieId,page)
+        .getMoviesSimilarTo(movieId, page)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .map(WatchMedia::valueOfMovieList);
