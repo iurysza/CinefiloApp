@@ -83,7 +83,6 @@ public class WatchMedia {
             movie.getPosterPath() != null &&
             movie.getReleaseDate() != null &&
             movie.getOverview() != null) {
-
           mediaList.add(valueOf(movie));
         }
       }

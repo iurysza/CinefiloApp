@@ -62,6 +62,7 @@ public class RealmMovie implements RealmModel {
   private RealmList<RealmProductionCountry> productionCountryList = new RealmList<>();
 
   public static RealmMovie valueOf(Movie movie, int queryType) {
+
     String originalTitle = movie.getOriginalTitle();
     String posterPath = movie.getPosterPath();
     Integer[] genreIds = movie.getGenreIds();
@@ -75,19 +76,27 @@ public class RealmMovie implements RealmModel {
     }
 
     RealmMovie realmMovie = new RealmMovie();
+
+    realmMovie.setId(movie.getId().intValue());
+    Long budget = movie.getBudget();
+    Long revenue = movie.getRevenue();
+    if (budget == null) {
+      budget = 0L;
+    }
+    if (revenue == null) {
+      revenue = 0L;
+    }
+    realmMovie.setBudget(budget.intValue());
+    realmMovie.setRevenue(revenue.intValue());
     realmMovie.setAdult(movie.getAdult());
     realmMovie.setBackdropPath("");
     realmMovie.setBackdropPath(movie.getBackdropPath());
-    realmMovie.setBackdropPath(movie.getBackdropPath());
-    realmMovie.setId(movie.getId().intValue());
     realmMovie.setOriginalTitle(originalTitle);
     realmMovie.setOverview(overview);
     realmMovie.setPosterPath(posterPath);
     realmMovie.setVoteAverage(voteAverage);
 
     realmMovie.setImdbId(movie.getImdbId());
-    realmMovie.setBudget(movie.getBudget().intValue());
-    realmMovie.setRevenue(movie.getRevenue().intValue());
     realmMovie.setRuntime(movie.getRuntime());
     realmMovie.setStatus(movie.getStatus());
     realmMovie.setHomepage(movie.getHomepage());
@@ -102,7 +111,9 @@ public class RealmMovie implements RealmModel {
     realmMovie.setGenreIds(RealmIntegerMapper.map(genreIds));
     realmMovie.setGenreList(RealmGenre.map(genreList));
     realmMovie.setQueryDate(System.currentTimeMillis());
-    realmMovie.setQueryType(queryType);
+    if (queryType != QUERY_TYPE_DETAIL) {
+      realmMovie.setQueryType(queryType);
+    }
     if (movie.getBackdropPath() == null) {
       movie.setBackdropPath("");
     }

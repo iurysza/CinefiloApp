@@ -16,7 +16,7 @@ public class LocalDetailDataSource {
         .equalTo(RealmMovie.ID, movieId)
         .findFirst();
     RealmMovie unmanagedMovie = null;
-    if (movieQuery != null) {
+    if (movieQuery != null && !movieQuery.getGenreList().isEmpty()) {
       unmanagedMovie = realm.copyFromRealm(movieQuery);
     }
     realm.close();
@@ -24,10 +24,19 @@ public class LocalDetailDataSource {
   }
 
   public void storeMovie(RealmMovie movie) {
-    Realm realm = Realm.getDefaultInstance();
     if (movie != null) {
-      realm.executeTransaction(transaction -> transaction.copyToRealmOrUpdate(movie));
+      Realm realm = Realm.getDefaultInstance();
+      RealmMovie movieQuery = realm
+          .where(RealmMovie.class)
+          .equalTo(RealmMovie.ID, movie.getId())
+          .findFirst();
+      RealmMovie unmanagedMovie = null;
+      if (movieQuery != null) {
+        unmanagedMovie = realm.copyFromRealm(movieQuery);
+        movie.setQueryType(unmanagedMovie.getQueryType());
+        realm.executeTransaction(transaction -> transaction.copyToRealmOrUpdate(movie));
+      }
+      realm.close();
     }
-    realm.close();
   }
 }
