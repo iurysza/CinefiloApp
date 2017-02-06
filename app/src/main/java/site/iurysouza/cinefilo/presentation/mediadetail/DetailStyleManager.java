@@ -2,6 +2,7 @@ package site.iurysouza.cinefilo.presentation.mediadetail;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
@@ -74,15 +75,27 @@ public class DetailStyleManager {
       Palette.from(bitmap).generate(palette -> {
         int defaultColor = 0x000000;
         int dominantColor = palette.getDominantColor(defaultColor);
-        int titleTextColor = palette.getDominantSwatch().getTitleTextColor();
-
+        Palette.Swatch dominantSwatch = palette.getDominantSwatch();
+        int titleTextColor;
+        if (dominantSwatch != null) {
+          titleTextColor = dominantSwatch.getTitleTextColor();
+        } else {
+          titleTextColor = Color.BLACK;
+        }
         collapsingToolbarLayout.setContentScrimColor(dominantColor);
         collapsingToolbarLayout.setStatusBarScrimColor(dominantColor);
         toolbar.setTitleTextColor(titleTextColor);
 
         Palette.Swatch lightMutedSwatch = palette.getLightMutedSwatch();
-        int tabDefaultTextColor = lightMutedSwatch.getTitleTextColor();
-        int tabSelectedTextColor = lightMutedSwatch.getBodyTextColor();
+        int tabDefaultTextColor;
+        int tabSelectedTextColor;
+        if (lightMutedSwatch != null) {
+          tabDefaultTextColor = lightMutedSwatch.getTitleTextColor();
+          tabSelectedTextColor = lightMutedSwatch.getBodyTextColor();
+        } else {
+          tabDefaultTextColor = Color.GRAY;
+          tabSelectedTextColor = Color.BLACK;
+        }
 
         tabLayout.setTabTextColors(tabDefaultTextColor, tabSelectedTextColor);
         tabLayout.setSelectedTabIndicatorColor(dominantColor);

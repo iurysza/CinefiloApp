@@ -10,7 +10,7 @@ import site.iurysouza.cinefilo.R;
 
 public enum MediaDetailPagerEnum {
   MEDIA_OVERVIEW(R.string.detail_page_overview_title, R.layout.media_detail_page_overview_layout),
-  MEDIA_PEOPLE(R.string.detail_page_people_title, R.layout.media_detail_page_people_layout);
+  MEDIA_CAST(R.string.detail_page_people_title, R.layout.media_detail_page_cast_layout);
 
   private int titleResId;
   private int layoutResId;

@@ -21,6 +21,7 @@ public class MediaDetailPagerAdapter extends PagerAdapter {
   private TextView revenueText;
   private TextView budgetText;
   private TextView languageText;
+  private TextView tagLineText;
 
   public MediaDetailPagerAdapter(Context context) {
     this.context = context;
@@ -55,16 +56,22 @@ public class MediaDetailPagerAdapter extends PagerAdapter {
     revenueText = (TextView) layout.findViewById(R.id.overview_page_revenue);
     budgetText = (TextView) layout.findViewById(R.id.overview_page_budget);
     languageText = (TextView) layout.findViewById(R.id.overview_page_original_language);
-
+    tagLineText = (TextView) layout.findViewById(R.id.overview_page_tagline);
   }
 
   void updateOverViewPage(MovieDetailValue movieDetailValue) {
     overviewText.setText(movieDetailValue.overview());
-    revenueText.setText(String.valueOf(movieDetailValue.revenue()));
-    budgetText.setText(String.valueOf(movieDetailValue.budget()));
     languageText.setText(movieDetailValue.originalLanguage());
+    tagLineText.setText(movieDetailValue.tagLine());
 
+    Integer revenue = movieDetailValue.revenue();
+    Integer budget = movieDetailValue.budget();
+    if (revenue == 0) revenueText.setVisibility(View.GONE);
+    if (budget == 0) budgetText.setVisibility(View.GONE);
+    revenueText.setText("$" + revenue);
+    budgetText.setText("$" + budget);
   }
+
   @Override
   public void destroyItem(ViewGroup collection, int position, Object view) {
     collection.removeView((View) view);

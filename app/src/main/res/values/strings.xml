@@ -40,6 +40,6 @@
   <string name="poster_card_transition">poster_card</string>
   <string name="media_title_transition">media_title_transition</string>
   <string name="detail_genre_transition">detail_genre_transition</string>
-  <string name="detail_page_people_title">People</string>
+  <string name="detail_page_people_title">Cast</string>
   <string name="detail_page_overview_title">Overview</string>
 </resources>

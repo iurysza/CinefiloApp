@@ -1,8 +1,15 @@
 package site.iurysouza.cinefilo.util;
 
+import android.support.annotation.NonNull;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import org.greenrobot.eventbus.EventBus;
 import rx.Subscription;
+
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.SHORT;
 
 /**
  * Created by Iury Souza on 06/01/2017.
@@ -26,5 +33,12 @@ public class Utils {
       subscription.unsubscribe();
     }
     return subscription;
+  }
+
+  @NonNull public static String parseDateText(Date releaseDate) {
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(releaseDate);
+    String month = cal.getDisplayName(MONTH, SHORT, Locale.US);
+    return month + ", " + (cal.get(Calendar.YEAR));
   }
 }

@@ -2,6 +2,7 @@ package site.iurysouza.cinefilo.presentation.mediadetail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -14,6 +15,8 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -24,9 +27,9 @@ import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.malinskiy.superrecyclerview.OnMoreListener;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.squareup.picasso.Picasso;
+import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
-import org.joda.time.DateTime;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.di.modules.MediaDetailModule;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
@@ -34,6 +37,7 @@ import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.mediadetail.similarmovies.SimilarMoviesAdapter;
 import site.iurysouza.cinefilo.util.ImageUtils;
+import site.iurysouza.cinefilo.util.Utils;
 import timber.log.Timber;
 
 public class MediaDetailActivity extends BaseActivity implements MovieDetailView {
@@ -90,6 +94,9 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
 
     presenter.getMovieDetailById(movieId);
     presenter.getMoviesSimilarTo(movieId, 1);
+    postponeEnterTransition();
+    setTransitionToViews();
+    scheduleStartPostponedTransition(mediaDetailCard);
 
     mediaDetailTabs.setupWithViewPager(mediaDetailViewpager);
     pagerAdapter = new MediaDetailPagerAdapter(this);
@@ -109,6 +116,42 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
         }
       }
     });
+  }
+
+  private void setTransitionToViews() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      String posterTransition = getResources().getString(R.string.poster_card_transition);
+      String titleTransition = getResources().getString(R.string.media_title_transition);
+      String cardTransition = getResources().getString(R.string.detail_card_transition);
+      String genreTransition = getResources().getString(R.string.detail_genre_transition);
+      mediaDetailGenre.setTransitionName(genreTransition);
+      mediaDetailPictureCard.setTransitionName(posterTransition);
+      mediaDetailTitleText.setTransitionName(titleTransition);
+      mediaDetailCard.setTransitionName(cardTransition);
+    }
+  }
+
+  @Override public void onActivityReenter(int resultCode, Intent data) {
+    super.onActivityReenter(resultCode, data);
+    postponeEnterTransition();
+    setTransitionToViews();
+    scheduleStartPostponedTransition(mediaDetailCard);
+  }
+
+  private void scheduleStartPostponedTransition(final View sharedElement) {
+    sharedElement.getViewTreeObserver().addOnPreDrawListener(
+        new ViewTreeObserver.OnPreDrawListener() {
+          @Override
+          public boolean onPreDraw() {
+            sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
+            startPostponedEnterTransition();
+            mediaDetailGenre.setTransitionName(null);
+            mediaDetailPictureCard.setTransitionName(null);
+            mediaDetailTitleText.setTransitionName(null);
+            mediaDetailCard.setTransitionName(null);
+            return true;
+          }
+        });
   }
 
   private void setupSimilarMoviesList() {
@@ -144,7 +187,9 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
+        setResult(RESULT_OK);
         supportFinishAfterTransition();
+        onNavigateUp();
         return true;
     }
     return super.onOptionsItemSelected(item);
@@ -166,10 +211,10 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
         .fit()
         .placeholder(R.drawable.placeholder)
         .into(mediaDetailPictureImageview);
-    mediaDetailTitleText.setText(name);
-    DateTime movieReleaseDate = new DateTime(watchMedia.releaseDate());
-    mediaDetailDate.setText("(" + movieReleaseDate.getYear() + ")");
 
+    mediaDetailTitleText.setText(name);
+    String dateText = Utils.parseDateText(watchMedia.releaseDate());
+    mediaDetailDate.setText(dateText);
     Double voteAverage = watchMedia.voteAverage();
     float movieRating = (float) (voteAverage / 2);
     mediaDetailRating.setRating(movieRating);
@@ -178,8 +223,16 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
 
   @Override public void updateMovieData(MovieDetailValue movieDetailValue) {
     Timber.e("MOVIE UPDATED: %s", movieDetailValue);
-    mediaDetailPlaytime.setText(String.valueOf(movieDetailValue.runTime().intValue()));
+    String runTime = String.valueOf(movieDetailValue.runTime().intValue()) + "min";
+    mediaDetailPlaytime.setText(runTime);
+    HashMap<String, Integer> stringIntegerHashMap = movieDetailValue.genreList();
+    String genreText = "";
+    for (String genreName : stringIntegerHashMap.keySet()) {
+      genreText = genreText + ", " + genreName;
+    }
 
+    movieDetailValue.tagLine();
+    //mediaDetailGenreText.setText(genreText);
     DetailStyleManager
         .builder()
         .context(this)

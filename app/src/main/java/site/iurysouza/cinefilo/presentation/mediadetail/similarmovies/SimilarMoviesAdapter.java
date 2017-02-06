@@ -78,6 +78,7 @@ public class SimilarMoviesAdapter
     }
 
     void bindDataTo(WatchMediaValue watchMediaValue) {
+      moviePoster.setTransitionName(null);
       this.watchMediaValue = watchMediaValue;
       movieTitle.setText(watchMediaValue.name());
       ItemColorManager
@@ -98,6 +99,7 @@ public class SimilarMoviesAdapter
       Intent startIntent = MediaDetailActivity.getStartIntent(context, movie);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         String posterTransition = context.getResources().getString(R.string.poster_card_transition);
+        moviePoster.setTransitionName(posterTransition);
         Pair<View, String> posterPair = new android.util.Pair<>(moviePoster, posterTransition);
         ActivityOptions options = ActivityOptions
             .makeSceneTransitionAnimation((Activity) context, posterPair);

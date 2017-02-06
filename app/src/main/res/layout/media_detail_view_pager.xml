@@ -16,6 +16,9 @@
   <android.support.design.widget.TabLayout
       android:id="@+id/media_detail_tabs"
       android:layout_width="match_parent"
+      app:tabIndicatorColor="@color/appLightBlack"
+      app:tabTextColor="@color/appGreyAlpha80"
+      app:tabSelectedTextColor="@color/appLightBlack"
       android:layout_height="wrap_content" />
 
   <site.iurysouza.cinefilo.presentation.mediadetail.WrappingViewPager

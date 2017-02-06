@@ -48,10 +48,11 @@ public class ItemColorManager {
         }
 
         @Override public void onBitmapFailed(Drawable errorDrawable) {
-          Timber.e("Failed to loadBackdrop image");
+          Timber.e("Failed to similar movie poster");
         }
 
         @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
+          imageView.setImageDrawable(placeHolderDrawable);
         }
       };
     }
