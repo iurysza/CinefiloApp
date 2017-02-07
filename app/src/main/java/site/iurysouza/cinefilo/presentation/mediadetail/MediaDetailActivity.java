@@ -12,6 +12,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
@@ -19,6 +20,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -51,6 +53,7 @@ import timber.log.Timber;
 public class MediaDetailActivity extends BaseActivity implements MovieDetailView {
 
   public static final String WATCH_MEDIA_DATA = "WATCH_MEDIA_DATA";
+  public static final String REMOVE_TRANSITIONS = "REMOVE_TRANSITIONS";
   private static final int MIN_ITEMS_THRESHOLD = 5;
 
   @BindView(R.id.image_backdrop_detail_media) KenBurnsView imageBackdropDetailMedia;
@@ -90,6 +93,16 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     Bundle bundle = new Bundle();
     bundle.putParcelable(WATCH_MEDIA_DATA, watchMedia);
     intent.putExtra(WATCH_MEDIA_DATA, bundle);
+    intent.putExtra(REMOVE_TRANSITIONS, true);
+    return intent;
+  }
+
+  public static Intent getStartIntentFromSimMovies(Context context, WatchMediaValue watchMedia) {
+    Intent intent = new Intent(context, MediaDetailActivity.class);
+    Bundle bundle = new Bundle();
+    bundle.putParcelable(WATCH_MEDIA_DATA, watchMedia);
+    intent.putExtra(WATCH_MEDIA_DATA, bundle);
+    intent.putExtra(REMOVE_TRANSITIONS, false);
     return intent;
   }
 
@@ -156,12 +169,16 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
         new ViewTreeObserver.OnPreDrawListener() {
           @Override
           public boolean onPreDraw() {
+            boolean shouldRemoveTransitions =
+                getIntent().getBooleanExtra(REMOVE_TRANSITIONS, false);
             sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
             startPostponedEnterTransition();
-            mediaDetailGenre.setTransitionName(null);
-            mediaDetailPictureCard.setTransitionName(null);
-            mediaDetailTitleText.setTransitionName(null);
-            mediaDetailCard.setTransitionName(null);
+            if (shouldRemoveTransitions) {
+              mediaDetailGenre.setTransitionName(null);
+              mediaDetailPictureCard.setTransitionName(null);
+              mediaDetailTitleText.setTransitionName(null);
+              mediaDetailCard.setTransitionName(null);
+            }
             return true;
           }
         });
@@ -187,7 +204,6 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   }
 
   @Override protected void setupActivityComponent(Bundle savedInstanceState) {
-
     appInstance.createMediaDetailComponent(new MediaDetailModule()).inject(this);
   }
 
@@ -200,9 +216,8 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
-        setResult(RESULT_OK);
-        supportFinishAfterTransition();
-        onNavigateUp();
+        getWindow().setEnterTransition(new Explode());
+        NavUtils.navigateUpFromSameTask(this);
         return true;
     }
     return super.onOptionsItemSelected(item);
@@ -213,6 +228,8 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     ActionBar supportActionBar = getSupportActionBar();
     supportActionBar.setDisplayHomeAsUpEnabled(true);
     supportActionBar.setTitle("");
+    supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+
   }
 
   private void bindViewToData(WatchMediaValue watchMedia) {

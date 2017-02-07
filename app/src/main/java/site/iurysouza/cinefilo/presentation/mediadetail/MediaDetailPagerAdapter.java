@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Iterator;
 import java.util.Locale;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
@@ -19,7 +20,7 @@ import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
  * Created by Iury Souza on 31/01/2017.
  */
 
-public class MediaDetailPagerAdapter extends PagerAdapter {
+class MediaDetailPagerAdapter extends PagerAdapter {
 
   private Context context;
   private TextView overviewText;
@@ -31,7 +32,7 @@ public class MediaDetailPagerAdapter extends PagerAdapter {
   private LinearLayout budgetContainer;
   private LinearLayout revContainer;
 
-  public MediaDetailPagerAdapter(Context context) {
+  MediaDetailPagerAdapter(Context context) {
     this.context = context;
   }
 
@@ -64,19 +65,21 @@ public class MediaDetailPagerAdapter extends PagerAdapter {
     revenueText = (TextView) layout.findViewById(R.id.overview_page_revenue);
     budgetText = (TextView) layout.findViewById(R.id.overview_page_budget);
     revContainer = (LinearLayout) layout.findViewById(R.id.overview_page_revenue_container);
-    budgetContainer = (LinearLayout) layout.findViewById(R.id.overview_page_revenue_container);
-    langContainer = (LinearLayout) layout.findViewById(R.id.overview_page_revenue_container);
+    budgetContainer = (LinearLayout) layout.findViewById(R.id.overview_page_budget_container);
+    langContainer = (LinearLayout) layout.findViewById(R.id.overview_page_language_container);
     languageText = (TextView) layout.findViewById(R.id.overview_page_original_language);
     tagLineText = (TextView) layout.findViewById(R.id.overview_page_tagline);
   }
 
   void updateOverViewPage(MovieDetailValue movieDetailValue) {
     overviewText.setText(movieDetailValue.overview());
-
     tagLineText.setText(movieDetailValue.tagLine());
-
     Integer revenue = movieDetailValue.revenue();
     Integer budget = movieDetailValue.budget();
+
+    budgetText.setText(getFormattedMoneyValue(budget));
+    revenueText.setText(getFormattedMoneyValue(revenue));
+
     if (revenue == 0) {
       revContainer.setVisibility(View.GONE);
     }
@@ -84,15 +87,12 @@ public class MediaDetailPagerAdapter extends PagerAdapter {
       budgetContainer.setVisibility(View.GONE);
     }
 
-    budgetText.setText(getFormattedMoneyValue(budget));
-    revenueText.setText(getFormattedMoneyValue(revenue));
-    String firstLangName =
-        movieDetailValue
-            .spokenLanguageList()
-            .keySet()
-            .iterator()
-            .next();
-    languageText.setText(firstLangName);
+    Iterator<String> langIterator = movieDetailValue.spokenLanguageList().keySet().iterator();
+    if (langIterator.hasNext()) {
+      languageText.setText(langIterator.next());
+    } else {
+      langContainer.setVisibility(View.GONE);
+    }
   }
 
   private String getFormattedMoneyValue(long value) {

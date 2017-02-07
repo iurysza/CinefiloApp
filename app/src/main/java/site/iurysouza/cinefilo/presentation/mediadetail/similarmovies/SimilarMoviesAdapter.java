@@ -28,6 +28,7 @@ import site.iurysouza.cinefilo.presentation.mediadetail.MediaDetailActivity;
 public class SimilarMoviesAdapter
     extends RecyclerView.Adapter<SimilarMoviesAdapter.SimilarMovieViewHolder> {
 
+
   List<WatchMediaValue> movieList = new ArrayList<>();
   private Context context;
 
@@ -96,10 +97,9 @@ public class SimilarMoviesAdapter
     }
 
     private void openDetailActivityWithSharedElements(WatchMediaValue movie, Context context) {
-      Intent startIntent = MediaDetailActivity.getStartIntent(context, movie);
+      Intent startIntent = MediaDetailActivity.getStartIntentFromSimMovies(context, movie);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         String posterTransition = context.getResources().getString(R.string.poster_card_transition);
-        moviePoster.setTransitionName(posterTransition);
         Pair<View, String> posterPair = new android.util.Pair<>(moviePoster, posterTransition);
         ActivityOptions options = ActivityOptions
             .makeSceneTransitionAnimation((Activity) context, posterPair);

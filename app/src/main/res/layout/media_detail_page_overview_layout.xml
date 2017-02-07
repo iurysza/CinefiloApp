@@ -14,7 +14,7 @@
       android:gravity="center_horizontal"
       android:padding="8dp"
       android:textSize="@dimen/bigger_text_size"
-      android:text="'Everything that has a beggining, has an end.'"
+      tools:text="'Everything that has a beggining, has an end.'"
       android:textStyle="italic"
       android:textColor="@color/appGrey"
       />
@@ -72,7 +72,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Revenue: "
+          android:text="Revenue: "
         android:textColor="@color/appLightBlack"
         />
 
@@ -94,6 +94,7 @@
       android:orientation="horizontal"
       android:id="@+id/overview_page_language_container"
       android:paddingTop="4dp"
+      android:paddingLeft="4dp"
       android:paddingBottom="12dp"
       >
 
