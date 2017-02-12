@@ -2,7 +2,7 @@ package site.iurysouza.cinefilo.presentation.base;
 
 import android.os.Bundle;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import site.iurysouza.cinefilo.presentation.CineApplication;
+import site.iurysouza.cinefilo.CineApplication;
 
 public abstract class BaseActivity extends RxAppCompatActivity  {
 

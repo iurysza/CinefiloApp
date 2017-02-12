@@ -21,7 +21,7 @@ public class RealmGenre implements RealmModel {
   private String name;
   private Long queryDate;
 
-  public static RealmList<RealmGenre> map(List<Genre> genreList) {
+  public static RealmList<RealmGenre> valueOf(List<Genre> genreList) {
     RealmList<RealmGenre> realmGenreList = new RealmList<>();
     if (genreList == null) {
       return realmGenreList;

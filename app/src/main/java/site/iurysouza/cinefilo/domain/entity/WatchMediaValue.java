@@ -59,8 +59,8 @@ public abstract class WatchMediaValue implements Parcelable{
     abstract WatchMediaValue build();
   }
 
-  public static WatchMediaValue mapToValueMedia(WatchMedia media) {
-    WatchMediaValue build = WatchMediaValue
+  public static WatchMediaValue valueOf(WatchMedia media) {
+    return WatchMediaValue
         .builder()
         .id(media.getId())
         .voteAverage(media.getVoteAverage())
@@ -71,10 +71,9 @@ public abstract class WatchMediaValue implements Parcelable{
         .name(media.getName())
         .genre(media.getGenre())
         .build();
-    return build;
   }
 
-  public static List<WatchMediaValue> mapToValueMedia(List<WatchMedia> mediaList) {
+  public static List<WatchMediaValue> valueOf(List<WatchMedia> mediaList) {
     List<WatchMediaValue> valueMediaList = new ArrayList<>();
 
     if (mediaList.isEmpty()) {
@@ -82,7 +81,7 @@ public abstract class WatchMediaValue implements Parcelable{
     }
 
     for (WatchMedia media : mediaList) {
-      valueMediaList.add(mapToValueMedia(media));
+      valueMediaList.add(valueOf(media));
     }
     return valueMediaList;
   }

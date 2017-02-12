@@ -15,7 +15,8 @@ android {
     targetSdkVersion 25
     versionCode 1
     versionName "1.0"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
   }
   buildTypes {
     release {
@@ -28,25 +29,24 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-  configurations.all {
-    resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+
+  // Always show the result of every unit test, even if it passes.
+  testOptions.unitTests.all {
+    testLogging {
+      events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+    }
   }
 }
 
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
-  androidTestCompile "com.android.support:support-annotations:$rootProject.ext.supportLibrary"
+
 
   compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibrary"
   compile "com.android.support:design:$rootProject.ext.supportLibrary"
   compile "com.android.support:cardview-v7:$rootProject.ext.supportLibrary"
   compile "com.android.support:recyclerview-v7:$rootProject.ext.supportLibrary"
   compile "com.android.support:palette-v7:$rootProject.ext.supportLibrary"
-
-
 
   //UI Libraries
   compile "com.wang.avi:library:$rootProject.ext.AviVersion"
@@ -60,15 +60,14 @@ dependencies {
   compile 'io.apptik.widget:multislider:1.3'
   compile 'de.hdodenhof:circleimageview:2.1.0'
 
-
-
-
-
-
   //Value Type Generator
   provided "com.google.auto.value:auto-value:1.2"
   apt "com.google.auto.value:auto-value:1.2"
   apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
+
+  //Lombok - Data types with annotations
+  provided "org.projectlombok:lombok:1.12.6"
+  apt "org.projectlombok:lombok:1.12.6"
 
   //FragmentStackManagement
   compile 'com.ncapdevi:frag-nav:1.2.5'
@@ -79,7 +78,7 @@ dependencies {
   //GreenRobot's Eventbus
   compile "org.greenrobot:eventbus:$rootProject.ext.EventBusVersion"
 
-  //dagger - di
+  //Dagger2
   apt 'com.google.dagger:dagger-compiler:2.7'
   compile 'com.google.dagger:dagger:2.7'
   provided 'javax.annotation:jsr250-api:1.0'
@@ -107,9 +106,6 @@ dependencies {
   compile 'com.trello:rxlifecycle-components:1.0'
   compile 'com.trello:rxlifecycle:1.0'
 
-  //Lombok - data types with annotations
-  provided "org.projectlombok:lombok:1.12.6"
-  apt "org.projectlombok:lombok:1.12.6"
 
   // retrofit
   compile 'com.squareup.retrofit2:retrofit:2.1.0'
@@ -126,6 +122,44 @@ dependencies {
   compile 'com.jakewharton:butterknife:8.1.0'
   apt 'com.jakewharton:butterknife-compiler:8.1.0'
 
-  testCompile 'junit:junit:4.12'
+  // Dependencies for local unit tests
+  testCompile "junit:junit:$rootProject.ext.junitVersion"
+  testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
+  testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
+  testCompile "org.powermock:powermock-module-junit4:$rootProject.ext.powerMockito"
+  testCompile "org.powermock:powermock-api-mockito:$rootProject.ext.powerMockito"
 
+  // Android Testing Support Library's runner and rules
+  androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
+  androidTestCompile "com.android.support.test:rules:$rootProject.ext.rulesVersion"
+
+  // Espresso UI Testing dependencies.
+  androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
+  androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion"
+  androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
+}
+
+/*
+Resolves dependency versions across test and production APKs, specifically, transitive
+dependencies. This is required since Espresso internally has a dependency on support-annotations.
+*/
+configurations.all {
+  resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+  resolutionStrategy.force "com.google.guava:guava:$rootProject.ext.guavaVersion"
+  resolutionStrategy.force "org.hamcrest:hamcrest-core:$rootProject.ext.hamcrestVersion"
+  resolutionStrategy.force "com.android.support:support-annotations:$rootProject.supportLibrary"
+  resolutionStrategy.force "com.android.support:support-v4:$rootProject.supportLibrary"
+}
+
+/*
+All direct/transitive dependencies shared between your test and production APKs need to be
+excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
+excluding these dependencies from your test configuration will result in an dex pre-verifier error
+at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
+*/
+configurations.compile.dependencies.each { compileDependency ->
+  println "Excluding compile dependency: ${compileDependency.getName()}"
+  configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+    configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+  }
 }

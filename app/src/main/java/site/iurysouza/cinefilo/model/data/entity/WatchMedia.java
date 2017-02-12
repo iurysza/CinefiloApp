@@ -12,6 +12,8 @@ import site.iurysouza.cinefilo.model.entities.realm.RealmInteger;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmSeries;
 
+import static site.iurysouza.cinefilo.util.Utils.isEmptyString;
+
 /**
  * Created by Iury Souza on 06/01/2017.
  */
@@ -44,6 +46,8 @@ public class WatchMedia {
 
   public static WatchMedia valueOf(Movie movie) {
     Integer genreValue = getGenreIdValue(movie);
+    if (isInvalid(movie)) return null;
+
     return WatchMedia
         .builder()
         .id(movie.getId())
@@ -55,6 +59,13 @@ public class WatchMedia {
         .name(movie.getOriginalTitle())
         .genre(genreValue)
         .build();
+  }
+
+  private static boolean isInvalid(Movie movie) {
+    return (isEmptyString(movie.getOriginalTitle()) ||
+        isEmptyString(movie.getPosterPath()) ||
+        isEmptyString(movie.getOverview()) ||
+        movie.getReleaseDate() == null);
   }
 
   public static WatchMedia valueOf(Series series) {
@@ -74,17 +85,12 @@ public class WatchMedia {
 
   public static List<WatchMedia> valueOfMovieList(List<Movie> movieList) {
     List<WatchMedia> mediaList = new ArrayList<>();
+    if (movieList.isEmpty()) return mediaList;
 
-    if (movieList.isEmpty()) {
-      return mediaList;
-    } else {
-      for (Movie movie : movieList) {
-        if (movie.getOriginalTitle() != null &&
-            movie.getPosterPath() != null &&
-            movie.getReleaseDate() != null &&
-            movie.getOverview() != null) {
-          mediaList.add(valueOf(movie));
-        }
+    for (Movie movie : movieList) {
+      WatchMedia watchMedia = valueOf(movie);
+      if (watchMedia != null) {
+        mediaList.add(watchMedia);
       }
     }
     return mediaList;
@@ -117,7 +123,6 @@ public class WatchMedia {
     }
     return genreId;
   }
-
 
   private static Integer getGenreIdValue(Series series) {
     Integer[] genreIdList = series.getGenres();

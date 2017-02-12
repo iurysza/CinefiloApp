@@ -101,7 +101,7 @@ public class CloudMovieDataSource {
   public void getMovieById(int movieId) {
     //movieService
     //    .getMovieById(movieId, Constants.MOVIE_DB_API.API_KEY)
-    //    .map(MovieDataMapper::map)
+    //    .valueOf(MovieDataMapper::valueOf)
     //    .subscribeOn(Schedulers.io())
     //    .observeOn(AndroidSchedulers.mainThread())
     //    .subscribe(this::saveToRealm, Throwable::printStackTrace);
@@ -111,7 +111,7 @@ public class CloudMovieDataSource {
     //movieService
     //    .getMovieGenreList(Constants.MOVIE_DB_API.API_KEY)
     //    .subscribeOn(Schedulers.io())
-    //    .map(genreResult -> GenreDataMapper.map(genreResult.getGenreList()))
+    //    .valueOf(genreResult -> GenreDataMapper.valueOf(genreResult.getGenreList()))
     //    .observeOn(AndroidSchedulers.mainThread())
     //    .subscribe(this::saveToRealm, Throwable::printStackTrace);
   }

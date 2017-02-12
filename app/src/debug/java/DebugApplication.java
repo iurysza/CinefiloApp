@@ -2,7 +2,7 @@ import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import rx.plugins.RxJavaErrorHandler;
 import rx.plugins.RxJavaPlugins;
-import site.iurysouza.cinefilo.presentation.CineApplication;
+import site.iurysouza.cinefilo.CineApplication;
 import timber.log.Timber;
 
 /**

@@ -6,10 +6,6 @@ import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 import java.util.Date;
 import lombok.Data;
-import site.iurysouza.cinefilo.model.entities.mapper.GenreDataMapper;
-import site.iurysouza.cinefilo.model.entities.mapper.NetworkDataMapper;
-import site.iurysouza.cinefilo.model.entities.mapper.PersonDataMapper;
-import site.iurysouza.cinefilo.model.entities.mapper.SeasonDataMapper;
 import site.iurysouza.cinefilo.model.entities.pojo.Series;
 
 /**
@@ -61,6 +57,7 @@ public class RealmSeries implements RealmModel {
   private RealmList<RealmString> originCountryList = new RealmList<>();
 
   public static RealmSeries valueOf(Series series, int queryType) {
+    RealmSeries realmSeries = new RealmSeries();
 
     String originalTitle = series.getOriginalName();
     String posterPath = series.getPosterPath();
@@ -70,22 +67,20 @@ public class RealmSeries implements RealmModel {
 
     if (isSeriesInvalid(originalTitle, posterPath, genreIds, voteAverage, overview)) return null;
     if (series.getFirstAirDate() == null) {
-      return null;
+      return realmSeries;
     }
 
-    RealmSeries realmSeries = new RealmSeries();
-    realmSeries.setBackdropPath("");
     String backdropPath = series.getBackdropPath();
-    if (backdropPath != null) {
-      realmSeries.setBackdropPath(backdropPath);
+    if (backdropPath == null) {
+      backdropPath = "";
     }
+    realmSeries.setBackdropPath(backdropPath);
     realmSeries.setFirstAirDate(series.getFirstAirDate());
     realmSeries.setLastAirDate(series.getLastAirDate());
     realmSeries.setHomepage(series.getHomepage());
     realmSeries.setInProduction(series.getInProduction());
     realmSeries.setName(series.getName());
     realmSeries.setId(series.getId());
-
     realmSeries.setNumberOfEpisodes(series.getNumberOfEpisodes());
     realmSeries.setNumberOfSeasons(series.getNumberOfSeasons());
     realmSeries.setOriginalLanguage(series.getOriginalLanguage());
@@ -93,17 +88,15 @@ public class RealmSeries implements RealmModel {
     realmSeries.setOverview(series.getOverview());
     realmSeries.setPopularity(series.getPopularity());
     realmSeries.setPosterPath(series.getPosterPath());
-
     realmSeries.setVoteAverage(series.getVoteAverage());
     realmSeries.setVoteCount(series.getVoteCount());
     realmSeries.setStatus(series.getStatus());
     realmSeries.setType(series.getType());
     realmSeries.setQueryDate(System.currentTimeMillis());
-
-    realmSeries.setGenreList(GenreDataMapper.map(series.getGenreList()));
-    realmSeries.setCreatedByList(PersonDataMapper.map(series.getCreatedByList()));
-    realmSeries.setSeasonList(SeasonDataMapper.map(series.getSeasons()));
-    realmSeries.setNetworkList(NetworkDataMapper.map(series.getNetworks()));
+    realmSeries.setGenreList(RealmGenre.valueOf(series.getGenreList()));
+    realmSeries.setCreatedByList(RealmPerson.valueOf(series.getCreatedByList()));
+    realmSeries.setSeasonList(RealmSeason.valueOf(series.getSeasons()));
+    realmSeries.setNetworkList(RealmNetwork.valueOf(series.getNetworks()));
 
     realmSeries.setProductionCompanyList(
         RealmProductionCompany.valueOf(series.getProductionCompanyList()));

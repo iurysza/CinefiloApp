@@ -8,8 +8,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
 import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
-import site.iurysouza.cinefilo.model.data.moviedetail.storage.CloudMovieDetailDataSource;
-import site.iurysouza.cinefilo.model.data.moviedetail.storage.LocalDetailDataSource;
+import site.iurysouza.cinefilo.model.data.moviedetail.storage.ICloudMovieDetailDataSource;
+import site.iurysouza.cinefilo.model.data.moviedetail.storage.ILocalDetailDataSource;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.DEFAULT_QUERY;
@@ -18,12 +18,15 @@ import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.DEFAULT_QU
  * Created by Iury Souza on 31/01/2017.
  */
 public class MovieDetailRepository {
-  private final LocalDetailDataSource localDetailDataSource;
-  private final CloudMovieDetailDataSource cloudMovieDetailDataSource;
+
+  private final ILocalDetailDataSource localDetailDataSource;
+  private final ICloudMovieDetailDataSource cloudMovieDetailDataSource;
 
   @Inject
-  public MovieDetailRepository(LocalDetailDataSource localDetailDataSource,
-      CloudMovieDetailDataSource cloudMovieDetailDataSource) {
+  public MovieDetailRepository(
+      ILocalDetailDataSource localDetailDataSource,
+      ICloudMovieDetailDataSource cloudMovieDetailDataSource) {
+
     this.localDetailDataSource = localDetailDataSource;
     this.cloudMovieDetailDataSource = cloudMovieDetailDataSource;
   }
@@ -31,9 +34,13 @@ public class MovieDetailRepository {
   public Observable<MovieDetailValue> getMovieById(int movieId) {
 
     Observable<RealmMovie> movieFromLocalSource =
-        localDetailDataSource.getMovieById(movieId).subscribeOn(Schedulers.computation());
+        localDetailDataSource
+            .getMovieById(movieId)
+            .subscribeOn(Schedulers.computation());
+
     Observable<RealmMovie> cloudFromLocalSource =
-        getNowPlayingFromApi(movieId).subscribeOn(Schedulers.io());
+        getNowPlayingFromApi(movieId)
+            .subscribeOn(Schedulers.io());
 
     return Observable.concat(movieFromLocalSource, cloudFromLocalSource)
         .first(realmMovie -> realmMovie != null)

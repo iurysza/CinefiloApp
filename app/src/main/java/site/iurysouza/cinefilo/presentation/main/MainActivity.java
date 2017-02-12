@@ -48,7 +48,6 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
     List<Fragment> fragments = new ArrayList<>();
     fragments.add(MediaPagerFragment.newInstance(TAB1));
     fragments.add(MediaPagerFragment.newInstance(TAB2));
-
     navigationManager.setupFragNavController(fragments, this);
     bottomBar.setSpaceOnClickListener(navigationManager);
     sharedViewsManager = SharedViewsManager.createSharedViewsManager(this, bottomBar);

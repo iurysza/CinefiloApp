@@ -12,7 +12,7 @@ import timber.log.Timber;
 /**
  * Created by Iury Souza on 31/01/2017.
  */
-public class CloudMovieDetailDataSource {
+public class CloudMovieDetailDataSource implements ICloudMovieDetailDataSource {
   private MovieDetailService detailService;
 
   @Inject
@@ -20,11 +20,13 @@ public class CloudMovieDetailDataSource {
     this.detailService = detailService;
   }
 
+  @Override
   public Observable<Movie> getMovieById(int movieId) {
     return detailService
         .getMovieById(movieId, Constants.MOVIE_DB_API.API_KEY)
         .doOnNext(movie -> Timber.d("Loaded %s from api", movie.getTitle()));
   }
+  @Override
   public Observable<List<Movie>> getMoviesSimilarTo(int movieId, int page) {
     return detailService
         .getMoviesSimilarTo(movieId, page, Constants.MOVIE_DB_API.API_KEY)

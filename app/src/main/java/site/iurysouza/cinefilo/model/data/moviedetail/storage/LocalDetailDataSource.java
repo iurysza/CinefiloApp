@@ -7,8 +7,9 @@ import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 /**
  * Created by Iury Souza on 31/01/2017.
  */
-public class LocalDetailDataSource {
+public class LocalDetailDataSource implements ILocalDetailDataSource {
 
+  @Override
   public Observable<RealmMovie> getMovieById(int movieId) {
     Realm realm = Realm.getDefaultInstance();
     RealmMovie movieQuery = realm
@@ -23,6 +24,7 @@ public class LocalDetailDataSource {
     return Observable.just(unmanagedMovie);
   }
 
+  @Override
   public void storeMovie(RealmMovie movie) {
     if (movie != null) {
       Realm realm = Realm.getDefaultInstance();

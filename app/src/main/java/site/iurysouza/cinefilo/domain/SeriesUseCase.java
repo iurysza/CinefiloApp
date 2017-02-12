@@ -4,7 +4,6 @@ import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValueMapper;
 import site.iurysouza.cinefilo.model.data.series.SeriesRepository;
 import site.iurysouza.cinefilo.presentation.UseCase;
 
@@ -33,7 +32,7 @@ public class SeriesUseCase implements UseCase {
 
     return seriesRepository
         .getMostPopularSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override
@@ -42,7 +41,7 @@ public class SeriesUseCase implements UseCase {
 
     return seriesRepository
         .getMostPopularSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override
@@ -51,7 +50,7 @@ public class SeriesUseCase implements UseCase {
 
     return seriesRepository
         .getTopRatedSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override public Observable<List<WatchMediaValue>> getNextTopRated(int nextPage) {
@@ -59,7 +58,7 @@ public class SeriesUseCase implements UseCase {
 
     return seriesRepository
         .getTopRatedSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override
@@ -73,7 +72,7 @@ public class SeriesUseCase implements UseCase {
 
     return seriesRepository
         .getNowPlayingSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override
@@ -82,6 +81,6 @@ public class SeriesUseCase implements UseCase {
 
     return seriesRepository
         .getNowPlayingSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 }

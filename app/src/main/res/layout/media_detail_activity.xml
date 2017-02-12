@@ -33,14 +33,69 @@
 
 
       <android.support.v7.widget.CardView
+          android:id="@+id/media_detail_picture_card"
+          android:layout_width="@dimen/media_picture_detail_card_width"
+          android:layout_height="@dimen/media_picture_detail_card_height"
+          android:layout_marginLeft="8dp"
+          android:transitionName="@string/poster_card_transition"
+          card_view:cardCornerRadius="@dimen/small_card_radius"
+          card_view:cardElevation="@dimen/mid_card_elevation"
+          >
+
+
+
+        <ImageView
+            android:id="@+id/media_detail_picture_imageview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder"
+            />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:alpha=".8"
+            android:id="@+id/media_detail_like_overlay"
+            android:background="@color/colorAccent"
+            >
+
+        </FrameLayout>
+      </android.support.v7.widget.CardView>
+
+      <TextView
+          android:id="@+id/media_detail_similar_title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/media_detail_card"
+          android:padding="16dp"
+          android:text="Similar Movies"
+          android:textSize="@dimen/title_text_size"
+
+          />
+
+      <com.malinskiy.superrecyclerview.SuperRecyclerView
+          android:id="@+id/media_detail_similar_movies"
+          android:layout_width="match_parent"
+          android:layout_height="130dp"
+          android:layout_below="@id/media_detail_similar_title"
+          android:orientation="horizontal"
+          tools:listitem="@layout/similar_movies_list_item"
+          >
+
+      </com.malinskiy.superrecyclerview.SuperRecyclerView>
+
+      <android.support.v7.widget.CardView
           android:id="@+id/media_detail_card"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
-          android:layout_marginBottom="4dp"
           android:layout_marginTop="48dp"
           card_view:cardCornerRadius="@dimen/default_card_radius"
           card_view:cardElevation="@dimen/base_card_elevation"
+          android:layout_alignParentTop="true"
+          android:layout_alignParentStart="true"
           >
 
         <LinearLayout
@@ -163,61 +218,6 @@
 
         </include>
       </android.support.v7.widget.CardView>
-
-
-      <android.support.v7.widget.CardView
-          android:id="@+id/media_detail_picture_card"
-          android:layout_width="@dimen/media_picture_detail_card_width"
-          android:layout_height="@dimen/media_picture_detail_card_height"
-          android:layout_marginLeft="8dp"
-          android:transitionName="@string/poster_card_transition"
-          card_view:cardCornerRadius="@dimen/small_card_radius"
-          card_view:cardElevation="@dimen/mid_card_elevation"
-          >
-
-
-
-        <ImageView
-            android:id="@+id/media_detail_picture_imageview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/placeholder"
-            />
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            tools:visibility="visible"
-            android:alpha=".8"
-            android:id="@+id/media_detail_like_overlay"
-            android:background="@color/colorAccent"
-            >
-
-        </FrameLayout>
-      </android.support.v7.widget.CardView>
-
-      <TextView
-          android:id="@+id/media_detail_similar_title"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_below="@+id/media_detail_card"
-          android:padding="16dp"
-          android:text="Similar Movies"
-          android:textSize="@dimen/title_text_size"
-
-          />
-
-      <com.malinskiy.superrecyclerview.SuperRecyclerView
-          android:id="@+id/media_detail_similar_movies"
-          android:layout_width="match_parent"
-          android:layout_height="130dp"
-          android:layout_below="@id/media_detail_similar_title"
-          android:orientation="horizontal"
-          tools:listitem="@layout/similar_movies_list_item"
-          >
-
-      </com.malinskiy.superrecyclerview.SuperRecyclerView>
     </RelativeLayout>
 
   </android.support.v4.widget.NestedScrollView>

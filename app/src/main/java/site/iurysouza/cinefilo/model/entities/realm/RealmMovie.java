@@ -7,7 +7,6 @@ import io.realm.annotations.RealmClass;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
-import site.iurysouza.cinefilo.model.entities.mapper.RealmIntegerMapper;
 import site.iurysouza.cinefilo.model.entities.pojo.Genre;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 
@@ -62,7 +61,61 @@ public class RealmMovie implements RealmModel {
   private RealmList<RealmProductionCountry> productionCountryList = new RealmList<>();
 
   public static RealmMovie valueOf(Movie movie, int queryType) {
+    RealmMovie realmMovie = new RealmMovie();
 
+    if (isMovieInvalid(movie)) {
+      return realmMovie;
+    }
+    Long budget = movie.getBudget();
+    Long revenue = movie.getRevenue();
+    String backdropPath = movie.getBackdropPath();
+    if (budget == null) {
+      budget = 0L;
+    }
+    if (revenue == null) {
+      revenue = 0L;
+    }
+    if (backdropPath == null) {
+      movie.setBackdropPath("");
+    }
+
+    realmMovie.setId(movie.getId().intValue());
+    realmMovie.setBudget(budget.intValue());
+    realmMovie.setRevenue(revenue.intValue());
+    realmMovie.setAdult(movie.getAdult());
+    realmMovie.setBackdropPath(backdropPath);
+    realmMovie.setOriginalTitle(movie.getOriginalTitle());
+    realmMovie.setOverview(movie.getOverview());
+    realmMovie.setPosterPath(movie.getPosterPath());
+    realmMovie.setVoteAverage(movie.getVoteAverage());
+    realmMovie.setImdbId(movie.getImdbId());
+    realmMovie.setRuntime(movie.getRuntime());
+    realmMovie.setStatus(movie.getStatus());
+    realmMovie.setHomepage(movie.getHomepage());
+    realmMovie.setTagline(movie.getTagline());
+    realmMovie.setOriginalLanguage(movie.getOriginalLanguage());
+    realmMovie.setPopularity(movie.getPopularity());
+    realmMovie.setVideo(movie.getVideo());
+    realmMovie.setVoteCount(movie.getVoteCount());
+    realmMovie.setReleaseDate(movie.getReleaseDate());
+
+    realmMovie.setSpokenLanguageList(RealmSpokenLanguage.valueOf(movie.getSpokenLanguageList()));
+    realmMovie.setProductionCompanyList(
+        RealmProductionCompany.valueOf(movie.getProductionCompanyList()));
+    realmMovie.setProductionCountryList(
+        RealmProductionCountry.valueOf(movie.getProductionCountryList()));
+    realmMovie.setGenreIds(RealmInteger.map(movie.getGenreIds()));
+    realmMovie.setGenreList(RealmGenre.valueOf(movie.getGenreList()));
+    realmMovie.setQueryDate(System.currentTimeMillis());
+
+    if (queryType != DEFAULT_QUERY) {
+      realmMovie.setQueryType(queryType);
+    }
+
+    return realmMovie;
+  }
+
+  private static boolean isMovieInvalid(Movie movie) {
     String originalTitle = movie.getOriginalTitle();
     String posterPath = movie.getPosterPath();
     Integer[] genreIds = movie.getGenreIds();
@@ -70,61 +123,7 @@ public class RealmMovie implements RealmModel {
     String overview = movie.getOverview();
     Date releaseDate = movie.getReleaseDate();
     List<Genre> genreList = movie.getGenreList();
-    if (isMovieInvalid(originalTitle, posterPath, genreIds, voteAverage, overview, releaseDate,
-        genreList)) {
-      return null;
-    }
 
-    RealmMovie realmMovie = new RealmMovie();
-
-    realmMovie.setId(movie.getId().intValue());
-    Long budget = movie.getBudget();
-    Long revenue = movie.getRevenue();
-    if (budget == null) {
-      budget = 0L;
-    }
-    if (revenue == null) {
-      revenue = 0L;
-    }
-    realmMovie.setBudget(budget.intValue());
-    realmMovie.setRevenue(revenue.intValue());
-    realmMovie.setAdult(movie.getAdult());
-    realmMovie.setBackdropPath("");
-    realmMovie.setBackdropPath(movie.getBackdropPath());
-    realmMovie.setOriginalTitle(originalTitle);
-    realmMovie.setOverview(overview);
-    realmMovie.setPosterPath(posterPath);
-    realmMovie.setVoteAverage(voteAverage);
-
-    realmMovie.setImdbId(movie.getImdbId());
-    realmMovie.setRuntime(movie.getRuntime());
-    realmMovie.setStatus(movie.getStatus());
-    realmMovie.setHomepage(movie.getHomepage());
-    realmMovie.setTagline(movie.getTagline());
-
-    realmMovie.setOriginalLanguage(movie.getOriginalLanguage());
-    realmMovie.setPopularity(movie.getPopularity());
-    realmMovie.setVideo(movie.getVideo());
-    realmMovie.setVoteCount(movie.getVoteCount());
-    realmMovie.setReleaseDate(releaseDate);
-    realmMovie.setSpokenLanguageList(RealmSpokenLanguage.valueOf(movie.getSpokenLanguageList()));
-    realmMovie.setProductionCompanyList(RealmProductionCompany.valueOf(movie.getProductionCompanyList()));
-    realmMovie.setProductionCountryList(RealmProductionCountry.valueOf(movie.getProductionCountryList()));
-
-    realmMovie.setGenreIds(RealmIntegerMapper.map(genreIds));
-    realmMovie.setGenreList(RealmGenre.map(genreList));
-    realmMovie.setQueryDate(System.currentTimeMillis());
-    if (queryType != DEFAULT_QUERY) {
-      realmMovie.setQueryType(queryType);
-    }
-    if (movie.getBackdropPath() == null) {
-      movie.setBackdropPath("");
-    }
-    return realmMovie;
-  }
-
-  private static boolean isMovieInvalid(String originalTitle, String posterPath, Integer[] genreIds,
-      Double voteAverage, String overview, Date releaseDate, List<Genre> genreList) {
     return isStringFieldInvalid(originalTitle) ||
         isStringFieldInvalid(posterPath) ||
         isStringFieldInvalid(overview) ||

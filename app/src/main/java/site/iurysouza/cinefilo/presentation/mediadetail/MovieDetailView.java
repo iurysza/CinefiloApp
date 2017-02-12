@@ -1,5 +1,6 @@
 package site.iurysouza.cinefilo.presentation.mediadetail;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.util.List;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
@@ -14,4 +15,6 @@ public interface MovieDetailView extends BaseView{
   void showErrorWarning();
 
   void showSimilarMovies(List<WatchMediaValue> mediaValues);
+
+  RxAppCompatActivity getRxAppCompatActivity();
 }

@@ -24,12 +24,13 @@ public class RealmProductionCompany implements RealmModel {
     realmProdCompany.setName(prodCompany.getName());
     return realmProdCompany;
   }
+
   public static RealmList<RealmProductionCompany> valueOf(List<ProductionCompany> prodCompanyList) {
     RealmList<RealmProductionCompany> realmProdCompanyList = new RealmList<>();
     if (prodCompanyList == null || prodCompanyList.isEmpty()) {
       return realmProdCompanyList;
     }
-    for (ProductionCompany prodCompany :prodCompanyList) {
+    for (ProductionCompany prodCompany : prodCompanyList) {
       realmProdCompanyList.add(valueOf(prodCompany));
     }
     return realmProdCompanyList;

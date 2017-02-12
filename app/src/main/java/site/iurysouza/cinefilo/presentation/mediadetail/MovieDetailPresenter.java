@@ -1,6 +1,5 @@
 package site.iurysouza.cinefilo.presentation.mediadetail;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.util.List;
 import javax.inject.Inject;
 import rx.subscriptions.CompositeSubscription;
@@ -18,21 +17,18 @@ import timber.log.Timber;
 public class MovieDetailPresenter extends BasePresenter<MovieDetailView> {
   private MovieDetailUseCase useCase;
   private CompositeSubscription subscription = new CompositeSubscription();
-  private RxAppCompatActivity rxLifecycle;
 
-  @Inject
-  public MovieDetailPresenter(MovieDetailUseCase useCase) {
+  @Inject MovieDetailPresenter(MovieDetailUseCase useCase) {
     this.useCase = useCase;
   }
 
-  @Override public void attachView(MovieDetailView view) {
-    super.attachView(view);
-    rxLifecycle = ((MediaDetailActivity) view);
+  @Override public void dettachView() {
+    super.dettachView();
+    subscription.unsubscribe();
   }
 
   void getMovieDetailById(int movieId) {
     subscription.add(useCase.getMovieById(movieId)
-        .compose(rxLifecycle.bindToLifecycle())
         .subscribe(new CineSubscriber<MovieDetailValue>() {
           @Override public void onNext(MovieDetailValue movieDetailValue) {
             super.onNext(movieDetailValue);
@@ -48,10 +44,8 @@ public class MovieDetailPresenter extends BasePresenter<MovieDetailView> {
         }));
   }
 
-
   void getMoviesSimilarTo(int movieId, int page) {
     subscription.add(useCase.geMoviesSimilarTo(movieId, page)
-        .compose(rxLifecycle.bindToLifecycle())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
           @Override public void onNext(List<WatchMediaValue> mediaValueList) {
             super.onNext(mediaValueList);

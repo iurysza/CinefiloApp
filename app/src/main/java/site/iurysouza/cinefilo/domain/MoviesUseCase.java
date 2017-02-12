@@ -4,7 +4,6 @@ import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValueMapper;
 import site.iurysouza.cinefilo.model.data.movies.MoviesRepository;
 import site.iurysouza.cinefilo.presentation.UseCase;
 
@@ -29,7 +28,7 @@ public class MoviesUseCase implements UseCase {
 
     return movieRepository
         .getMostPopularSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override
@@ -38,7 +37,7 @@ public class MoviesUseCase implements UseCase {
 
     return movieRepository
         .getMostPopularSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override
@@ -47,7 +46,7 @@ public class MoviesUseCase implements UseCase {
 
     return movieRepository
         .getTopRatedSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override
@@ -55,7 +54,7 @@ public class MoviesUseCase implements UseCase {
       movieRepository.getTopRated(nextPage, true);
       return movieRepository
           .getTopRatedSubject()
-          .map(WatchMediaValueMapper::mapToValueMedia);
+          .map(WatchMediaValue::valueOf);
   }
 
   @Override
@@ -63,7 +62,7 @@ public class MoviesUseCase implements UseCase {
     movieRepository.getFilteredBy(page, mediaFilter);
     return movieRepository
         .getFilteredMoviesSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override
@@ -72,14 +71,14 @@ public class MoviesUseCase implements UseCase {
 
     return movieRepository
         .getNowPlayingSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override public Observable<List<WatchMediaValue>> getMediaByGender(int gender) {
     movieRepository.getByGenre(gender);
     return movieRepository
         .getGenresSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override
@@ -88,6 +87,6 @@ public class MoviesUseCase implements UseCase {
 
     return movieRepository
         .getNowPlayingSubject()
-        .map(WatchMediaValueMapper::mapToValueMedia);
+        .map(WatchMediaValue::valueOf);
   }
 }

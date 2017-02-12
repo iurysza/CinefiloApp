@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation;
+package site.iurysouza.cinefilo;
 
 import android.app.Application;
 import com.facebook.stetho.Stetho;
@@ -7,9 +7,8 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import rx.plugins.RxJavaErrorHandler;
 import rx.plugins.RxJavaPlugins;
-import site.iurysouza.cinefilo.BuildConfig;
-import site.iurysouza.cinefilo.di.components.AppComponent;
-import site.iurysouza.cinefilo.di.components.DaggerAppComponent;
+import site.iurysouza.cinefilo.di.components.CineComponent;
+import site.iurysouza.cinefilo.di.components.DaggerApplicationComponent;
 import site.iurysouza.cinefilo.di.components.MediaDetailComponent;
 import site.iurysouza.cinefilo.di.components.MediaListComponent;
 import site.iurysouza.cinefilo.di.modules.ApiModule;
@@ -26,10 +25,9 @@ import timber.log.Timber;
 public class CineApplication extends Application {
 
   private static CineApplication appInstance;
-  private AppComponent appComponent;
+  private CineComponent cineComponent;
   private MediaListComponent mediaListComponent;
   private MediaDetailComponent mediaDetailComponent;
-  private Realm realm;
 
   public static CineApplication getAppInstance() {
     return appInstance;
@@ -38,9 +36,9 @@ public class CineApplication extends Application {
   @Override public void onCreate() {
     super.onCreate();
     appInstance = this;
-    realm = initRealm();
+    initRealm();
     initTimber();
-    createAppComponent();
+    cineComponent = createAppComponent();
     RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
       @Override public void handleError(Throwable e) {
         super.handleError(e);
@@ -61,7 +59,7 @@ public class CineApplication extends Application {
     });
   }
 
-  private Realm initRealm() {
+  private void initRealm() {
     Realm.init(getApplicationContext());
     RealmConfiguration.Builder realmConfig = new RealmConfiguration.Builder();
     if (BuildConfig.DEBUG) {
@@ -70,53 +68,51 @@ public class CineApplication extends Application {
           .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
           .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
           .build());
-
     }
     realmConfig.build();
-
     Realm.setDefaultConfiguration(realmConfig.build());
-    return Realm.getDefaultInstance();
   }
 
-
-
-  private void createAppComponent() {
-    appComponent = DaggerAppComponent
+  public CineComponent createAppComponent() {
+    cineComponent = DaggerApplicationComponent
         .builder()
-        .appModule(new AppModule(this, realm))
+        .appModule(new AppModule(this))
         .apiModule(new ApiModule())
         .build();
+    return cineComponent;
   }
 
-  public MediaListComponent createMediaListComponent(MediaListModule mediaListModule, UtilityModule utilityModule) {
-    mediaListComponent = getAppComponent().plus(mediaListModule, utilityModule);
+  public MediaListComponent createMediaListComponent(MediaListModule mediaListModule,
+      UtilityModule utilityModule) {
+    mediaListComponent = getCineComponent().plus(mediaListModule, utilityModule);
     return mediaListComponent;
   }
 
   public MediaDetailComponent createMediaDetailComponent(MediaDetailModule mediaDetailModule) {
-    mediaDetailComponent = getAppComponent().plus(mediaDetailModule);
+    mediaDetailComponent = getCineComponent().plus(mediaDetailModule);
     return mediaDetailComponent;
   }
 
-
-
-  public AppComponent getAppComponent() {
-    return appComponent;
+  public CineComponent getCineComponent() {
+    return cineComponent;
   }
+
   public MediaListComponent getMediaListComponent() {
     return mediaListComponent;
   }
+
   public MediaDetailComponent getMediaDetailComponent() {
     return mediaDetailComponent;
   }
 
   public void releaseAppComponent() {
-    appComponent = null;
+    cineComponent = null;
   }
 
   public void releaseRepositoryComponent() {
     mediaListComponent = null;
   }
+
   public void releaseDetailComponent() {
     mediaDetailComponent = null;
   }

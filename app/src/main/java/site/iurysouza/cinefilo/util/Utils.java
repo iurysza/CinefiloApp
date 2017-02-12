@@ -41,4 +41,10 @@ public class Utils {
     String month = cal.getDisplayName(MONTH, SHORT, Locale.US);
     return month + ", " + (cal.get(Calendar.YEAR));
   }
+
+  public static boolean isEmptyString( final String s ) {
+    // Null-safe, short-circuit evaluation.
+    return s == null || s.trim().isEmpty();
+  }
+
 }

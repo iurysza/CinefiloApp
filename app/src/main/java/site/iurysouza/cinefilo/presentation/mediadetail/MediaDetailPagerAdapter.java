@@ -2,6 +2,8 @@ package site.iurysouza.cinefilo.presentation.mediadetail;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.transition.Fade;
+import android.support.transition.TransitionManager;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,6 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.util.Iterator;
 import java.util.Locale;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
@@ -31,6 +32,7 @@ class MediaDetailPagerAdapter extends PagerAdapter {
   private LinearLayout langContainer;
   private LinearLayout budgetContainer;
   private LinearLayout revContainer;
+  private LinearLayout overviewRoot;
 
   MediaDetailPagerAdapter(Context context) {
     this.context = context;
@@ -62,6 +64,7 @@ class MediaDetailPagerAdapter extends PagerAdapter {
 
   private void bindOverviewLayout(ViewGroup layout) {
     overviewText = (TextView) layout.findViewById(R.id.overview_page_overview);
+    overviewRoot = (LinearLayout) layout.findViewById(R.id.overview_page_root);
     revenueText = (TextView) layout.findViewById(R.id.overview_page_revenue);
     budgetText = (TextView) layout.findViewById(R.id.overview_page_budget);
     revContainer = (LinearLayout) layout.findViewById(R.id.overview_page_revenue_container);
@@ -72,24 +75,32 @@ class MediaDetailPagerAdapter extends PagerAdapter {
   }
 
   void updateOverViewPage(MovieDetailValue movieDetailValue) {
-    overviewText.setText(movieDetailValue.overview());
-    tagLineText.setText(movieDetailValue.tagLine());
     Integer revenue = movieDetailValue.revenue();
     Integer budget = movieDetailValue.budget();
 
+    TransitionManager.beginDelayedTransition(overviewRoot, new Fade().setDuration(350));
     budgetText.setText(getFormattedMoneyValue(budget));
     revenueText.setText(getFormattedMoneyValue(revenue));
-
+    overviewText.setText(movieDetailValue.overview());
+    tagLineText.setText(movieDetailValue.tagLine());
     if (revenue == 0) {
       revContainer.setVisibility(View.GONE);
+    } else {
+      revContainer.setVisibility(View.VISIBLE);
     }
     if (budget == 0) {
       budgetContainer.setVisibility(View.GONE);
+    } else {
+      budgetContainer.setVisibility(View.VISIBLE);
     }
 
-    Iterator<String> langIterator = movieDetailValue.spokenLanguageList().keySet().iterator();
-    if (langIterator.hasNext()) {
-      languageText.setText(langIterator.next());
+    String langText = "";
+    for (String language : movieDetailValue.spokenLanguageList().keySet()) {
+      langText = langText + ", " + language;
+    }
+    if (!langText.isEmpty()) {
+      langContainer.setVisibility(View.VISIBLE);
+      languageText.setText(langText);
     } else {
       langContainer.setVisibility(View.GONE);
     }
@@ -119,5 +130,9 @@ class MediaDetailPagerAdapter extends PagerAdapter {
     ViewGroup layout = (ViewGroup) inflater.inflate(layoutResId, collection, false);
     collection.addView(layout);
     return layout;
+  }
+
+  public void updateOverView(String overview) {
+    //overviewText.setText(overview);
   }
 }

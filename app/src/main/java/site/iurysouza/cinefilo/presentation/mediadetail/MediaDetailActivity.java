@@ -20,7 +20,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
-import android.transition.Explode;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -37,6 +36,7 @@ import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.malinskiy.superrecyclerview.OnMoreListener;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.squareup.picasso.Picasso;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
@@ -55,6 +55,7 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   public static final String WATCH_MEDIA_DATA = "WATCH_MEDIA_DATA";
   public static final String REMOVE_TRANSITIONS = "REMOVE_TRANSITIONS";
   private static final int MIN_ITEMS_THRESHOLD = 5;
+
 
   @BindView(R.id.image_backdrop_detail_media) KenBurnsView imageBackdropDetailMedia;
   @BindView(R.id.toolbar_detail_media) Toolbar toolbarDetailMedia;
@@ -216,7 +217,6 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
-        getWindow().setEnterTransition(new Explode());
         NavUtils.navigateUpFromSameTask(this);
         return true;
     }
@@ -249,6 +249,7 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     float movieRating = (float) (voteAverage / 2);
     mediaDetailRating.setRating(movieRating);
     mediaDetailRatingText.setText(String.valueOf(voteAverage));
+    pagerAdapter.updateOverView(watchMedia.overview());
   }
 
   @Override public void updateMovieData(MovieDetailValue movieDetailValue) {
@@ -287,6 +288,10 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   @Override public void showErrorWarning() {
 
   }
+  @Override public RxAppCompatActivity getRxAppCompatActivity() {
+    return this;
+  }
+
 
   @OnClick(R.id.media_detail_like_fab) public void onClick(View view) {
     if (movieLiked) {
@@ -343,6 +348,7 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
         R.drawable.ic_favorite_border_white_24dp));
     int whiteColor = MediaDetailActivity.this.getResources().getColor(R.color.colorAccent);
     likeFab.setBackgroundTintList(ColorStateList.valueOf(whiteColor));
+
   }
 
   private void removeOverlayWithReveal() {

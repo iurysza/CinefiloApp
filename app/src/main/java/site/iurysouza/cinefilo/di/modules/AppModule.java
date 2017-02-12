@@ -3,7 +3,6 @@ package site.iurysouza.cinefilo.di.modules;
 import android.content.Context;
 import dagger.Module;
 import dagger.Provides;
-import io.realm.Realm;
 import javax.inject.Singleton;
 
 /**
@@ -12,11 +11,9 @@ import javax.inject.Singleton;
 @Module
 public class AppModule {
   private Context context;
-  private Realm realm;
 
-  public AppModule(Context context, Realm realm) {
+  public AppModule(Context context) {
     this.context = context;
-    this.realm = realm;
   }
 
   @Provides
@@ -24,12 +21,4 @@ public class AppModule {
   public Context provideContext() {
     return context;
   }
-
-
-  @Provides
-  @Singleton
-  public Realm provideRealm() {
-    return realm;
-  }
-
 }
