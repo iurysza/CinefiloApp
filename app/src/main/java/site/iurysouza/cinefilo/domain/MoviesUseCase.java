@@ -4,7 +4,7 @@ import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.model.data.movies.MoviesRepository;
+import site.iurysouza.cinefilo.model.data.movies.MoviesRepositoryI;
 import site.iurysouza.cinefilo.presentation.UseCase;
 
 /**
@@ -14,10 +14,10 @@ import site.iurysouza.cinefilo.presentation.UseCase;
 public class MoviesUseCase implements UseCase {
 
   private static final int FIRST_PAGE = 1;
-  private MoviesRepository movieRepository;
+  private MoviesRepositoryI movieRepository;
 
   @Inject
-  public MoviesUseCase(MoviesRepository movieRepository) {
+  public MoviesUseCase(MoviesRepositoryI movieRepository) {
     this.movieRepository = movieRepository;
     //movieRepository.getGenreList();
   }

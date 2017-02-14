@@ -22,15 +22,14 @@ import static site.iurysouza.cinefilo.model.entities.realm.RealmSeries.VOTE_COUN
  * Created by Iury Souza on 12/10/2016.
  */
 
-public class LocalSeriesDataSource {
-
+public class LocalSeriesDataSource implements ILocalSeriesDataSource {
 
   @Inject
   public LocalSeriesDataSource() {
   }
 
-
-  public void storeSeriesAndCurrentPageInRealm(RealmSeriesResults realmSeriesResults, int listType) {
+  public void storeSeriesAndCurrentPageInRealm(RealmSeriesResults realmSeriesResults,
+      int listType) {
     if (realmSeriesResults.getSeriesList().isEmpty()) return;
     Realm realm = Realm.getDefaultInstance();
     realm.executeTransaction(transaction ->
@@ -43,7 +42,7 @@ public class LocalSeriesDataSource {
   private void storeCurrentPage(int page, int listType) {
     Realm realm = Realm.getDefaultInstance();
     RealmCurrentPage currentPage = new RealmCurrentPage();
-    currentPage.setId(listType+MEDIA_SERIES);
+    currentPage.setId(listType + MEDIA_SERIES);
     currentPage.setCurrentPage(page);
     realm.executeTransaction(transaction -> {
       transaction.copyToRealmOrUpdate(currentPage);
@@ -98,7 +97,6 @@ public class LocalSeriesDataSource {
     realm.close();
     return seriesList;
   }
-
 
   private Date getValidDate() {
     return new DateTime().minusMonths(6).toDate();

@@ -17,7 +17,7 @@ import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.DEFAULT_QU
 /**
  * Created by Iury Souza on 31/01/2017.
  */
-public class MovieDetailRepository {
+public class MovieDetailRepository implements IMovieDetailRepository {
 
   private final ILocalDetailDataSource localDetailDataSource;
   private final ICloudMovieDetailDataSource cloudMovieDetailDataSource;
@@ -31,6 +31,7 @@ public class MovieDetailRepository {
     this.cloudMovieDetailDataSource = cloudMovieDetailDataSource;
   }
 
+  @Override
   public Observable<MovieDetailValue> getMovieById(int movieId) {
 
     Observable<RealmMovie> movieFromLocalSource =
@@ -48,8 +49,7 @@ public class MovieDetailRepository {
         .observeOn(AndroidSchedulers.mainThread());
   }
 
-  @NonNull
-  private Observable<RealmMovie> getNowPlayingFromApi(int movieId) {
+  @NonNull @Override public Observable<RealmMovie> getNowPlayingFromApi(int movieId) {
     return cloudMovieDetailDataSource
         .getMovieById(movieId)
         .map(movie -> {
@@ -59,7 +59,7 @@ public class MovieDetailRepository {
         });
   }
 
-  @NonNull
+  @NonNull @Override
   public Observable<List<WatchMedia>> getMoviesSimilarTo(int movieId, int page) {
     return cloudMovieDetailDataSource
         .getMoviesSimilarTo(movieId, page)

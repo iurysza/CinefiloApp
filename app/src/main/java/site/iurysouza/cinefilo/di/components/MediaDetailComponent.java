@@ -13,6 +13,6 @@ import site.iurysouza.cinefilo.presentation.mediadetail.MediaDetailActivity;
     modules = {
         MediaDetailModule.class
     })
-public interface MediaDetailComponent extends IMediaDetailComponent{
+public interface MediaDetailComponent {
     void inject(MediaDetailActivity mediaDetailActivity);
 }

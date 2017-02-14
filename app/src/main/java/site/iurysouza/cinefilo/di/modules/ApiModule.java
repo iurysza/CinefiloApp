@@ -73,7 +73,7 @@ public class ApiModule {
 
   @Provides @Singleton
   public InputStream providesLocalGenres(Context context) {
-     return context.getResources().openRawResource(R.raw.cinefilo_genre_list);
+    return context.getResources().openRawResource(R.raw.cinefilo_genre_list);
   }
 
   @Provides @Singleton public OkHttpClient providesLoggingCapableHttpClient(Cache cache,
@@ -92,8 +92,7 @@ public class ApiModule {
         .build();
   }
 
-  @Provides @Singleton public Retrofit providesRetrofit(OkHttpClient okHttpClient
-      ) {
+  @Provides @Singleton public Retrofit providesRetrofit(OkHttpClient okHttpClient) {
     return new Retrofit.Builder()
         .baseUrl(Constants.MOVIE_DB_API.BASE_URL)
         .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))

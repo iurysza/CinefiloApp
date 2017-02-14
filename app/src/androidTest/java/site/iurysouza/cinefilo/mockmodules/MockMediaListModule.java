@@ -1,8 +1,6 @@
-package site.iurysouza.cinefilo.di.modules;
+package site.iurysouza.cinefilo.mockmodules;
 
-import dagger.Module;
-import dagger.Provides;
-import retrofit2.Retrofit;
+import site.iurysouza.cinefilo.di.modules.MediaListModule;
 import site.iurysouza.cinefilo.domain.IWatchMediaRepository;
 import site.iurysouza.cinefilo.domain.MoviesUseCase;
 import site.iurysouza.cinefilo.domain.SeriesUseCase;
@@ -20,54 +18,46 @@ import site.iurysouza.cinefilo.model.services.MovieService;
 import site.iurysouza.cinefilo.model.services.SeriesService;
 import site.iurysouza.cinefilo.presentation.UseCase;
 
+import static org.mockito.Mockito.mock;
+
 /**
- * Created by Iury Souza on 12/10/2016.
+ * Created by Iury Souza on 13/02/2017.
  */
-@Module
-public class MediaListModule {
-  @Provides
-  public MovieService providesMovieService(Retrofit retrofit) {
-    return retrofit.create(MovieService.class);
+
+public class MockMediaListModule extends MediaListModule {
+
+  @Override public ICloudMovieDataSource providesCloudMovieDataSource(MovieService movieService) {
+    return mock(CloudMovieDataSource.class);
   }
 
-  @Provides
-  public SeriesService providesSeriesService(Retrofit retrofit) {
-    return retrofit.create(SeriesService.class);
+  @Override public ICloudSeriesDataSource providesCloudSeriesDataSource(SeriesService seriesService) {
+    return mock(CloudSeriesDataSource.class);
   }
 
-  @Provides public ICloudMovieDataSource providesCloudMovieDataSource(MovieService movieService) {
-    return new CloudMovieDataSource(movieService);
+  @Override public ILocalMovieDataSource providesLocalMovieDataSource() {
+    return mock(LocalMovieDataSource.class);
   }
 
-  @Provides public ICloudSeriesDataSource providesCloudSeriesDataSource(SeriesService seriesService) {
-    return new CloudSeriesDataSource(seriesService);
+  @Override public ILocalSeriesDataSource providesLocalSeriesDataSource() {
+    return mock(LocalSeriesDataSource.class);
   }
 
-  @Provides public ILocalMovieDataSource providesLocalMovieDataSource() {
-    return new LocalMovieDataSource();
-  }
-
-  @Provides public ILocalSeriesDataSource providesLocalSeriesDataSource() {
-    return new LocalSeriesDataSource();
-  }
-
-  @Provides public IWatchMediaRepository providesMovieDataRepository(
-      LocalMovieDataSource localMovieDataSource,
+  @Override public IWatchMediaRepository providesMovieDataRepository(LocalMovieDataSource localMovieDataSource,
       CloudMovieDataSource cloudMovieDataSource) {
     return new MoviesRepositoryI(localMovieDataSource, cloudMovieDataSource);
   }
 
-  @Provides public IWatchMediaRepository providesSeriesDataRepository(
+  @Override public IWatchMediaRepository providesSeriesDataRepository(
       LocalSeriesDataSource localSeriesDataSource,
       CloudSeriesDataSource cloudSeriesDataSource) {
     return new SeriesRepositoryI(localSeriesDataSource, cloudSeriesDataSource);
   }
 
-  @Provides public UseCase providesMovieUseCase(MoviesRepositoryI dataRepository) {
+  @Override public UseCase providesMovieUseCase(MoviesRepositoryI dataRepository) {
     return new MoviesUseCase(dataRepository);
   }
 
-  @Provides public UseCase providesSeriesUseCase(SeriesRepositoryI dataRepository) {
+  @Override public UseCase providesSeriesUseCase(SeriesRepositoryI dataRepository) {
     return new SeriesUseCase(dataRepository);
   }
 }

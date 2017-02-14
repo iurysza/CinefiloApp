@@ -12,24 +12,27 @@ import site.iurysouza.cinefilo.presentation.main.NavigationManager;
 
 @Module
 public class UtilityModule {
-  private AppCompatActivity activity;
+  protected AppCompatActivity activity;
 
   public UtilityModule(AppCompatActivity activity) {
     this.activity = activity;
   }
 
+  public UtilityModule() {
+  }
+
   @Provides
-  AppCompatActivity provideActivity() {
+  public AppCompatActivity provideActivity() {
     return activity;
   }
 
   @Provides
-  FragmentManager providesFragmentManager(AppCompatActivity activity) {
+  public FragmentManager providesFragmentManager(AppCompatActivity activity) {
     return activity.getSupportFragmentManager();
   }
 
   @Provides
-  NavigationManager providesNavigationManager(AppCompatActivity activity, FragmentManager manager) {
+  public NavigationManager providesNavigationManager(AppCompatActivity activity, FragmentManager manager) {
     return new NavigationManager(activity, manager );
   }
 }

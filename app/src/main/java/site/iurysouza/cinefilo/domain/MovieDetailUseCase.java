@@ -10,7 +10,7 @@ import site.iurysouza.cinefilo.model.data.moviedetail.MovieDetailRepository;
 /**
  * Created by Iury Souza on 31/01/2017.
  */
-public class MovieDetailUseCase {
+public class MovieDetailUseCase implements IMovieDetailUseCase {
   private MovieDetailRepository detailRepository;
 
   @Inject

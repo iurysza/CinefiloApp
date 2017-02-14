@@ -1,13 +1,14 @@
 package site.iurysouza.cinefilo;
 
 import android.app.Application;
+import android.support.annotation.VisibleForTesting;
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import rx.plugins.RxJavaErrorHandler;
 import rx.plugins.RxJavaPlugins;
-import site.iurysouza.cinefilo.di.components.CineComponent;
+import site.iurysouza.cinefilo.di.components.ApplicationComponent;
 import site.iurysouza.cinefilo.di.components.DaggerApplicationComponent;
 import site.iurysouza.cinefilo.di.components.MediaDetailComponent;
 import site.iurysouza.cinefilo.di.components.MediaListComponent;
@@ -16,6 +17,8 @@ import site.iurysouza.cinefilo.di.modules.AppModule;
 import site.iurysouza.cinefilo.di.modules.MediaDetailModule;
 import site.iurysouza.cinefilo.di.modules.MediaListModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
+import site.iurysouza.cinefilo.presentation.main.MainActivity;
+import site.iurysouza.cinefilo.presentation.mediadetail.MediaDetailActivity;
 import timber.log.Timber;
 
 /**
@@ -25,9 +28,9 @@ import timber.log.Timber;
 public class CineApplication extends Application {
 
   private static CineApplication appInstance;
-  private CineComponent cineComponent;
-  private MediaListComponent mediaListComponent;
-  private MediaDetailComponent mediaDetailComponent;
+  protected ApplicationComponent applicationComponent;
+  protected MediaListComponent mediaListComponent;
+  protected MediaDetailComponent mediaDetailComponent;
 
   public static CineApplication getAppInstance() {
     return appInstance;
@@ -38,7 +41,7 @@ public class CineApplication extends Application {
     appInstance = this;
     initRealm();
     initTimber();
-    cineComponent = createAppComponent();
+    createAppComponent();
     RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
       @Override public void handleError(Throwable e) {
         super.handleError(e);
@@ -73,28 +76,38 @@ public class CineApplication extends Application {
     Realm.setDefaultConfiguration(realmConfig.build());
   }
 
-  public CineComponent createAppComponent() {
-    cineComponent = DaggerApplicationComponent
-        .builder()
-        .appModule(new AppModule(this))
-        .apiModule(new ApiModule())
-        .build();
-    return cineComponent;
+  public void createAppComponent() {
+    if (applicationComponent == null) {
+      applicationComponent = DaggerApplicationComponent
+          .builder()
+          .appModule(new AppModule(this))
+          .apiModule(new ApiModule())
+          .build();
+    }
   }
 
-  public MediaListComponent createMediaListComponent(MediaListModule mediaListModule,
-      UtilityModule utilityModule) {
-    mediaListComponent = getCineComponent().plus(mediaListModule, utilityModule);
-    return mediaListComponent;
+  public void createMediaListComponent(MainActivity activity) {
+    if (mediaListComponent == null) {
+      mediaListComponent = getAppComponent()
+          .plus(new MediaListModule(), new UtilityModule(activity));
+    }
+      mediaListComponent.inject(activity);
   }
 
-  public MediaDetailComponent createMediaDetailComponent(MediaDetailModule mediaDetailModule) {
-    mediaDetailComponent = getCineComponent().plus(mediaDetailModule);
-    return mediaDetailComponent;
+  public void createMediaDetailComponent(MediaDetailActivity mediaDetailActivity) {
+    if (mediaDetailComponent == null) {
+      mediaDetailComponent = getAppComponent().plus(new MediaDetailModule());
+    }
+      mediaDetailComponent.inject(mediaDetailActivity);
   }
 
-  public CineComponent getCineComponent() {
-    return cineComponent;
+  public ApplicationComponent getAppComponent() {
+    return applicationComponent;
+  }
+
+  @VisibleForTesting
+  public void setApplicationComponent(ApplicationComponent component) {
+    this.applicationComponent = component;
   }
 
   public MediaListComponent getMediaListComponent() {
@@ -106,7 +119,7 @@ public class CineApplication extends Application {
   }
 
   public void releaseAppComponent() {
-    cineComponent = null;
+    applicationComponent = null;
   }
 
   public void releaseRepositoryComponent() {

@@ -26,7 +26,7 @@ import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.VOTE_COUNT
  * Created by Iury Souza on 12/10/2016.
  */
 
-public class LocalMovieDataSource {
+public class LocalMovieDataSource implements ILocalMovieDataSource {
 
   @Inject
   public LocalMovieDataSource() {

@@ -9,8 +9,8 @@ import javax.inject.Inject;
 import org.joda.time.DateTime;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
+import site.iurysouza.cinefilo.domain.IWatchMediaRepository;
 import site.iurysouza.cinefilo.domain.MediaFilter;
-import site.iurysouza.cinefilo.domain.WatchMediaRepository;
 import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
 import site.iurysouza.cinefilo.model.data.series.storage.CloudSeriesDataSource;
 import site.iurysouza.cinefilo.model.data.series.storage.LocalSeriesDataSource;
@@ -27,7 +27,7 @@ import static site.iurysouza.cinefilo.presentation.medias.MediaListFragment.INVA
  */
 
 @UiThread
-public class SeriesRepository implements WatchMediaRepository {
+public class SeriesRepositoryI implements IWatchMediaRepository {
 
   private final LocalSeriesDataSource localDataStore;
   private final CloudSeriesDataSource cloudDataStore;
@@ -37,7 +37,7 @@ public class SeriesRepository implements WatchMediaRepository {
   private BehaviorSubject<List<WatchMedia>> mostPopularSubject = BehaviorSubject.create();
 
   @Inject
-  public SeriesRepository(LocalSeriesDataSource localDataStore,
+  public SeriesRepositoryI(LocalSeriesDataSource localDataStore,
       CloudSeriesDataSource cloudDataStore) {
     this.localDataStore = localDataStore;
     this.cloudDataStore = cloudDataStore;

@@ -16,7 +16,9 @@ android {
     versionCode 1
     versionName "1.0"
 
-    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    /* replaced with custom MockTestRunner */
+//     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "site.iurysouza.cinefilo.testhelpers.CineTestRunner"
   }
   buildTypes {
     release {
@@ -137,6 +139,12 @@ dependencies {
   androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
   androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion"
   androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
+  androidTestApt 'com.google.dagger:dagger-compiler:2.7'
+  annotationProcessor 'com.google.dagger:dagger-compiler:2.7'
+  androidTestCompile "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
+  androidTestCompile 'com.github.fabioCollini:DaggerMock:0.6.4'
+  androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+  androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
 }
 
 /*
@@ -146,7 +154,6 @@ dependencies. This is required since Espresso internally has a dependency on sup
 configurations.all {
   resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
   resolutionStrategy.force "com.google.guava:guava:$rootProject.ext.guavaVersion"
-  resolutionStrategy.force "org.hamcrest:hamcrest-core:$rootProject.ext.hamcrestVersion"
   resolutionStrategy.force "com.android.support:support-annotations:$rootProject.supportLibrary"
   resolutionStrategy.force "com.android.support:support-v4:$rootProject.supportLibrary"
 }

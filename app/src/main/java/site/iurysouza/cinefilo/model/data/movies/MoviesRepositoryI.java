@@ -16,8 +16,8 @@ import org.joda.time.DateTime;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
+import site.iurysouza.cinefilo.domain.IWatchMediaRepository;
 import site.iurysouza.cinefilo.domain.MediaFilter;
-import site.iurysouza.cinefilo.domain.WatchMediaRepository;
 import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
 import site.iurysouza.cinefilo.model.data.movies.storage.CloudMovieDataSource;
 import site.iurysouza.cinefilo.model.data.movies.storage.LocalMovieDataSource;
@@ -38,11 +38,10 @@ import static site.iurysouza.cinefilo.presentation.medias.MediaListFragment.INVA
  */
 
 @UiThread
-public class MoviesRepository implements WatchMediaRepository {
+public class MoviesRepositoryI implements IWatchMediaRepository {
 
   private final LocalMovieDataSource localDataStore;
   private final CloudMovieDataSource cloudDataStore;
-  private final InputStream genresFromJson;
 
   private BehaviorSubject<List<WatchMedia>> nowPlayingSubject = BehaviorSubject.create();
   private BehaviorSubject<List<WatchMedia>> topRatedSubject = BehaviorSubject.create();
@@ -51,11 +50,10 @@ public class MoviesRepository implements WatchMediaRepository {
   private BehaviorSubject<List<WatchMedia>> filteredSubject = BehaviorSubject.create();
 
   @Inject
-  public MoviesRepository(LocalMovieDataSource localDataStore,
-      CloudMovieDataSource cloudDataStore, InputStream genresFromJson) {
+  public MoviesRepositoryI(LocalMovieDataSource localDataStore,
+      CloudMovieDataSource cloudDataStore) {
     this.localDataStore = localDataStore;
     this.cloudDataStore = cloudDataStore;
-    this.genresFromJson = genresFromJson;
   }
 
   @Override

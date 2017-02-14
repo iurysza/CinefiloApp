@@ -27,8 +27,6 @@ import site.iurysouza.cinefilo.presentation.main.FilterEvent;
 import site.iurysouza.cinefilo.presentation.medias.pager.MediaPageChangedEvent;
 import site.iurysouza.cinefilo.util.Utils;
 
-import static site.iurysouza.cinefilo.R.id.fabtoolbar;
-
 /**
  * Created by Iury Souza on 14/01/2017.
  */
@@ -43,7 +41,7 @@ public class FilterViewManager {
   @BindView(R.id.main_blurred_view) RealtimeBlurView blurredView;
   @BindView(R.id.filter_btn_close) FancyButton btnClose;
   @BindView(R.id.filter_btn_apply) FancyButton btnApply;
-  @BindView(fabtoolbar) FABToolbarLayout fabToolbar;
+  @BindView(R.id.fabtoolbar) FABToolbarLayout fabToolbar;
   @BindView(R.id.filter_view_header) FrameLayout filterViewHeader;
   @BindView(R.id.fabtoolbar_toolbar) RelativeLayout fabtoolbarToolbar;
 

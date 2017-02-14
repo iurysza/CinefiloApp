@@ -16,7 +16,7 @@
       android:layout_height="match_parent"
       android:scrollbars="none"
 
-      app:layout_moreProgress="@layout/layout_more_progress"
+      app:layout_moreProgress="@layout/layout_load_more_indicator"
       app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
       app:recyclerClipToPadding="true"
       tools:listitem="@layout/media_list_item"

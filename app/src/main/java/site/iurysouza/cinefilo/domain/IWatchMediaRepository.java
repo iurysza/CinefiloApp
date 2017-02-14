@@ -8,7 +8,7 @@ import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
  * Created by Iury Souza on 12/10/2016.
  */
 
-public interface WatchMediaRepository {
+public interface IWatchMediaRepository {
 
   void getMostPopular(int page, boolean forceRemote);
 

@@ -41,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.di.modules.MediaDetailModule;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
@@ -205,7 +204,7 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   }
 
   @Override protected void setupActivityComponent(Bundle savedInstanceState) {
-    appInstance.createMediaDetailComponent(new MediaDetailModule()).inject(this);
+    appInstance.createMediaDetailComponent(this);
   }
 
   @Override protected void onDestroy() {

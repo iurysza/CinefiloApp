@@ -88,7 +88,7 @@ public class MediaListFragment extends BaseFragment
     View view = inflater.inflate(R.layout.media_list_fragment, container, false);
     ButterKnife.bind(this, view);
     Utils.safeRegisterEventBus(this);
-    fabFilter = (FloatingActionButton) getActivity().findViewById(R.id.fabtoolbar_fab);
+    //fabFilter = (FloatingActionButton) getActivity().findViewById(R.id.fabtoolbar_fab);
 
     listType = getArguments().getInt(LIST_TYPE);
     int mediaType = getArguments().getInt(MEDIA_TYPE);

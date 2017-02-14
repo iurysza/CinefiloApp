@@ -10,7 +10,7 @@ import javax.inject.Singleton;
  */
 @Module
 public class AppModule {
-  private Context context;
+  protected Context context;
 
   public AppModule(Context context) {
     this.context = context;

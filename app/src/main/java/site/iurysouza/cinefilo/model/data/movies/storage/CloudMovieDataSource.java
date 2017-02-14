@@ -21,7 +21,7 @@ import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.TOP_QUERY;
  * Created by Iury Souza on 12/10/2016.
  */
 
-public class CloudMovieDataSource {
+public class CloudMovieDataSource implements ICloudMovieDataSource {
   private final MovieService movieService;
 
   @Inject

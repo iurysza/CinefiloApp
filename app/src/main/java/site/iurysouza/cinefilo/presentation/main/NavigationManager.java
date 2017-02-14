@@ -1,5 +1,6 @@
 package site.iurysouza.cinefilo.presentation.main;
 
+import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

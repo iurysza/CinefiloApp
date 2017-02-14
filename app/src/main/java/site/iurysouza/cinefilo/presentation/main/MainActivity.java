@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.di.modules.MediaListModule;
-import site.iurysouza.cinefilo.di.modules.UtilityModule;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.medias.filter.FilterViewManager;
 import site.iurysouza.cinefilo.presentation.medias.pager.MediaPagerFragment;
@@ -55,8 +53,7 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
   }
 
   @Override protected void setupActivityComponent(Bundle savedInstanceState) {
-    appInstance.createMediaListComponent(new MediaListModule(),
-        new UtilityModule(this)).inject(this);
+    appInstance.createMediaListComponent(this);
   }
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
