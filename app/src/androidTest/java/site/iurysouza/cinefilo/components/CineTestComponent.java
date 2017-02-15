@@ -7,6 +7,7 @@ import site.iurysouza.cinefilo.di.modules.ApiModule;
 import site.iurysouza.cinefilo.di.modules.AppModule;
 import site.iurysouza.cinefilo.di.modules.MediaListModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
+import site.iurysouza.cinefilo.testhelpers.CinefiloTestApplication;
 import site.iurysouza.cinefilo.tests.MediaDetailActivityTest;
 
 /**
@@ -19,7 +20,8 @@ import site.iurysouza.cinefilo.tests.MediaDetailActivityTest;
         AppModule.class
     })
 public interface CineTestComponent extends ApplicationComponent {
-  void inject(MediaDetailActivityTest activity);
+  void inject(MediaDetailActivityTest target);
+  void inject(CinefiloTestApplication target);
   MediaListTestComponent plus(MediaListModule mediaListModule, UtilityModule utilityModule);
 }
 

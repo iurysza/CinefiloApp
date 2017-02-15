@@ -3,6 +3,7 @@ package site.iurysouza.cinefilo.di.modules;
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
+import retrofit2.mock.BehaviorDelegate;
 import site.iurysouza.cinefilo.domain.IMovieDetailUseCase;
 import site.iurysouza.cinefilo.domain.MovieDetailUseCase;
 import site.iurysouza.cinefilo.model.data.moviedetail.IMovieDetailRepository;
@@ -18,8 +19,11 @@ import site.iurysouza.cinefilo.model.services.MovieDetailService;
  */
 @Module
 public class MediaDetailModule {
+
+  //to be overriden in tests
+
   @Provides
-  protected MovieDetailService providesMovieDetailService(Retrofit retrofit) {
+  protected MovieDetailService providesMovieDetailService(Retrofit retrofit, BehaviorDelegate<MovieDetailService> delegate) {
     return retrofit.create(MovieDetailService.class);
   }
 

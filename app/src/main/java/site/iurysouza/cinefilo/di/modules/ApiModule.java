@@ -14,12 +14,17 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.mockwebserver.MockWebServer;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.mock.BehaviorDelegate;
+import retrofit2.mock.MockRetrofit;
+import retrofit2.mock.NetworkBehavior;
 import rx.schedulers.Schedulers;
 import site.iurysouza.cinefilo.BuildConfig;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.model.services.MovieDetailService;
 import site.iurysouza.cinefilo.util.Constants;
 import site.iurysouza.cinefilo.util.NetworkUtil;
 import timber.log.Timber;
@@ -92,12 +97,36 @@ public class ApiModule {
         .build();
   }
 
-  @Provides @Singleton public Retrofit providesRetrofit(OkHttpClient okHttpClient) {
+  @Provides @Singleton
+  public Retrofit providesRetrofit(OkHttpClient okHttpClient) {
     return new Retrofit.Builder()
         .baseUrl(Constants.MOVIE_DB_API.BASE_URL)
         .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build();
+  }
+
+  //enables being overriden on test module
+  @Provides @Singleton public MockWebServer providesMockWebServer() {
+    return null;
+  }
+
+  @Provides @Singleton protected NetworkBehavior provideNetworkBehavior() {
+    NetworkBehavior networkBehavior = NetworkBehavior.create();
+    networkBehavior.setDelay(2L, TimeUnit.SECONDS);
+    return networkBehavior;
+  }
+
+  @Provides @Singleton
+  protected MockRetrofit providesMockRetrofit(Retrofit retrofit, NetworkBehavior networkBehavior) {
+    return new MockRetrofit.Builder(retrofit)
+        .networkBehavior(networkBehavior)
+        .build();
+  }
+
+  @Provides @Singleton protected BehaviorDelegate<MovieDetailService> providesBehaviorDelegate(
+      MockRetrofit mockRetrofit) {
+    return mockRetrofit.create(MovieDetailService.class);
   }
 }

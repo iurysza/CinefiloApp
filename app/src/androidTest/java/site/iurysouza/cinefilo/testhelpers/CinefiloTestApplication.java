@@ -1,8 +1,11 @@
 package site.iurysouza.cinefilo.testhelpers;
 
 import site.iurysouza.cinefilo.CineApplication;
+import site.iurysouza.cinefilo.components.DaggerCineTestComponent;
+import site.iurysouza.cinefilo.di.modules.AppModule;
 import site.iurysouza.cinefilo.di.modules.MockMediaDetailModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
+import site.iurysouza.cinefilo.mockmodules.MockApiModule;
 import site.iurysouza.cinefilo.mockmodules.MockMediaListModule;
 import site.iurysouza.cinefilo.presentation.main.MainActivity;
 import site.iurysouza.cinefilo.presentation.mediadetail.MediaDetailActivity;
@@ -17,6 +20,15 @@ public class CinefiloTestApplication extends CineApplication {
       mediaListComponent = getAppComponent().plus(new MockMediaListModule(),
           new UtilityModule(activity));
       mediaListComponent.inject(activity);
+    }
+  }
+  @Override public void createAppComponent() {
+    if (getAppComponent() == null) {
+      applicationComponent = DaggerCineTestComponent.builder()
+          .appModule(new AppModule(this))
+          .apiModule(new MockApiModule())
+          .build();
+      applicationComponent.inject((getAppInstance()));
     }
   }
 

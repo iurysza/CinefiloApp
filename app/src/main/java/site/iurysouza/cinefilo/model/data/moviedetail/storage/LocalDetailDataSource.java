@@ -36,8 +36,8 @@ public class LocalDetailDataSource implements ILocalDetailDataSource {
       if (movieQuery != null) {
         unmanagedMovie = realm.copyFromRealm(movieQuery);
         movie.setQueryType(unmanagedMovie.getQueryType());
-        realm.executeTransaction(transaction -> transaction.copyToRealmOrUpdate(movie));
       }
+        realm.executeTransaction(transaction -> transaction.copyToRealmOrUpdate(movie));
       realm.close();
     }
   }

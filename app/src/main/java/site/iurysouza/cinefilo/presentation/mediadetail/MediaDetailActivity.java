@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -54,7 +55,6 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   public static final String WATCH_MEDIA_DATA = "WATCH_MEDIA_DATA";
   public static final String REMOVE_TRANSITIONS = "REMOVE_TRANSITIONS";
   private static final int MIN_ITEMS_THRESHOLD = 5;
-
 
   @BindView(R.id.image_backdrop_detail_media) KenBurnsView imageBackdropDetailMedia;
   @BindView(R.id.toolbar_detail_media) Toolbar toolbarDetailMedia;
@@ -118,8 +118,6 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     presenter.attachView(this);
     int movieId = (int) watchMedia.id();
 
-    presenter.getMovieDetailById(movieId);
-    presenter.getMoviesSimilarTo(movieId, 1);
     postponeEnterTransition();
     setTransitionToViews();
     scheduleStartPostponedTransition(mediaDetailCard);
@@ -142,6 +140,9 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
         }
       }
     });
+
+    presenter.getMovieDetailById(movieId);
+    presenter.getMoviesSimilarTo(movieId, 1);
   }
 
   private void setTransitionToViews() {
@@ -228,7 +229,6 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     supportActionBar.setDisplayHomeAsUpEnabled(true);
     supportActionBar.setTitle("");
     supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-
   }
 
   private void bindViewToData(WatchMediaValue watchMedia) {
@@ -256,12 +256,8 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     String runTime = String.valueOf(movieDetailValue.runTime().intValue()) + "min";
     mediaDetailPlaytime.setText(runTime);
 
-    HashMap<String, Integer> stringIntegerHashMap = movieDetailValue.genreList();
-    String genreText = "";
-    for (String genreName : stringIntegerHashMap.keySet()) {
-      genreText = genreText + ", " + genreName;
-    }
-    mediaDetailGenreText.setText(genreText.substring(2));
+    String substring = getGenreListAsString(movieDetailValue);
+    mediaDetailGenreText.setText(substring);
     movieDetailValue.tagLine();
     DetailStyleManager
         .builder()
@@ -279,6 +275,21 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     pagerAdapter.updateOverViewPage(movieDetailValue);
   }
 
+  @NonNull private String getGenreListAsString(MovieDetailValue movieDetailValue) {
+    HashMap<String, Integer> stringIntegerHashMap = movieDetailValue.genreList();
+    String genreText = "";
+    for (String genreName : stringIntegerHashMap.keySet()) {
+      genreText = genreText + ", " + genreName;
+    }
+    String substring;
+    try {
+      substring = genreText.substring(2);
+    } catch (IndexOutOfBoundsException e) {
+      substring = "No Genre";
+    }
+    return substring;
+  }
+
   @Override public void showSimilarMovies(List<WatchMediaValue> mediaValues) {
     Timber.e("Similar movies arrived: %s", mediaValues.size());
     adapter.addSimilarMovies(mediaValues);
@@ -287,10 +298,10 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   @Override public void showErrorWarning() {
 
   }
+
   @Override public RxAppCompatActivity getRxAppCompatActivity() {
     return this;
   }
-
 
   @OnClick(R.id.media_detail_like_fab) public void onClick(View view) {
     if (movieLiked) {
@@ -347,7 +358,6 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
         R.drawable.ic_favorite_border_white_24dp));
     int whiteColor = MediaDetailActivity.this.getResources().getColor(R.color.colorAccent);
     likeFab.setBackgroundTintList(ColorStateList.valueOf(whiteColor));
-
   }
 
   private void removeOverlayWithReveal() {
