@@ -122,7 +122,7 @@ public class CineApplication extends Application {
     applicationComponent = null;
   }
 
-  public void releaseRepositoryComponent() {
+  public void releaseMediaListComponent() {
     mediaListComponent = null;
   }
 

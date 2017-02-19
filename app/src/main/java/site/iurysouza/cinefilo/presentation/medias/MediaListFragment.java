@@ -205,6 +205,7 @@ public class MediaListFragment extends BaseFragment
   @Override public void onDestroyView() {
     super.onDestroyView();
     mediaPresenter.dettachView();
+    ((CineApplication) getContext().getApplicationContext()).releaseMediaListComponent();
   }
 
   @Override public void showLoadingIndicator() {
