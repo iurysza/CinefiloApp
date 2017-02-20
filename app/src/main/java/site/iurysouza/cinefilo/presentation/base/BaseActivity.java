@@ -1,10 +1,10 @@
 package site.iurysouza.cinefilo.presentation.base;
 
 import android.os.Bundle;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import android.support.v7.app.AppCompatActivity;
 import site.iurysouza.cinefilo.CineApplication;
 
-public abstract class BaseActivity extends RxAppCompatActivity  {
+public abstract class BaseActivity extends AppCompatActivity {
 
   protected CineApplication appInstance;
 

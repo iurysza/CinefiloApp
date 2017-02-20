@@ -10,6 +10,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.mediadetail.MediaDetailActivity;
 
 /**
@@ -101,8 +103,11 @@ public class SimilarMoviesAdapter
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         String posterTransition = context.getResources().getString(R.string.poster_card_transition);
         Pair<View, String> posterPair = new android.util.Pair<>(moviePoster, posterTransition);
+        View statusBar = ((BaseActivity) context).findViewById(android.R.id.statusBarBackground);
+        Pair<View, String> statusBarPair =
+            Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);
         ActivityOptions options = ActivityOptions
-            .makeSceneTransitionAnimation((Activity) context, posterPair);
+            .makeSceneTransitionAnimation((Activity) context, posterPair,statusBarPair);
         context.startActivity(startIntent, options.toBundle());
       } else {
         context.startActivity(startIntent);

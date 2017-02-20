@@ -1,63 +1,71 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="AppBaseTheme">
 
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:windowTranslucentStatus" >false</item>
-        <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:windowContentTransitions">true</item>
+    <item name="android:textColorPrimary">@android:color/white</item>
+    <item name="android:windowTranslucentStatus">false</item>
+    <item name="android:windowTranslucentNavigation">false</item>
+    <item name="android:windowContentTransitions">true</item>
 
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-
-
-        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
-
-        <!-- enable window content transitions -->
-        <item name="android:windowActivityTransitions">true</item>
-
-        <!-- specify enter and exit transitions -->
-        <item name="android:windowEnterTransition">@android:transition/fade</item>
-        <item name="android:windowExitTransition">@android:transition/fade</item>
-
-        <!-- specify shared element transitions -->
-        <item name="android:windowSharedElementEnterTransition">
-            @transition/change_image_transform</item>
-        <item name="android:windowSharedElementExitTransition">
-            @transition/change_image_transform</item>
-
-    </style>
-
-    <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/colorRatingView</item>
-        <item name="colorControlActivated">@color/appYellow</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="CineToolbar">
-        <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="android:background">?attr/colorPrimary</item>
-    </style>
-
-    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
-    </style>
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
 
 
-    <style name="AppTheme.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <!-- White arrow -->
-        <item name="colorControlNormal">@android:color/white</item>
-    </style>
+    <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+
+    <!-- enable window content transitions -->
+    <item name="android:windowActivityTransitions">true</item>
+
+    <!-- specify enter and exit transitions -->
+    <item name="android:windowEnterTransition">@android:transition/fade</item>
+    <item name="android:windowExitTransition">@android:transition/fade</item>
+
+    <!-- specify shared element transitions -->
+    <item name="android:windowSharedElementEnterTransition">
+      @transition/change_image_transform
+    </item>
+    <item name="android:windowSharedElementExitTransition">
+      @transition/change_image_transform
+    </item>
+
+  </style>
+
+  <style name="DetailActivityTheme" parent="AppTheme">
+    <item name="android:windowTranslucentStatus">true</item>
+    <item name="colorPrimaryDark">@color/transparent</item>
+  </style>
+
+  <style name="RatingBar" parent="Theme.AppCompat">
+    <item name="colorControlNormal">@color/colorRatingView</item>
+    <item name="colorControlActivated">@color/appYellow</item>
+  </style>
+
+  <style name="AppTheme.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+  </style>
+
+  <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+  <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+  <style name="CineToolbar">
+    <item name="android:layout_height">?attr/actionBarSize</item>
+    <item name="android:background">?attr/colorPrimary</item>
+  </style>
+
+  <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
+  </style>
+
+
+  <style name="AppTheme.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+    <!-- White arrow -->
+    <item name="colorControlNormal">@android:color/white</item>
+  </style>
 
 </resources>

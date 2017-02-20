@@ -157,6 +157,8 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   }
 
   void loadFiltered(int page, MediaFilter filter) {
+    if (page == 1) getBaseView().showLoadingIndicator();
+
     Utils.resetSubscription(genderSubscription);
     genderSubscription = useCase
         .getFilteredMedia(page, filter)

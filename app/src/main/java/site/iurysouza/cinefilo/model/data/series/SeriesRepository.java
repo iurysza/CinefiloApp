@@ -92,9 +92,6 @@ public class SeriesRepository implements WatchMediaRepository {
         nowPlayingSubject);
   }
 
-  @Override public Observable<List<WatchMedia>> getFilteredMoviesSubject() {
-    return null;
-  }
 
   @Override public Observable<List<WatchMedia>> getFilteredBy(int page, MediaFilter mediaFilter) {
     return null;

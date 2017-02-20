@@ -10,6 +10,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +18,7 @@ import java.util.List;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.mediadetail.MediaDetailActivity;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 
@@ -145,9 +147,12 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
         View genreView = itemView.findViewById(R.id.movie_item_genre);
         String genreTransition = context.getResources().getString(R.string.detail_genre_transition);
         Pair<View, String> genrePair = new android.util.Pair<>(genreView, genreTransition);
+        View statusBar = ((BaseActivity) context).findViewById(android.R.id.statusBarBackground);
+        Pair<View, String> statusBarPair =
+            Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);
 
         ActivityOptions options = ActivityOptions
-            .makeSceneTransitionAnimation((Activity) context, posterPair, cardPair, titlePair,
+            .makeSceneTransitionAnimation((Activity) context, posterPair, cardPair, titlePair,statusBarPair,
                 genrePair);
         context.startActivity(startIntent, options.toBundle());
       } else {

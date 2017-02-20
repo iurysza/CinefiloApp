@@ -7,7 +7,7 @@
     android:id="@+id/root_coord_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
     tools:context="site.iurysouza.cinefilo.presentation.main.MainActivity"
     >
 
@@ -16,7 +16,6 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       >
-
   </include>
 
   <FrameLayout
@@ -39,24 +38,25 @@
       app:layout_behavior="com.luseen.spacenavigation.SpaceNavigationViewBehavior"
       />
 
-
-  <com.github.mmin18.widget.RealtimeBlurView
-      android:id="@+id/main_blurred_view"
+  <FrameLayout
+      android:id="@+id/main_dimm_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:alpha="0"
+      android:clickable="true"
+      android:fitsSystemWindows="false"
+      android:focusable="true"
       android:visibility="gone"
-      app:realtimeBlurRadius="10dp"
-      app:realtimeDownsampleFactor="6"
-      app:realtimeOverlayColor="#8000"
-      />
+      android:foreground="@android:color/black"
+      >
 
-
+  </FrameLayout>
 
 
   <com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
+      xmlns:app="http://schemas.android.com/apk/res-auto"
       android:id="@+id/fabtoolbar"
       android:layout_width="match_parent"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
       android:layout_height="match_parent"
       app:containerId="@+id/fabtoolbar_container"
       app:fabDrawableAnimationEnabled="false"
@@ -108,10 +108,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="4dp"
-            android:textStyle="bold"
             android:text="Discover Movies"
             android:textColor="@color/appFilterTextColor"
             android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
             />
 
         <mehdi.sakout.fancybuttons.FancyButton
@@ -120,7 +120,7 @@
             android:layout_height="40dp"
             android:layout_gravity="right"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="4dp"
             fancy:fb_defaultColor="@color/appLightBlack"
             fancy:fb_focusColor="@color/colorPrimaryDark"
             fancy:fb_iconPaddingLeft="0dp"
@@ -142,15 +142,16 @@
 
           >
       </android.support.v4.view.ViewPager>
+
       <me.relex.circleindicator.CircleIndicator
           android:id="@+id/media_list_page_indicator"
           android:layout_width="match_parent"
           android:layout_height="48dp"
-          app:ci_width="8dp"
-          app:ci_height="2dp"
+          android:layout_marginTop="20dp"
           app:ci_drawable="@drawable/ic_selected_page_indicator"
           app:ci_drawable_unselected="@drawable/ic_page_indicator"
-          android:layout_marginTop="20dp"
+          app:ci_height="12dp"
+          app:ci_width="8dp"
           />
 
       <mehdi.sakout.fancybuttons.FancyButton

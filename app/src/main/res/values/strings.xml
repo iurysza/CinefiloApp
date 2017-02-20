@@ -44,4 +44,6 @@
   <string name="detail_page_overview_title">Overview</string>
   <string name="detail_activity_liked_snackbar">Added to Favorites</string>
   <string name="detail_activity_liked_removed">Removed from Favorites</string>
+  <string name="detail_activity_error">Something went Wrong</string>
+  <string name="media_detail_no_genre">No Genre</string>
 </resources>

@@ -1,5 +1,6 @@
 package site.iurysouza.cinefilo.presentation.medias.filter;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.os.Handler;
@@ -7,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import butterknife.BindColor;
@@ -14,7 +17,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
-import com.github.mmin18.widget.RealtimeBlurView;
 import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 import mehdi.sakout.fancybuttons.FancyButton;
@@ -32,19 +34,21 @@ import site.iurysouza.cinefilo.util.Utils;
  */
 
 public class FilterViewManager {
-  private static final int BLUR_VIEW_HIDE_DELAY = 350;
-  private static final int BLUR_VIEW_SHOW_DELAY = 250;
-  public static final int Filter = 6;
+  private static final String ALPHA = "alpha";
+  private static final int TRANSPARENT = 0;
+  private static final float DIMM_VALUE = .8f;
+  private static final int BLUR_VIEW_HIDE_DELAY = 500;
+  private static final int BLUR_VIEW_SHOW_DELAY = 600;
 
   @BindView(R.id.media_list_filter_viewpager) ViewPager viewPager;
   @BindView(R.id.media_list_page_indicator) CircleIndicator indicator;
   @BindView(R.id.fabtoolbar_fab) FloatingActionButton filterFab;
-  @BindView(R.id.main_blurred_view) RealtimeBlurView blurredView;
   @BindView(R.id.filter_btn_close) FancyButton btnClose;
   @BindView(R.id.filter_btn_apply) FancyButton btnApply;
   @BindView(R.id.fabtoolbar) FABToolbarLayout fabToolbar;
   @BindView(R.id.filter_view_header) FrameLayout filterViewHeader;
   @BindView(R.id.fabtoolbar_toolbar) RelativeLayout fabtoolbarToolbar;
+  @BindView(R.id.main_dimm_layout) FrameLayout dimmLayout;
 
   @BindColor(R.color.colorPrimary) int defaultColor;
   @BindColor(R.color.colorAccent) int selectedColor;
@@ -120,7 +124,7 @@ public class FilterViewManager {
   }
 
   public boolean hideFilterIfShown() {
-    if (blurredView.isShown()) {
+    if (viewPager.isShown()) {
       hideFilterView();
       return true;
     }
@@ -129,12 +133,31 @@ public class FilterViewManager {
 
   private void hideFilterView() {
     fabToolbar.hide();
-    blurredView.postDelayed(() -> blurredView.setVisibility(View.GONE), BLUR_VIEW_HIDE_DELAY);
+    dimmLayout.setVisibility(View.GONE);
+    ObjectAnimator animation1 = ObjectAnimator.ofFloat(dimmLayout,
+        ALPHA, TRANSPARENT);
+    animation1.setDuration(BLUR_VIEW_HIDE_DELAY);
+    animation1.start();
+    Window window = activity.getWindow();
+    dimmLayout.postDelayed(
+        () -> window.setStatusBarColor(
+            activity.getResources().getColor(R.color.colorPrimaryDark)), BLUR_VIEW_HIDE_DELAY-150);
   }
 
   private void showFilterView() {
     fabToolbar.show();
-    blurredView.postDelayed(() -> blurredView.setVisibility(View.VISIBLE), BLUR_VIEW_SHOW_DELAY);
+    dimmLayout.setVisibility(View.VISIBLE);
+    ObjectAnimator animation1 = ObjectAnimator.ofFloat(dimmLayout,
+        ALPHA, DIMM_VALUE);
+    animation1.setDuration(BLUR_VIEW_SHOW_DELAY);
+    animation1.start();
+
+    Window window = activity.getWindow();
+    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+    dimmLayout.postDelayed(
+        () -> window.setStatusBarColor(
+            activity.getResources().getColor(R.color.colorPrimaryDarkest)), BLUR_VIEW_SHOW_DELAY-150);
   }
 
   private void changeFabColor() {
@@ -151,14 +174,13 @@ public class FilterViewManager {
       R.id.filter_btn_close,
       R.id.filter_btn_apply,
       R.id.fabtoolbar_fab,
-      R.id.main_blurred_view
   })
   void onClick(View view) {
     switch (view.getId()) {
       case R.id.filter_btn_close:
         removeFilters();
         break;
-      case R.id.main_blurred_view:
+      case R.id.main_dimm_layout:
         hideFilterView();
         break;
       case R.id.filter_btn_apply:
@@ -173,7 +195,7 @@ public class FilterViewManager {
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onPageChangedEvent(MediaPageChangedEvent event) {
     if (wasFilterAdded()) {
-    removeFilters();
+      removeFilters();
     }
   }
 
@@ -221,6 +243,5 @@ public class FilterViewManager {
     void onSortingMethodChanged(SortingMethod sortBy);
 
     void closeOnRefresh();
-
   }
 }

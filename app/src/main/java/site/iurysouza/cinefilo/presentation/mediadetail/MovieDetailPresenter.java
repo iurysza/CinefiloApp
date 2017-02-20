@@ -44,8 +44,8 @@ public class MovieDetailPresenter extends BasePresenter<MovieDetailView> {
         }));
   }
 
-  void getMoviesSimilarTo(int movieId, int page) {
-    subscription.add(useCase.geMoviesSimilarTo(movieId, page)
+  void getMoviesSimilarTo(int movieId) {
+    subscription.add(useCase.geMoviesSimilarTo(movieId)
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
           @Override public void onNext(List<WatchMediaValue> mediaValueList) {
             super.onNext(mediaValueList);

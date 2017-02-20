@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -30,14 +31,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.flaviofaria.kenburnsview.KenBurnsView;
-import com.malinskiy.superrecyclerview.OnMoreListener;
-import com.malinskiy.superrecyclerview.SuperRecyclerView;
 import com.squareup.picasso.Picasso;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
@@ -54,7 +53,6 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
 
   public static final String WATCH_MEDIA_DATA = "WATCH_MEDIA_DATA";
   public static final String REMOVE_TRANSITIONS = "REMOVE_TRANSITIONS";
-  private static final int MIN_ITEMS_THRESHOLD = 5;
 
   @BindView(R.id.image_backdrop_detail_media) KenBurnsView imageBackdropDetailMedia;
   @BindView(R.id.toolbar_detail_media) Toolbar toolbarDetailMedia;
@@ -74,7 +72,7 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   @BindView(R.id.media_detail_picture_imageview) ImageView mediaDetailPictureImageview;
   @BindView(R.id.media_detail_picture_card) CardView mediaDetailPictureCard;
   @BindView(R.id.media_detail_like_fab) FloatingActionButton likeFab;
-  @BindView(R.id.media_detail_similar_movies) SuperRecyclerView similiarMoviesList;
+  @BindView(R.id.media_detail_similar_movies) RecyclerView similiarMoviesList;
 
   @Inject MovieDetailPresenter presenter;
   @BindView(R.id.detail_backdrop_play_btn) ImageView detailBackdropPlayBtn;
@@ -84,7 +82,6 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
 
   private WatchMediaValue watchMedia;
   private MediaDetailPagerAdapter pagerAdapter;
-  private int similarMoviesPage = 0;
   private SimilarMoviesAdapter adapter;
   private boolean movieLiked = false;
 
@@ -112,8 +109,8 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     setContentView(R.layout.media_detail_activity);
     ButterKnife.bind(this);
     setupActionBar();
-    Bundle bundle = getIntent().getBundleExtra(WATCH_MEDIA_DATA);
 
+    Bundle bundle = getIntent().getBundleExtra(WATCH_MEDIA_DATA);
     watchMedia = bundle.getParcelable(WATCH_MEDIA_DATA);
     presenter.attachView(this);
     int movieId = (int) watchMedia.id();
@@ -124,10 +121,9 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
 
     mediaDetailTabs.setupWithViewPager(mediaDetailViewpager);
     pagerAdapter = new MediaDetailPagerAdapter(this);
-
     mediaDetailViewpager.setAdapter(pagerAdapter);
-    setupSimilarMoviesList();
 
+    setupSimilarMoviesList();
 
     appbarDetailMedia.addOnOffsetChangedListener(new AppBarStateChangeListener() {
       @Override
@@ -143,7 +139,7 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
 
     bindViewToData(watchMedia);
     presenter.getMovieDetailById(movieId);
-    presenter.getMoviesSimilarTo(movieId, 1);
+    presenter.getMoviesSimilarTo(movieId);
   }
 
   private void setTransitionToViews() {
@@ -194,15 +190,7 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     adapter = new SimilarMoviesAdapter(this);
     similiarMoviesList.setAdapter(adapter);
     SnapHelper snapHelper = new LinearSnapHelper();
-    snapHelper.attachToRecyclerView(similiarMoviesList.getRecyclerView());
-    similiarMoviesList.setupMoreListener(onMoreSimilarMoviesAsked(), MIN_ITEMS_THRESHOLD);
-  }
-
-  private OnMoreListener onMoreSimilarMoviesAsked() {
-    return (overallItemsCount, itemsBeforeMore, maxLastVisiblePosition) -> {
-      similarMoviesPage++;
-      presenter.getMoviesSimilarTo((int) watchMedia.id(), similarMoviesPage);
-    };
+    snapHelper.attachToRecyclerView(similiarMoviesList);
   }
 
   @Override protected void setupActivityComponent(Bundle savedInstanceState) {
@@ -285,7 +273,7 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     try {
       substring = genreText.substring(2);
     } catch (IndexOutOfBoundsException e) {
-      substring = "No Genre";
+      substring = getString(R.string.media_detail_no_genre);
     }
     return substring;
   }
@@ -296,11 +284,8 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
   }
 
   @Override public void showErrorWarning() {
-
-  }
-
-  @Override public RxAppCompatActivity getRxAppCompatActivity() {
-    return this;
+    Toast.makeText(appInstance, R.string.detail_activity_error, Toast.LENGTH_SHORT).show();
+    Timber.e("Something went wrong");
   }
 
   @OnClick(R.id.media_detail_like_fab) public void onClick(View view) {

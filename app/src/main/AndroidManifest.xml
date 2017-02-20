@@ -27,6 +27,7 @@
     <activity
         android:name=".presentation.mediadetail.MediaDetailActivity"
         android:label="@string/title_activity_media_detail"
+        android:theme="@style/DetailActivityTheme"
         android:parentActivityName=".presentation.main.MainActivity">
       <meta-data
           android:name="android.support.PARENT_ACTIVITY"

@@ -61,14 +61,14 @@ public class MovieDetailPresenterTest {
     //Given
     int movieId = anyInt();
     int page = anyInt();
-    when(mockUseCase.geMoviesSimilarTo(movieId, page)).thenReturn(
+    when(mockUseCase.geMoviesSimilarTo(movieId)).thenReturn(
         Observable.just(Collections.emptyList()));
 
     //When
-    presenter.getMoviesSimilarTo(movieId, page);
+    presenter.getMoviesSimilarTo(movieId);
 
     //Then
-    verify(mockUseCase).geMoviesSimilarTo(movieId, page);
+    verify(mockUseCase).geMoviesSimilarTo(movieId);
     verify(mockView).showSimilarMovies(Collections.emptyList());
   }
 
@@ -77,14 +77,14 @@ public class MovieDetailPresenterTest {
     //Given
     int movieId = anyInt();
     int page = anyInt();
-    when(mockUseCase.geMoviesSimilarTo(movieId, page)).thenReturn(
+    when(mockUseCase.geMoviesSimilarTo(movieId)).thenReturn(
         Observable.error(new RuntimeException("Something went Wrong")));
 
     //When
-    presenter.getMoviesSimilarTo(movieId, page);
+    presenter.getMoviesSimilarTo(movieId);
 
     //Then
-    verify(mockUseCase).geMoviesSimilarTo(movieId, page);
+    verify(mockUseCase).geMoviesSimilarTo(movieId);
     verify(mockView).showErrorWarning();
   }
 }

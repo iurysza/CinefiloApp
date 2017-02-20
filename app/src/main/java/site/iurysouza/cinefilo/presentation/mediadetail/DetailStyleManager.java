@@ -25,6 +25,8 @@ import timber.log.Timber;
 
 public class DetailStyleManager {
 
+  private static final int REVEAL_DURATION = 450;
+  private static final int REVEAL_DELAY = 150;
   private Context context;
   private String backDropPath;
   private String posterPath;
@@ -147,9 +149,9 @@ public class DetailStyleManager {
           endRadius);
 
       kenBurnsView.setVisibility(View.VISIBLE);
-      anim.setStartDelay(100);
+      anim.setStartDelay(REVEAL_DELAY);
       anim
-          .setDuration(300)
+          .setDuration(REVEAL_DURATION)
           .addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animation) {
               kenBurnsView.setImageBitmap(bitmap);

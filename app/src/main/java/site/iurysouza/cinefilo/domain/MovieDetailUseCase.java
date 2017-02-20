@@ -11,6 +11,7 @@ import site.iurysouza.cinefilo.model.data.moviedetail.MovieDetailRepository;
  * Created by Iury Souza on 31/01/2017.
  */
 public class MovieDetailUseCase implements IMovieDetailUseCase {
+  public static final int FIRST_PAGE = 1;
   private MovieDetailRepository detailRepository;
 
   @Inject
@@ -22,9 +23,9 @@ public class MovieDetailUseCase implements IMovieDetailUseCase {
     return detailRepository.getMovieById(movieId);
   }
 
-  public Observable<List<WatchMediaValue>> geMoviesSimilarTo(int movieId, int page) {
+  public Observable<List<WatchMediaValue>> geMoviesSimilarTo(int movieId) {
     return detailRepository
-        .getMoviesSimilarTo(movieId, page)
+        .getMoviesSimilarTo(movieId, FIRST_PAGE)
         .map(WatchMediaValue::valueOf);
   }
 }
