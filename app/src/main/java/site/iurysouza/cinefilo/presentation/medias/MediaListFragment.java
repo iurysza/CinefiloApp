@@ -25,13 +25,13 @@ import javax.inject.Inject;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.domain.MediaFilter;
-import site.iurysouza.cinefilo.domain.MoviesUseCase;
-import site.iurysouza.cinefilo.domain.SeriesUseCase;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.domain.watchmedialist.MoviesWatchMediaListUseCase;
+import site.iurysouza.cinefilo.domain.watchmedialist.SeriesWatchMediaListUseCase;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
 import site.iurysouza.cinefilo.presentation.main.FilterEvent;
+import site.iurysouza.cinefilo.presentation.medias.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.domain.watchmedialist.MediaFilter;
 import site.iurysouza.cinefilo.util.Utils;
 import timber.log.Timber;
 
@@ -57,8 +57,8 @@ public class MediaListFragment extends BaseFragment
 
   private final MediaPresenter mediaPresenter = new MediaPresenter();
 
-  @Inject MoviesUseCase moviesUseCase;
-  @Inject SeriesUseCase seriesUseCase;
+  @Inject MoviesWatchMediaListUseCase moviesUseCase;
+  @Inject SeriesWatchMediaListUseCase seriesUseCase;
 
   @BindView(R.id.container_movie_list) FrameLayout container;
   @BindView(R.id.movie_list_progressImage) AVLoadingIndicatorView loadingPlaceHolder;

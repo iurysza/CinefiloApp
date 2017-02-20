@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.medias.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.CineApplication;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
 import site.iurysouza.cinefilo.presentation.medias.BackDropChangedEvent;

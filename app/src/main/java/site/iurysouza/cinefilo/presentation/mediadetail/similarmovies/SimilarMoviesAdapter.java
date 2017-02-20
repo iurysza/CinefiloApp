@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import java.util.ArrayList;
 import java.util.List;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.medias.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.mediadetail.MediaDetailActivity;
 

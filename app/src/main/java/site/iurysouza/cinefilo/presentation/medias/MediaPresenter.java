@@ -4,12 +4,12 @@ import java.util.List;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import site.iurysouza.cinefilo.domain.MediaFilter;
-import site.iurysouza.cinefilo.domain.MoviesUseCase;
-import site.iurysouza.cinefilo.domain.SeriesUseCase;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.presentation.UseCase;
+import site.iurysouza.cinefilo.domain.watchmedialist.MoviesWatchMediaListUseCase;
+import site.iurysouza.cinefilo.domain.watchmedialist.SeriesWatchMediaListUseCase;
+import site.iurysouza.cinefilo.domain.watchmedialist.WatchMediaListUseCase;
 import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
+import site.iurysouza.cinefilo.presentation.medias.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.domain.watchmedialist.MediaFilter;
 import site.iurysouza.cinefilo.util.CineSubscriber;
 import site.iurysouza.cinefilo.util.Utils;
 
@@ -20,7 +20,7 @@ import static site.iurysouza.cinefilo.util.Utils.resetSubscription;
  */
 
 public class MediaPresenter extends BasePresenter<MediaView> {
-  private UseCase useCase;
+  private WatchMediaListUseCase watchMediaListUseCase;
   private Subscription nowPlayingSubscription;
   private Subscription topRatedSubscription;
   private Subscription mostPopularSubscription;
@@ -29,20 +29,21 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   MediaPresenter() {
   }
 
-  void createPresenter(MoviesUseCase moviesUseCase, SeriesUseCase seriesUseCase,
+  void createPresenter(MoviesWatchMediaListUseCase moviesUseCase, SeriesWatchMediaListUseCase seriesUseCase,
       int mediaType) {
     if (mediaType == 0) {
-      useCase = moviesUseCase;
+      watchMediaListUseCase = moviesUseCase;
     } else {
-      useCase = seriesUseCase;
+      watchMediaListUseCase = seriesUseCase;
     }
   }
 
   void loadNowPlaying() {
     getBaseView().showLoadingIndicator();
     resetSubscription(nowPlayingSubscription);
-    nowPlayingSubscription = useCase
+    nowPlayingSubscription = watchMediaListUseCase
         .getNowPlaying()
+        .map(WatchMediaValue::valueOf)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
@@ -61,8 +62,9 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   void loadMostPopular() {
     getBaseView().showLoadingIndicator();
     resetSubscription(mostPopularSubscription);
-    mostPopularSubscription = useCase
+    mostPopularSubscription = watchMediaListUseCase
         .getMostPopular()
+        .map(WatchMediaValue::valueOf)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
@@ -81,8 +83,9 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   void loadTopRated() {
     getBaseView().showLoadingIndicator();
     resetSubscription(topRatedSubscription);
-    topRatedSubscription = useCase
+    topRatedSubscription = watchMediaListUseCase
         .getTopRated()
+        .map(WatchMediaValue::valueOf)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
@@ -101,8 +104,9 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   void loadNextNowPlaying(int page) {
     getBaseView().showMoreProgress();
     resetSubscription(nowPlayingSubscription);
-    nowPlayingSubscription = useCase
+    nowPlayingSubscription = watchMediaListUseCase
         .getNextNowPlaying(page)
+        .map(WatchMediaValue::valueOf)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
@@ -120,8 +124,9 @@ public class MediaPresenter extends BasePresenter<MediaView> {
 
   void loadNextMostPopularPlaying(int page) {
     resetSubscription(mostPopularSubscription);
-    mostPopularSubscription = useCase
+    mostPopularSubscription = watchMediaListUseCase
         .getNextPopular(page)
+        .map(WatchMediaValue::valueOf)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
@@ -139,8 +144,9 @@ public class MediaPresenter extends BasePresenter<MediaView> {
 
   void loadNextTopRated(int page) {
     resetSubscription(topRatedSubscription);
-    topRatedSubscription = useCase
+    topRatedSubscription = watchMediaListUseCase
         .getNextTopRated(page)
+        .map(WatchMediaValue::valueOf)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
@@ -160,8 +166,9 @@ public class MediaPresenter extends BasePresenter<MediaView> {
     if (page == 1) getBaseView().showLoadingIndicator();
 
     Utils.resetSubscription(genderSubscription);
-    genderSubscription = useCase
+    genderSubscription = watchMediaListUseCase
         .getFilteredMedia(page, filter)
+        .map(WatchMediaValue::valueOf)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {

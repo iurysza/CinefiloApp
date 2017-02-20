@@ -3,9 +3,8 @@ package site.iurysouza.cinefilo.di.modules;
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
-import site.iurysouza.cinefilo.domain.WatchMediaRepository;
-import site.iurysouza.cinefilo.domain.MoviesUseCase;
-import site.iurysouza.cinefilo.domain.SeriesUseCase;
+import site.iurysouza.cinefilo.domain.watchmedialist.MoviesWatchMediaListUseCase;
+import site.iurysouza.cinefilo.domain.watchmedialist.SeriesWatchMediaListUseCase;
 import site.iurysouza.cinefilo.model.data.movies.MoviesRepository;
 import site.iurysouza.cinefilo.model.data.movies.storage.CloudMovieDataSource;
 import site.iurysouza.cinefilo.model.data.movies.storage.ICloudMovieDataSource;
@@ -18,7 +17,6 @@ import site.iurysouza.cinefilo.model.data.series.storage.ILocalSeriesDataSource;
 import site.iurysouza.cinefilo.model.data.series.storage.LocalSeriesDataSource;
 import site.iurysouza.cinefilo.model.services.MovieService;
 import site.iurysouza.cinefilo.model.services.SeriesService;
-import site.iurysouza.cinefilo.presentation.UseCase;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -51,23 +49,23 @@ public class MediaListModule {
     return new LocalSeriesDataSource();
   }
 
-  @Provides public WatchMediaRepository providesMovieDataRepository(
+  @Provides public MoviesRepository providesMovieDataRepository(
       LocalMovieDataSource localMovieDataSource,
       CloudMovieDataSource cloudMovieDataSource) {
     return new MoviesRepository(localMovieDataSource, cloudMovieDataSource);
   }
 
-  @Provides public WatchMediaRepository providesSeriesDataRepository(
+  @Provides public SeriesRepository providesSeriesDataRepository(
       LocalSeriesDataSource localSeriesDataSource,
       CloudSeriesDataSource cloudSeriesDataSource) {
     return new SeriesRepository(localSeriesDataSource, cloudSeriesDataSource);
   }
 
-  @Provides public UseCase providesMovieUseCase(MoviesRepository dataRepository) {
-    return new MoviesUseCase(dataRepository);
+  @Provides public MoviesWatchMediaListUseCase providesMovieUseCase(MoviesRepository dataRepository) {
+    return new MoviesWatchMediaListUseCase(dataRepository);
   }
 
-  @Provides public UseCase providesSeriesUseCase(SeriesRepository dataRepository) {
-    return new SeriesUseCase(dataRepository);
+  @Provides public SeriesWatchMediaListUseCase providesSeriesUseCase(SeriesRepository dataRepository) {
+    return new SeriesWatchMediaListUseCase(dataRepository);
   }
 }

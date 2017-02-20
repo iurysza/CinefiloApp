@@ -13,7 +13,7 @@ import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import org.joda.time.DateTime;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.medias.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 import site.iurysouza.cinefilo.util.ImageUtils;
 

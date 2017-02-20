@@ -3,10 +3,10 @@ package site.iurysouza.cinefilo.presentation.mediadetail;
 import java.util.List;
 import javax.inject.Inject;
 import rx.subscriptions.CompositeSubscription;
-import site.iurysouza.cinefilo.domain.MovieDetailUseCase;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
+import site.iurysouza.cinefilo.domain.moviedetail.MovieDetailUseCase;
 import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
+import site.iurysouza.cinefilo.presentation.medias.entity.MovieDetailValue;
+import site.iurysouza.cinefilo.presentation.medias.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.util.CineSubscriber;
 import timber.log.Timber;
 
@@ -29,6 +29,7 @@ public class MovieDetailPresenter extends BasePresenter<MovieDetailView> {
 
   void getMovieDetailById(int movieId) {
     subscription.add(useCase.getMovieById(movieId)
+        .map(MovieDetailValue::mapToValueMedia)
         .subscribe(new CineSubscriber<MovieDetailValue>() {
           @Override public void onNext(MovieDetailValue movieDetailValue) {
             super.onNext(movieDetailValue);
@@ -46,6 +47,7 @@ public class MovieDetailPresenter extends BasePresenter<MovieDetailView> {
 
   void getMoviesSimilarTo(int movieId) {
     subscription.add(useCase.geMoviesSimilarTo(movieId)
+        .map(WatchMediaValue::valueOf)
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
           @Override public void onNext(List<WatchMediaValue> mediaValueList) {
             super.onNext(mediaValueList);

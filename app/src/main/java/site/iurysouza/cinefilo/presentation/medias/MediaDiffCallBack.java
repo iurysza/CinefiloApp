@@ -3,7 +3,7 @@ package site.iurysouza.cinefilo.presentation.medias;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import java.util.List;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.medias.entity.WatchMediaValue;
 
 /**
  * Created by Iury Souza on 15/12/2016.

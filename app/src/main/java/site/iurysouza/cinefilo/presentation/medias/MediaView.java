@@ -1,7 +1,7 @@
 package site.iurysouza.cinefilo.presentation.medias;
 
 import java.util.List;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.medias.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.base.mvp.BaseView;
 
 /**

@@ -16,11 +16,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.domain.MediaFilter;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.mediadetail.MediaDetailActivity;
-import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
+import site.iurysouza.cinefilo.presentation.medias.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.domain.watchmedialist.MediaFilter;
 
 /**
  * Created by Iury Souza on 15/12/2016.
@@ -91,8 +90,8 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     boolean isGenderFilterValid = filter.getGenderList() != null;
     for (WatchMediaValue media : mediaValueList) {
       if (isGenderFilterValid) {
-        for (GenderEnum gender : filter.getGenderList()) {
-          if (media.genre() == gender.getGenreId()) {
+        for (Integer gender : filter.getGenderList()) {
+          if (media.genre() == gender) {
             filterByScore(filter, filteredList, media);
           }
         }

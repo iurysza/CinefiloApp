@@ -16,7 +16,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Set;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
+import site.iurysouza.cinefilo.presentation.medias.entity.MovieDetailValue;
 
 /**
  * Created by Iury Souza on 31/01/2017.

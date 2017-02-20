@@ -1,9 +1,9 @@
 package site.iurysouza.cinefilo.presentation.mediadetail;
 
 import java.util.List;
-import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
 import site.iurysouza.cinefilo.presentation.base.mvp.BaseView;
+import site.iurysouza.cinefilo.presentation.medias.entity.MovieDetailValue;
+import site.iurysouza.cinefilo.presentation.medias.entity.WatchMediaValue;
 
 /**
  * Created by Iury Souza on 01/02/2017.

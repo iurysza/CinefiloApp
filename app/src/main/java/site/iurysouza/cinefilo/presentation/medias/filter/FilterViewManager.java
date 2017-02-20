@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
+import java.util.ArrayList;
 import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 import mehdi.sakout.fancybuttons.FancyButton;
@@ -24,7 +25,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.domain.MediaFilter;
+import site.iurysouza.cinefilo.domain.watchmedialist.MediaFilter;
+import site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod;
 import site.iurysouza.cinefilo.presentation.main.FilterEvent;
 import site.iurysouza.cinefilo.presentation.medias.pager.MediaPageChangedEvent;
 import site.iurysouza.cinefilo.util.Utils;
@@ -215,6 +217,12 @@ public class FilterViewManager {
   }
 
   private void applyFilters() {
+    List<Integer> genderIds = new ArrayList<>();
+    if (selectedGenreList != null) {
+      for (GenderEnum gender : selectedGenreList) {
+        genderIds.add(gender.getGenreId());
+      }
+    }
     MediaFilter filter = null;
     if (wasFilterAdded()) {
       filter = MediaFilter
@@ -223,7 +231,7 @@ public class FilterViewManager {
           .startDate(mStartDate)
           .minScore(mMinScore)
           .sortBy(mSortBy)
-          .genderList(selectedGenreList)
+          .genderList(genderIds)
           .build();
     }
     hideFilterView();
