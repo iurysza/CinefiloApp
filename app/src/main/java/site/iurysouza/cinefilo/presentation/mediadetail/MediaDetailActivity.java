@@ -127,7 +127,7 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
 
     mediaDetailViewpager.setAdapter(pagerAdapter);
     setupSimilarMoviesList();
-    bindViewToData(watchMedia);
+
 
     appbarDetailMedia.addOnOffsetChangedListener(new AppBarStateChangeListener() {
       @Override
@@ -141,6 +141,7 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
       }
     });
 
+    bindViewToData(watchMedia);
     presenter.getMovieDetailById(movieId);
     presenter.getMoviesSimilarTo(movieId, 1);
   }
@@ -248,12 +249,11 @@ public class MediaDetailActivity extends BaseActivity implements MovieDetailView
     float movieRating = (float) (voteAverage / 2);
     mediaDetailRating.setRating(movieRating);
     mediaDetailRatingText.setText(String.valueOf(voteAverage));
-    pagerAdapter.updateOverView(watchMedia.overview());
   }
 
   @Override public void updateMovieData(MovieDetailValue movieDetailValue) {
     Timber.e("MOVIE DETAIL LOADED: %s", movieDetailValue);
-    String runTime = String.valueOf(movieDetailValue.runTime().intValue()) + "min";
+    String runTime = String.valueOf(movieDetailValue.runTime().intValue()) + " min";
     mediaDetailPlaytime.setText(runTime);
 
     String substring = getGenreListAsString(movieDetailValue);

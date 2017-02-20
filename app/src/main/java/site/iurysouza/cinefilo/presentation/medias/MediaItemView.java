@@ -44,8 +44,8 @@ public final class MediaItemView extends FrameLayout {
     ButterKnife.bind(this);
   }
 
-  public void bindTo(WatchMediaValue realmMovie, Picasso picasso) {
-    String posterPath = realmMovie.posterPath();
+  public void bindTo(WatchMediaValue media, Picasso picasso) {
+    String posterPath = media.posterPath();
     if (posterPath != null) {
       String posterUrl = ImageUtils.getPosterUrl(posterPath);
       picasso.load(posterUrl)
@@ -53,15 +53,15 @@ public final class MediaItemView extends FrameLayout {
           .placeholder(R.drawable.placeholder)
           .into(movieImage);
     }
-    DateTime movieReleaseDate = new DateTime(realmMovie.releaseDate());
+    DateTime movieReleaseDate = new DateTime(media.releaseDate());
     movieDate.setText("("+movieReleaseDate.getYear()+")");
-    movieTitle.setText(realmMovie.name());
+    movieTitle.setText(media.name());
 
-    float movieRating = (float) (realmMovie.voteAverage() / 2);
+    float movieRating = (float) (media.voteAverage() / 2);
     this.movieRating.setRating(movieRating);
 
-    overviewText.setText(realmMovie.overview());
-    Integer genre = realmMovie.genre();
+    overviewText.setText(media.overview());
+    Integer genre = media.genre();
 
     if (genre != null) {
       GenderEnum genderEnum = GenderEnum.getGenreById(genre);

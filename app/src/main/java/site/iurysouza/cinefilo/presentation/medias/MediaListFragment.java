@@ -24,12 +24,12 @@ import java.util.List;
 import javax.inject.Inject;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import site.iurysouza.cinefilo.CineApplication;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.MoviesUseCase;
 import site.iurysouza.cinefilo.domain.SeriesUseCase;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
 import site.iurysouza.cinefilo.presentation.main.FilterEvent;
 import site.iurysouza.cinefilo.util.Utils;
@@ -46,8 +46,8 @@ import static site.iurysouza.cinefilo.util.Constants.Media.TOP_MEDIA;
  */
 
 public class MediaListFragment extends BaseFragment
-    implements MediaView,
-    MediaAdapter.OnAdapterClickListener {
+    implements MediaView
+{
 
   public static final int INVALID_PAGE = -1;
   private static final String LIST_TYPE = "LIST_TYPE";
@@ -104,7 +104,7 @@ public class MediaListFragment extends BaseFragment
 
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onFilterApplied(FilterEvent event) {
-    this.filter = event.filter;
+    filter = event.filter;
     if (isMenuVisible()) {
       if (filter == null) {
         disableFilter();
@@ -130,7 +130,7 @@ public class MediaListFragment extends BaseFragment
     movieList.getRecyclerView().setHasFixedSize(false);
     layoutManger = new LinearLayoutManager(getContext());
     movieList.setLayoutManager(layoutManger);
-    mediaAdapter = new MediaAdapter(Picasso.with(getContext()), this);
+    mediaAdapter = new MediaAdapter(Picasso.with(getContext()));
     movieList.setAdapter(mediaAdapter);
     movieList.setupMoreListener(createOnMoreListener(), MIN_ITEMS_THRESHOLD);
     movieList.getRecyclerView().addOnScrollListener(createFabScrollBehavior());
@@ -205,7 +205,7 @@ public class MediaListFragment extends BaseFragment
   @Override public void onDestroyView() {
     super.onDestroyView();
     mediaPresenter.dettachView();
-    ((CineApplication) getContext().getApplicationContext()).releaseMediaListComponent();
+    appInstance.releaseMediaListComponent();
   }
 
   @Override public void showLoadingIndicator() {
@@ -250,16 +250,7 @@ public class MediaListFragment extends BaseFragment
   }
 
   @Override protected void setupFragmentComponent() {
-    ((CineApplication) getContext().getApplicationContext()).getMediaListComponent().inject(this);
-  }
-
-  @Override public void onItemClicked(WatchMediaValue mediaValue) {
-
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-
+    appInstance.createMediaListComponent((BaseActivity) getActivity()).inject(this);
   }
 
   @Subscribe(threadMode = ThreadMode.MAIN)

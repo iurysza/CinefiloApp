@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Set;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.model.data.entity.MovieDetailValue;
 
@@ -33,6 +34,15 @@ class MediaDetailPagerAdapter extends PagerAdapter {
   private LinearLayout budgetContainer;
   private LinearLayout revContainer;
   private LinearLayout overviewRoot;
+  //@BindView(R.id.overview_page_overview) TextView overviewText;
+  //@BindView(R.id.overview_page_budget) TextView budgetText;
+  //@BindView(R.id.overview_page_original_language)TextView languageText;
+  //@BindView(R.id.overview_page_tagline)TextView tagLineText;
+  //@BindView(R.id.overview_page_language_container)LinearLayout langContainer;
+  //@BindView(R.id.overview_page_budget_container)LinearLayout budgetContainer;
+  //@BindView(R.id.overview_page_revenue_container)LinearLayout revContainer;
+  //@BindView(R.id.overview_page_root)LinearLayout overviewRoot;
+  //@BindView(R.id.overview_page_revenue) TextView revenueText;
 
   MediaDetailPagerAdapter(Context context) {
     this.context = context;
@@ -45,6 +55,24 @@ class MediaDetailPagerAdapter extends PagerAdapter {
   @Override
   public boolean isViewFromObject(View view, Object object) {
     return view == object;
+  }
+
+  @Override
+  public void destroyItem(ViewGroup collection, int position, Object view) {
+    collection.removeView((View) view);
+  }
+
+  @Override
+  public CharSequence getPageTitle(int position) {
+    MediaDetailPagerEnum customPagerEnum = MediaDetailPagerEnum.values()[position];
+    return context.getString(customPagerEnum.getTitleResId());
+  }
+
+  private ViewGroup getView(ViewGroup collection, @LayoutRes int layoutResId) {
+    LayoutInflater inflater = LayoutInflater.from(context);
+    ViewGroup layout = (ViewGroup) inflater.inflate(layoutResId, collection, false);
+    collection.addView(layout);
+    return layout;
   }
 
   @Override public Object instantiateItem(ViewGroup container, int position) {
@@ -94,10 +122,7 @@ class MediaDetailPagerAdapter extends PagerAdapter {
       budgetContainer.setVisibility(View.VISIBLE);
     }
 
-    String langText = "";
-    for (String language : movieDetailValue.spokenLanguageList().keySet()) {
-      langText = langText + ", " + language;
-    }
+    String langText = getLanguageListText(movieDetailValue);
     if (!langText.isEmpty()) {
       langContainer.setVisibility(View.VISIBLE);
       languageText.setText(langText);
@@ -106,33 +131,27 @@ class MediaDetailPagerAdapter extends PagerAdapter {
     }
   }
 
+  private String getLanguageListText(MovieDetailValue movieDetailValue) {
+    String langText = "";
+    Set<String> langSet = movieDetailValue.spokenLanguageList().keySet();
+    if (!langSet.isEmpty()) {
+      if (langSet.size() == 1) {
+        langText = langSet.iterator().next();
+      } else {
+        for (String language : langSet) {
+          langText += language + ", ";
+        }
+        langText = langText.substring(0, langText.length() - 2);
+      }
+    }
+    return langText + ".";
+  }
+
   private String getFormattedMoneyValue(long value) {
     DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
     DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
     symbols.setGroupingSeparator(' ');
     formatter.setDecimalFormatSymbols(symbols);
     return "$ " + formatter.format(value);
-  }
-
-  @Override
-  public void destroyItem(ViewGroup collection, int position, Object view) {
-    collection.removeView((View) view);
-  }
-
-  @Override
-  public CharSequence getPageTitle(int position) {
-    MediaDetailPagerEnum customPagerEnum = MediaDetailPagerEnum.values()[position];
-    return context.getString(customPagerEnum.getTitleResId());
-  }
-
-  private ViewGroup getView(ViewGroup collection, @LayoutRes int layoutResId) {
-    LayoutInflater inflater = LayoutInflater.from(context);
-    ViewGroup layout = (ViewGroup) inflater.inflate(layoutResId, collection, false);
-    collection.addView(layout);
-    return layout;
-  }
-
-  public void updateOverView(String overview) {
-    //overviewText.setText(overview);
   }
 }

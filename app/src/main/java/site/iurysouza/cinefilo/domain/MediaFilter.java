@@ -15,9 +15,11 @@ public class MediaFilter {
 
   //initialize default data
   public static final int START_YEAR = 1990;
+  public static final int DEFAULT_RATING_SCORE = 6;
+
   private Integer startDate = START_YEAR;
   private Integer endDate = new DateTime(new Date()).getYear();
-  private Integer minScore = 6;
+  private Integer minScore = DEFAULT_RATING_SCORE;
   private SortingMethod sortBy = null;
   private List<GenderEnum> genderList = null;
 

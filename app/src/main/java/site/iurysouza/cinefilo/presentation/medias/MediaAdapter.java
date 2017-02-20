@@ -14,7 +14,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.MediaFilter;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
@@ -28,12 +27,10 @@ import site.iurysouza.cinefilo.presentation.medias.filter.GenderEnum;
 class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
 
   private final Picasso picasso;
-  private final OnAdapterClickListener movieClickListener;
   private List<WatchMediaValue> mediaValueList = Collections.emptyList();
 
-  MediaAdapter(Picasso picasso, OnAdapterClickListener movieClickListener) {
+  MediaAdapter(Picasso picasso) {
     this.picasso = picasso;
-    this.movieClickListener = movieClickListener;
     setHasStableIds(true);
   }
 
@@ -80,61 +77,35 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
   public void replaceList(List<WatchMediaValue> mediaValues) {
     //final MediaDiffCallBack diffCallback = new MediaDiffCallBack(mediaValueList, mediaValues);
     //final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+    //diffResult.dispatchUpdatesTo(this);
+
     this.mediaValueList.clear();
     this.mediaValueList.addAll(mediaValues);
     notifyDataSetChanged();
-    //diffResult.dispatchUpdatesTo(this);
   }
 
-  WatchMediaValue getFeauturedMovie() {
-    return getRandomMovieWithBackDrop(mediaValueList);
-  }
-
-  private WatchMediaValue getRandomMovieWithBackDrop(List<WatchMediaValue> movieList) {
-    if (movieList.isEmpty()) {
-      return null;
-    }
-    WatchMediaValue movie = mediaValueList.get((new Random()).nextInt(mediaValueList.size()));
-    if (movie.backdropPath() == null) {
-      return getRandomMovieWithBackDrop(movieList);
-    } else {
-      return movie;
-    }
-  }
-
-  public List<WatchMediaValue> getAdapterListFilteredBy(List<GenderEnum> genderEnumList) {
+  List<WatchMediaValue> filterAdapter(MediaFilter filter) {
     List<WatchMediaValue> filteredList = new ArrayList<>();
-    for (WatchMediaValue media : mediaValueList) {
-      for (GenderEnum gender : genderEnumList) {
-        if (media.genre() == gender.getGenreId()) {
-          filteredList.add(media);
-        }
-      }
-    }
-    return filteredList;
-  }
-
-  public List<WatchMediaValue> filterAdapter(MediaFilter filter) {
-    List<WatchMediaValue> filteredList = new ArrayList<>();
-
     boolean isGenderFilterValid = filter.getGenderList() != null;
-
     for (WatchMediaValue media : mediaValueList) {
       if (isGenderFilterValid) {
         for (GenderEnum gender : filter.getGenderList()) {
           if (media.genre() == gender.getGenreId()) {
-            if (media.voteAverage() >= filter.getMinScore()) {
-              isDateValid(filter, filteredList, media);
-            }
+            filterByScore(filter, filteredList, media);
           }
         }
       } else {
-        if (media.voteAverage() >= filter.getMinScore()) {
-          isDateValid(filter, filteredList, media);
-        }
+        filterByScore(filter, filteredList, media);
       }
     }
     return filteredList;
+  }
+
+  private void filterByScore(MediaFilter filter, List<WatchMediaValue> filteredList,
+      WatchMediaValue media) {
+    if (media.voteAverage() >= filter.getMinScore()) {
+      isDateValid(filter, filteredList, media);
+    }
   }
 
   private void isDateValid(MediaFilter filter, List<WatchMediaValue> filteredList,
@@ -144,10 +115,6 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
         && releaseYear <= filter.getEndDate()) {
       filteredList.add(media);
     }
-  }
-
-  interface OnAdapterClickListener {
-    void onItemClicked(WatchMediaValue mediaValue);
   }
 
   final class ViewHolder extends RecyclerView.ViewHolder {
@@ -180,7 +147,8 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
         Pair<View, String> genrePair = new android.util.Pair<>(genreView, genreTransition);
 
         ActivityOptions options = ActivityOptions
-            .makeSceneTransitionAnimation((Activity) context, posterPair, cardPair, titlePair, genrePair);
+            .makeSceneTransitionAnimation((Activity) context, posterPair, cardPair, titlePair,
+                genrePair);
         context.startActivity(startIntent, options.toBundle());
       } else {
         context.startActivity(startIntent);

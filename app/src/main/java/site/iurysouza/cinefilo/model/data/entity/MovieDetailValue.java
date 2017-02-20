@@ -42,6 +42,10 @@ public abstract class MovieDetailValue implements Parcelable {
       spokenLanguage.put(spokenLang.getName(), spokenLang.getIso31661());
     }
 
+    if (movie.getBackdropPath().isEmpty()) {
+      movie.setBackdropPath(movie.getPosterPath());
+    }
+
     return MovieDetailValue
         .builder()
         .adult(movie.getAdult())

@@ -1,10 +1,13 @@
 package site.iurysouza.cinefilo.domain;
 
+import android.support.annotation.NonNull;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.functions.Func1;
 import site.iurysouza.cinefilo.domain.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.model.data.movies.MoviesRepositoryI;
+import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
+import site.iurysouza.cinefilo.model.data.movies.MoviesRepository;
 import site.iurysouza.cinefilo.presentation.UseCase;
 
 /**
@@ -14,10 +17,10 @@ import site.iurysouza.cinefilo.presentation.UseCase;
 public class MoviesUseCase implements UseCase {
 
   private static final int FIRST_PAGE = 1;
-  private MoviesRepositoryI movieRepository;
+  private MoviesRepository movieRepository;
 
   @Inject
-  public MoviesUseCase(MoviesRepositoryI movieRepository) {
+  public MoviesUseCase(MoviesRepository movieRepository) {
     this.movieRepository = movieRepository;
     //movieRepository.getGenreList();
   }
@@ -51,17 +54,16 @@ public class MoviesUseCase implements UseCase {
 
   @Override
   public Observable<List<WatchMediaValue>> getNextTopRated(int nextPage) {
-      movieRepository.getTopRated(nextPage, true);
-      return movieRepository
-          .getTopRatedSubject()
-          .map(WatchMediaValue::valueOf);
+    movieRepository.getTopRated(nextPage, true);
+    return movieRepository
+        .getTopRatedSubject()
+        .map(WatchMediaValue::valueOf);
   }
 
   @Override
   public Observable<List<WatchMediaValue>> getFilteredMedia(int page, MediaFilter mediaFilter) {
-    movieRepository.getFilteredBy(page, mediaFilter);
     return movieRepository
-        .getFilteredMoviesSubject()
+        .getFilteredBy(page, mediaFilter)
         .map(WatchMediaValue::valueOf);
   }
 
@@ -88,5 +90,15 @@ public class MoviesUseCase implements UseCase {
     return movieRepository
         .getNowPlayingSubject()
         .map(WatchMediaValue::valueOf);
+  }
+
+  @NonNull private Func1<List<WatchMedia>, List<WatchMedia>> takeOnePageOnly() {
+    return watchMedias -> {
+      if (watchMedias.size() > 20) {
+        return watchMedias.subList(20, watchMedias.size() - 1);
+      } else {
+        return watchMedias;
+      }
+    };
   }
 }

@@ -8,7 +8,7 @@ import site.iurysouza.cinefilo.model.data.entity.WatchMedia;
  * Created by Iury Souza on 12/10/2016.
  */
 
-public interface IWatchMediaRepository {
+public interface WatchMediaRepository {
 
   void getMostPopular(int page, boolean forceRemote);
 
@@ -18,7 +18,6 @@ public interface IWatchMediaRepository {
 
   void getNowPlaying(int page, boolean forceRemote);
 
-  Observable<List<WatchMedia>> getFilteredMoviesSubject();
 
-  void getFilteredBy(int page, MediaFilter mediaFilter);
+  Observable<List<WatchMedia>> getFilteredBy(int page, MediaFilter mediaFilter);
 }

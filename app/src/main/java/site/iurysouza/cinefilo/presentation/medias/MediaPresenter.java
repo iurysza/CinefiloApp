@@ -1,6 +1,5 @@
 package site.iurysouza.cinefilo.presentation.medias;
 
-import com.trello.rxlifecycle.components.support.RxFragment;
 import java.util.List;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -25,8 +24,6 @@ public class MediaPresenter extends BasePresenter<MediaView> {
   private Subscription nowPlayingSubscription;
   private Subscription topRatedSubscription;
   private Subscription mostPopularSubscription;
-  private RxFragment rxLifecycle;
-
   private Subscription genderSubscription;
 
   MediaPresenter() {
@@ -39,11 +36,6 @@ public class MediaPresenter extends BasePresenter<MediaView> {
     } else {
       useCase = seriesUseCase;
     }
-  }
-
-  @Override public void attachView(MediaView view) {
-    super.attachView(view);
-    rxLifecycle = ((MediaListFragment) view);
   }
 
   void loadNowPlaying() {
@@ -71,7 +63,6 @@ public class MediaPresenter extends BasePresenter<MediaView> {
     resetSubscription(mostPopularSubscription);
     mostPopularSubscription = useCase
         .getMostPopular()
-        .compose(rxLifecycle.bindToLifecycle())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
@@ -92,7 +83,6 @@ public class MediaPresenter extends BasePresenter<MediaView> {
     resetSubscription(topRatedSubscription);
     topRatedSubscription = useCase
         .getTopRated()
-        .compose(rxLifecycle.bindToLifecycle())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new CineSubscriber<List<WatchMediaValue>>() {
@@ -189,6 +179,4 @@ public class MediaPresenter extends BasePresenter<MediaView> {
     getBaseView().hideLoadingIndicator();
     getBaseView().sendToListView(watchMediaValues);
   }
-
-
-  }
+}

@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity implements BottomBarListener {
   }
 
   @Override protected void setupActivityComponent(Bundle savedInstanceState) {
-    appInstance.createMediaListComponent(this);
+    appInstance.createMediaListComponent(this).inject(this);
   }
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {

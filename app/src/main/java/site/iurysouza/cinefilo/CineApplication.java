@@ -1,7 +1,6 @@
 package site.iurysouza.cinefilo;
 
 import android.app.Application;
-import android.support.annotation.VisibleForTesting;
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.realm.Realm;
@@ -17,7 +16,7 @@ import site.iurysouza.cinefilo.di.modules.AppModule;
 import site.iurysouza.cinefilo.di.modules.MediaDetailModule;
 import site.iurysouza.cinefilo.di.modules.MediaListModule;
 import site.iurysouza.cinefilo.di.modules.UtilityModule;
-import site.iurysouza.cinefilo.presentation.main.MainActivity;
+import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.mediadetail.MediaDetailActivity;
 import timber.log.Timber;
 
@@ -86,28 +85,23 @@ public class CineApplication extends Application {
     }
   }
 
-  public void createMediaListComponent(MainActivity activity) {
+  public MediaListComponent createMediaListComponent(BaseActivity activity) {
     if (mediaListComponent == null) {
       mediaListComponent = getAppComponent()
           .plus(new MediaListModule(), new UtilityModule(activity));
     }
-      mediaListComponent.inject(activity);
+    return mediaListComponent;
   }
 
   public void createMediaDetailComponent(MediaDetailActivity mediaDetailActivity) {
     if (mediaDetailComponent == null) {
       mediaDetailComponent = getAppComponent().plus(new MediaDetailModule());
     }
-      mediaDetailComponent.inject(mediaDetailActivity);
+    mediaDetailComponent.inject(mediaDetailActivity);
   }
 
   public ApplicationComponent getAppComponent() {
     return applicationComponent;
-  }
-
-  @VisibleForTesting
-  public void setApplicationComponent(ApplicationComponent component) {
-    this.applicationComponent = component;
   }
 
   public MediaListComponent getMediaListComponent() {

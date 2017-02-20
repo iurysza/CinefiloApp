@@ -1,15 +1,15 @@
 package site.iurysouza.cinefilo.mockmodules;
 
 import site.iurysouza.cinefilo.di.modules.MediaListModule;
-import site.iurysouza.cinefilo.domain.IWatchMediaRepository;
+import site.iurysouza.cinefilo.domain.WatchMediaRepository;
 import site.iurysouza.cinefilo.domain.MoviesUseCase;
 import site.iurysouza.cinefilo.domain.SeriesUseCase;
-import site.iurysouza.cinefilo.model.data.movies.MoviesRepositoryI;
+import site.iurysouza.cinefilo.model.data.movies.MoviesRepository;
 import site.iurysouza.cinefilo.model.data.movies.storage.CloudMovieDataSource;
 import site.iurysouza.cinefilo.model.data.movies.storage.ICloudMovieDataSource;
 import site.iurysouza.cinefilo.model.data.movies.storage.ILocalMovieDataSource;
 import site.iurysouza.cinefilo.model.data.movies.storage.LocalMovieDataSource;
-import site.iurysouza.cinefilo.model.data.series.SeriesRepositoryI;
+import site.iurysouza.cinefilo.model.data.series.SeriesRepository;
 import site.iurysouza.cinefilo.model.data.series.storage.CloudSeriesDataSource;
 import site.iurysouza.cinefilo.model.data.series.storage.ICloudSeriesDataSource;
 import site.iurysouza.cinefilo.model.data.series.storage.ILocalSeriesDataSource;
@@ -42,22 +42,22 @@ public class MockMediaListModule extends MediaListModule {
     return mock(LocalSeriesDataSource.class);
   }
 
-  @Override public IWatchMediaRepository providesMovieDataRepository(LocalMovieDataSource localMovieDataSource,
+  @Override public WatchMediaRepository providesMovieDataRepository(LocalMovieDataSource localMovieDataSource,
       CloudMovieDataSource cloudMovieDataSource) {
-    return new MoviesRepositoryI(localMovieDataSource, cloudMovieDataSource);
+    return new MoviesRepository(localMovieDataSource, cloudMovieDataSource);
   }
 
-  @Override public IWatchMediaRepository providesSeriesDataRepository(
+  @Override public WatchMediaRepository providesSeriesDataRepository(
       LocalSeriesDataSource localSeriesDataSource,
       CloudSeriesDataSource cloudSeriesDataSource) {
-    return new SeriesRepositoryI(localSeriesDataSource, cloudSeriesDataSource);
+    return new SeriesRepository(localSeriesDataSource, cloudSeriesDataSource);
   }
 
-  @Override public UseCase providesMovieUseCase(MoviesRepositoryI dataRepository) {
+  @Override public UseCase providesMovieUseCase(MoviesRepository dataRepository) {
     return new MoviesUseCase(dataRepository);
   }
 
-  @Override public UseCase providesSeriesUseCase(SeriesRepositoryI dataRepository) {
+  @Override public UseCase providesSeriesUseCase(SeriesRepository dataRepository) {
     return new SeriesUseCase(dataRepository);
   }
 }

@@ -34,6 +34,7 @@ import site.iurysouza.cinefilo.util.Utils;
 public class FilterViewManager {
   private static final int BLUR_VIEW_HIDE_DELAY = 350;
   private static final int BLUR_VIEW_SHOW_DELAY = 250;
+  public static final int Filter = 6;
 
   @BindView(R.id.media_list_filter_viewpager) ViewPager viewPager;
   @BindView(R.id.media_list_page_indicator) CircleIndicator indicator;
@@ -107,7 +108,7 @@ public class FilterViewManager {
     if (selectedGenreList == null &&
         mStartDate == null &&
         mEndDate == null &&
-        mMinScore == null &&
+        mMinScore == MediaFilter.DEFAULT_RATING_SCORE &&
         mSortBy == null
         ) {
       btnApply.setBackgroundColor(defaultColor);
@@ -183,7 +184,7 @@ public class FilterViewManager {
     if (wasFilterAdded()) {
       mEndDate = null;
       mStartDate = null;
-      mMinScore = null;
+      mMinScore = MediaFilter.DEFAULT_RATING_SCORE;
       selectedGenreList = null;
       mSortBy = null;
       wasFilterAdded();

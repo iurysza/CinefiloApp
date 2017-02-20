@@ -40,8 +40,7 @@ public class MovieDetailRepository implements IMovieDetailRepository {
             .subscribeOn(Schedulers.computation());
 
     Observable<RealmMovie> cloudFromLocalSource =
-        getNowPlayingFromApi(movieId)
-            .subscribeOn(Schedulers.io());
+        getNowPlayingFromApi(movieId);
 
     return Observable.concat(movieFromLocalSource, cloudFromLocalSource)
         .first(realmMovie -> realmMovie != null)
