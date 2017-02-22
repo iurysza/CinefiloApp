@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
-import site.iurysouza.cinefilo.model.services.MovieDetailService;
+import site.iurysouza.cinefilo.model.data.moviedetail.services.MovieDetailService;
 import site.iurysouza.cinefilo.util.Constants;
 
 /**

@@ -1,15 +1,18 @@
 package site.iurysouza.cinefilo.model.entities.realm;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import lombok.Data;
 import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
 import site.iurysouza.cinefilo.model.entities.pojo.Series;
+
+import static site.iurysouza.cinefilo.util.MappingUtils.isEmptyString;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -102,7 +105,7 @@ public class RealmSeries implements RealmModel {
     realmSeries.setNetworkList(RealmNetwork.valueOf(series.getNetworks()));
 
     realmSeries.setProductionCompanyList(
-        RealmProductionCompany.valueOf(series.getProductionCompanyList()));
+            RealmProductionCompany.valueOf(series.getProductionCompanyList()));
     realmSeries.setLanguageList(RealmString.valueOf(series.getLanguages()));
     realmSeries.setOriginCountryList(RealmString.valueOf(series.getOriginCountry()));
     realmSeries.setQueryType(queryType);
@@ -110,31 +113,42 @@ public class RealmSeries implements RealmModel {
   }
 
   private static boolean isSeriesInvalid(String originalTitle, String posterPath,
-      Integer[] genreIds,
-      Double voteAverage, String overview) {
-    return isStringFieldInvalid(originalTitle) ||
-        isStringFieldInvalid(posterPath) ||
-        isStringFieldInvalid(overview) ||
-        genreIds == null || genreIds.length == 0 ||
-        voteAverage == null;
+                                         Integer[] genreIds,
+                                         Double voteAverage, String overview) {
+    return isEmptyString(originalTitle) ||
+            isEmptyString(posterPath) ||
+            isEmptyString(overview) ||
+            genreIds == null || genreIds.length == 0 ||
+            voteAverage == null;
   }
 
-  private static boolean isStringFieldInvalid(String field) {
-    return (field == null || field.isEmpty());
-  }
   public static WatchMedia valueOf(Series series) {
     Integer genreValue = getGenreIdValue(series);
     return WatchMedia
-        .builder()
-        .id(series.getId())
-        .voteAverage(series.getVoteAverage())
-        .releaseDate(series.getFirstAirDate())
-        .overview(series.getOverview())
-        .backdropPath(series.getBackdropPath())
-        .posterPath(series.getPosterPath())
-        .name(series.getOriginalName())
-        .genre(genreValue)
-        .build();
+            .builder()
+            .id(series.getId())
+            .voteAverage(series.getVoteAverage())
+            .releaseDate(series.getFirstAirDate())
+            .overview(series.getOverview())
+            .backdropPath(series.getBackdropPath())
+            .posterPath(series.getPosterPath())
+            .name(series.getOriginalName())
+            .genre(genreValue)
+            .build();
+  }
+  public static WatchMedia valueOf(RealmSeries series) {
+    Integer genreValue = getGenreIdValue(series);
+    return WatchMedia
+            .builder()
+            .id(series.getId())
+            .voteAverage(series.getVoteAverage())
+            .overview(series.getOverview())
+            .backdropPath(series.getBackdropPath())
+            .releaseDate(series.getFirstAirDate())
+            .posterPath(series.getPosterPath())
+            .name(series.getOriginalName())
+            .genre(genreValue)
+            .build();
   }
   private static Integer getGenreIdValue(Series series) {
     Integer[] genreIdList = series.getGenres();
@@ -152,14 +166,14 @@ public class RealmSeries implements RealmModel {
     }
     return genreValue;
   }
-  public static List<WatchMedia> valueOfRealmSeries(List<RealmSeries> seriesResults) {
+  public static List<WatchMedia> valueOf(List<RealmSeries> seriesResults) {
     List<WatchMedia> mediaList = new ArrayList<>();
 
     if (seriesResults.isEmpty()) {
       return mediaList;
     } else {
       for (RealmSeries series : seriesResults) {
-        mediaList.add(RealmMovie.valueOf(series));
+        mediaList.add(valueOf(series));
       }
       return mediaList;
     }
@@ -173,9 +187,9 @@ public class RealmSeries implements RealmModel {
     } else {
       for (Series series : seriesList) {
         if (series.getOriginalName() != null &&
-            series.getPosterPath() != null &&
-            series.getFirstAirDate() != null &&
-            series.getOverview() != null) {
+                series.getPosterPath() != null &&
+                series.getFirstAirDate() != null &&
+                series.getOverview() != null) {
 
           mediaList.add(valueOf(series));
         }

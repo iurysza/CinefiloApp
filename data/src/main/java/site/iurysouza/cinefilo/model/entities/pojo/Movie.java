@@ -1,12 +1,17 @@
 package site.iurysouza.cinefilo.model.entities.pojo;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Builder;
+import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
+
+import static site.iurysouza.cinefilo.util.MappingUtils.isEmptyString;
+import static site.iurysouza.cinefilo.util.MappingUtils.isInvalid;
 
 @Data
 @Builder
@@ -64,5 +69,62 @@ public class Movie {
   private List<ProductionCountry> productionCountryList;
   @SerializedName("spoken_languages")
   private List<SpokenLanguage> spokenLanguageList;
+
+  public static WatchMedia valueOf(Movie movie) {
+    Integer genreValue = getGenreIdValue(movie);
+    if (isInvalid(movie)) return null;
+
+    return WatchMedia
+            .builder()
+            .id(movie.getId())
+            .voteAverage(movie.getVoteAverage())
+            .releaseDate(movie.getReleaseDate())
+            .overview(movie.getOverview())
+            .backdropPath(movie.getBackdropPath())
+            .posterPath(movie.getPosterPath())
+            .name(movie.getOriginalTitle())
+            .genre(genreValue)
+            .build();
+  }
+
+  public static List<WatchMedia> valueOfMovieList(List<Movie> movieList) {
+    List<WatchMedia> mediaList = new ArrayList<>();
+    if (movieList.isEmpty()) {
+      return mediaList;
+    }
+
+    for (Movie movie : movieList) {
+      WatchMedia watchMedia = valueOf(movie);
+      if (watchMedia != null) {
+        mediaList.add(watchMedia);
+      }
+    }
+    return mediaList;
+  }
+
+  private static Integer getGenreIdValue(Movie movie) {
+    Integer[] genreIdList = movie.getGenreIds();
+    Integer genreId = 0;
+    if (genreIdList.length > 0) {
+      genreId = genreIdList[0];
+    }
+    return genreId;
+  }
+  public static boolean isMovieInvalid(Movie movie) {
+    String originalTitle = movie.getOriginalTitle();
+    String posterPath = movie.getPosterPath();
+    Integer[] genreIds = movie.getGenreIds();
+    Double voteAverage = movie.getVoteAverage();
+    String overview = movie.getOverview();
+    Date releaseDate = movie.getReleaseDate();
+    List<Genre> genreList = movie.getGenreList();
+
+    return isEmptyString(originalTitle) ||
+            isEmptyString(posterPath) ||
+            isEmptyString(overview) ||
+            (genreIds == null && genreList == null) ||
+            voteAverage == null ||
+            releaseDate == null;
+  }
 
 }

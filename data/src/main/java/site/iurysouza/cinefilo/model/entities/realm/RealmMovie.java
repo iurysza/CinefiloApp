@@ -1,17 +1,20 @@
 package site.iurysouza.cinefilo.model.entities.realm;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
 import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import lombok.Data;
 import site.iurysouza.cinefilo.domain.moviedetail.MovieDetail;
 import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
-import site.iurysouza.cinefilo.model.entities.pojo.Genre;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
+
+import static site.iurysouza.cinefilo.model.entities.pojo.Movie.isMovieInvalid;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -24,14 +27,15 @@ public class RealmMovie implements RealmModel {
   public static final String POPULARITY = "popularity";
   public static final String VOTE_AVG = "voteAverage";
   public static final String RELEASE_DATE = "releaseDate";
-  public static final int DEFAULT_QUERY = 5;
   public static final String VOTE_COUNT = "voteCount";
   public static final String QUERY_DATE = "queryDate";
-  public static final int NOW_QUERY = 2;
+  public static final String QUERY_TYPE = "queryType";
+
   public static final int POP_QUERY = 1;
   public static final int TOP_QUERY = 0;
+  public static final int NOW_QUERY = 2;
   public static final int GENRE_QUERY = 3;
-  public static final String QUERY_TYPE = "queryType";
+  public static final int DEFAULT_QUERY = 4;
 
   @PrimaryKey
   private Integer id;
@@ -49,12 +53,12 @@ public class RealmMovie implements RealmModel {
   private String originalLanguage;
   private String originalTitle;
   private Integer revenue;
-  private Long runtime;
+  private Integer runtime;
   private String status;
   private String tagline;
   private String title;
   private Boolean video;
-  private Long voteCount;
+  private Integer voteCount;
   private Long queryDate;
 
   private RealmList<RealmInteger> genreIds = new RealmList<>();
@@ -92,21 +96,21 @@ public class RealmMovie implements RealmModel {
     realmMovie.setPosterPath(movie.getPosterPath());
     realmMovie.setVoteAverage(movie.getVoteAverage());
     realmMovie.setImdbId(movie.getImdbId());
-    realmMovie.setRuntime(movie.getRuntime());
+    realmMovie.setRuntime(movie.getRuntime().intValue());
     realmMovie.setStatus(movie.getStatus());
     realmMovie.setHomepage(movie.getHomepage());
     realmMovie.setTagline(movie.getTagline());
     realmMovie.setOriginalLanguage(movie.getOriginalLanguage());
     realmMovie.setPopularity(movie.getPopularity());
     realmMovie.setVideo(movie.getVideo());
-    realmMovie.setVoteCount(movie.getVoteCount());
+    realmMovie.setVoteCount(movie.getVoteCount().intValue());
     realmMovie.setReleaseDate(movie.getReleaseDate());
 
     realmMovie.setSpokenLanguageList(RealmSpokenLanguage.valueOf(movie.getSpokenLanguageList()));
     realmMovie.setProductionCompanyList(
-        RealmProductionCompany.valueOf(movie.getProductionCompanyList()));
+            RealmProductionCompany.valueOf(movie.getProductionCompanyList()));
     realmMovie.setProductionCountryList(
-        RealmProductionCountry.valueOf(movie.getProductionCountryList()));
+            RealmProductionCountry.valueOf(movie.getProductionCountryList()));
     realmMovie.setGenreIds(RealmInteger.map(movie.getGenreIds()));
     realmMovie.setGenreList(RealmGenre.valueOf(movie.getGenreList()));
     realmMovie.setQueryDate(System.currentTimeMillis());
@@ -118,107 +122,6 @@ public class RealmMovie implements RealmModel {
     return realmMovie;
   }
 
-  private static boolean isMovieInvalid(Movie movie) {
-    String originalTitle = movie.getOriginalTitle();
-    String posterPath = movie.getPosterPath();
-    Integer[] genreIds = movie.getGenreIds();
-    Double voteAverage = movie.getVoteAverage();
-    String overview = movie.getOverview();
-    Date releaseDate = movie.getReleaseDate();
-    List<Genre> genreList = movie.getGenreList();
-
-    return isStringFieldInvalid(originalTitle) ||
-        isStringFieldInvalid(posterPath) ||
-        isStringFieldInvalid(overview) ||
-        (genreIds == null && genreList == null) ||
-        voteAverage == null ||
-        releaseDate == null;
-  }
-
-  private static boolean isStringFieldInvalid(String field) {
-    return (field == null || field.isEmpty());
-  }
-  public static WatchMedia valueOf(RealmMovie movie) {
-    Integer genreValue = getGenreIdValue(movie);
-    return WatchMedia
-        .builder()
-        .id(movie.getId())
-        .voteAverage(movie.getVoteAverage())
-        .overview(movie.getOverview())
-        .releaseDate(movie.getReleaseDate())
-        .backdropPath(movie.getBackdropPath())
-        .posterPath(movie.getPosterPath())
-        .name(movie.getOriginalTitle())
-        .genre(genreValue)
-        .build();
-  }
-
-  public static WatchMedia valueOf(Movie movie) {
-    Integer genreValue = getGenreIdValue(movie);
-    if (isInvalid(movie)) return null;
-
-    return WatchMedia
-        .builder()
-        .id(movie.getId())
-        .voteAverage(movie.getVoteAverage())
-        .releaseDate(movie.getReleaseDate())
-        .overview(movie.getOverview())
-        .backdropPath(movie.getBackdropPath())
-        .posterPath(movie.getPosterPath())
-        .name(movie.getOriginalTitle())
-        .genre(genreValue)
-        .build();
-  }
-
-  private static boolean isInvalid(Movie movie) {
-    return (isEmptyString(movie.getOriginalTitle()) ||
-        isEmptyString(movie.getPosterPath()) ||
-        isEmptyString(movie.getOverview()) ||
-        movie.getReleaseDate() == null);
-  }
-
-
-  public static List<WatchMedia> valueOfMovieList(List<Movie> movieList) {
-    List<WatchMedia> mediaList = new ArrayList<>();
-    if (movieList.isEmpty()) return mediaList;
-
-    for (Movie movie : movieList) {
-      WatchMedia watchMedia = valueOf(movie);
-      if (watchMedia != null) {
-        mediaList.add(watchMedia);
-      }
-    }
-    return mediaList;
-  }
-
-
-  public static MovieDetail mapToValueMedia(RealmMovie movie) {
-    return null;
-  }
-  private static Integer getGenreIdValue(Movie movie) {
-    Integer[] genreIdList = movie.getGenreIds();
-    Integer genreId = 0;
-    if (genreIdList.length > 0) {
-      genreId = genreIdList[0];
-    }
-    return genreId;
-  }
-
-  public static WatchMedia valueOf(RealmSeries series) {
-    Integer genreValue = getGenreIdValue(series);
-    return WatchMedia
-        .builder()
-        .id(series.getId())
-        .voteAverage(series.getVoteAverage())
-        .overview(series.getOverview())
-        .backdropPath(series.getBackdropPath())
-        .releaseDate(series.getFirstAirDate())
-        .posterPath(series.getPosterPath())
-        .name(series.getOriginalName())
-        .genre(genreValue)
-        .build();
-  }
-
   private static Integer getGenreIdValue(RealmMovie movie) {
     RealmList<RealmInteger> genreIds = movie.getGenreIds();
     Integer genreValue = -1;
@@ -228,35 +131,91 @@ public class RealmMovie implements RealmModel {
     return genreValue;
   }
 
-
-  private static Integer getGenreIdValue(RealmSeries series) {
-    RealmList<RealmInteger> genreIds = series.getGenreIds();
-    Integer genreValue = -1;
-    if (!genreIds.isEmpty()) {
-      genreValue = genreIds.first().getValue();
+  private static List<Integer> getGenreIdList(RealmList<RealmInteger> movieGenreIds) {
+    List<Integer> genreIdList = new ArrayList<>();
+    for (RealmInteger genreId : movieGenreIds) {
+      genreIdList.add(genreId.getValue());
     }
-    return genreValue;
+    return genreIdList;
   }
 
+  public static WatchMedia valueOf(RealmMovie movie) {
+    Integer genreValue = getGenreIdValue(movie);
+    return WatchMedia
+            .builder()
+            .id(movie.getId())
+            .voteAverage(movie.getVoteAverage())
+            .overview(movie.getOverview())
+            .releaseDate(movie.getReleaseDate())
+            .backdropPath(movie.getBackdropPath())
+            .posterPath(movie.getPosterPath())
+            .name(movie.getOriginalTitle())
+            .genre(genreValue)
+            .build();
+  }
 
-
-  public static List<WatchMedia> valueOfRealmMovie(List<RealmMovie> movieResults) {
+  public static List<WatchMedia> valueOf(List<RealmMovie> movieResults) {
     List<WatchMedia> mediaList = new ArrayList<>();
-
     if (movieResults.isEmpty()) {
       return mediaList;
-    } else {
-      for (RealmMovie movie : movieResults) {
-        mediaList.add(RealmMovie.valueOf(movie));
-      }
-      return mediaList;
     }
+    for (RealmMovie movie : movieResults) {
+      WatchMedia watchMedia = valueOf(movie);
+      mediaList.add(watchMedia);
+    }
+    return mediaList;
   }
 
-  public static boolean isEmptyString( final String s ) {
-    // Null-safe, short-circuit evaluation.
-    return s == null || s.trim().isEmpty();
+  public static MovieDetail mapToValueMedia(RealmMovie movie) {
+    HashMap<String, Integer> detailGenres = new HashMap<>();
+    for (RealmGenre genre : movie.getGenreList()) {
+      detailGenres.put(genre.getName(), genre.getId().intValue());
+    }
+    HashMap<String, Integer> detailProdComp = new HashMap<>();
+    for (RealmProductionCompany prodComp : movie.getProductionCompanyList()) {
+      detailProdComp.put(prodComp.getName(), prodComp.getId().intValue());
+    }
+    HashMap<String, String> detailProdCountry = new HashMap<>();
+    for (RealmProductionCountry prodCountry : movie.getProductionCountryList()) {
+      detailProdCountry.put(prodCountry.getName(), prodCountry.getIso31661());
+    }
+
+    HashMap<String, String> spokenLanguage = new HashMap<>();
+    for (RealmSpokenLanguage spokenLang : movie.getSpokenLanguageList()) {
+      spokenLanguage.put(spokenLang.getName(), spokenLang.getIso31661());
+    }
+
+    if (movie.getBackdropPath().isEmpty()) {
+      movie.setBackdropPath(movie.getPosterPath());
+    }
+
+    return MovieDetail
+            .builder()
+            .adult(movie.getAdult())
+            .backdropPath(movie.getBackdropPath())
+            .budget(movie.getBudget())
+            .genreIdList(getGenreIdList(movie.genreIds))
+            .homepage(movie.getHomepage())
+            .id(movie.getId())
+            .imdbId(movie.getImdbId())
+            .originalTitle(movie.getOriginalTitle())
+            .originalLanguage(movie.getOriginalLanguage())
+            .overview(movie.getOverview())
+            .posterPath(movie.getPosterPath())
+            .popularity(movie.getPopularity())
+            .releaseDate(movie.getReleaseDate())
+            .revenue(movie.getRevenue())
+            .runtime(movie.getRuntime())
+            .status(movie.getStatus())
+            .tagline(movie.getTagline())
+            .title(movie.getTitle())
+            .video(movie.getVideo())
+            .voteAverage(movie.getVoteAverage())
+            .voteCount(movie.getVoteCount())
+            .spokenLanguageList(spokenLanguage)
+            .genreList(detailGenres)
+            .productionCompanyList(detailProdComp)
+            .productionCountryList(detailProdCountry)
+            .build();
   }
-
-
 }

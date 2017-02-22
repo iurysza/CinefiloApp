@@ -1,0 +1,144 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
+
+
+android {
+  def globalConfiguration = rootProject.extensions.getByName("ext")
+
+  compileSdkVersion globalConfiguration.getAt("androidCompileSdkVersion")
+  buildToolsVersion globalConfiguration.getAt("androidBuildToolsVersion")
+
+  defaultConfig {
+    minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
+    targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
+
+    applicationId globalConfiguration.getAt("androidApplicationId")
+    versionCode globalConfiguration.getAt("androidVersionCode")
+    renderscriptSupportModeEnabled true
+    multiDexEnabled true
+
+    renderscriptTargetApi globalConfiguration.getAt("renderScriptApiVersion")
+    testInstrumentationRunner globalConfiguration.getAt("androidTestRunner")
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  testOptions.unitTests.all {
+    testLogging {
+      events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+    }
+  }
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile project(path: ':domain')
+  compile project(path: ':data')
+
+  compile presentationDependencies.appCompat
+  compile presentationDependencies.design
+  compile presentationDependencies.cardView
+  compile presentationDependencies.recyclerView
+  compile presentationDependencies.palette
+
+  compile presentationDependencies.avi
+  compile presentationDependencies.fragNav
+
+  compile presentationDependencies.spaceNavView
+  compile presentationDependencies.superRecyclerView
+
+  compile presentationDependencies.dagger
+  apt presentationDependencies.daggerCompiler
+
+  provided presentationDependencies.autoValue
+  apt presentationDependencies.autoValue
+  apt presentationDependencies.autoValueParcel
+
+  compile presentationDependencies.jodaTime
+  compile presentationDependencies.eventBus
+
+  compile presentationDependencies.retrofitGson
+  compile presentationDependencies.retrofitRxAdapter
+  compile presentationDependencies.retrofitMock
+  compile presentationDependencies.mockWebServer
+  provided presentationDependencies.javaxAnnotation
+  compile presentationDependencies.okHttp
+  compile presentationDependencies.okHttpInterceptor
+
+  compile presentationDependencies.spaceNavView
+  compile presentationDependencies.kenBurnsView
+  compile presentationDependencies.circleIndicator
+  compile presentationDependencies.circleImageView
+  compile presentationDependencies.fancyButtons
+  compile presentationDependencies.fabToolbar
+  compile presentationDependencies.multiSlider
+
+
+  compile presentationDependencies.picasso
+  compile presentationDependencies.timber
+  compile presentationDependencies.butterKnife
+  apt presentationDependencies.butterKnifeCompiler
+  compile presentationDependencies.rxAndroid
+  compile presentationDependencies.rxJava
+
+  compile presentationDependencies.stetho
+  compile presentationDependencies.stethoOkhttp
+  compile presentationDependencies.stethoRealm
+
+//Dependencies for unit tests
+  testCompile presentationTestDependencies.jUnit
+  testCompile presentationTestDependencies.mockito
+  testCompile presentationTestDependencies.hamcrest
+
+//UI Testing dependencies.
+  androidTestCompile presentationTestDependencies.testingSupportLib
+  androidTestCompile presentationTestDependencies.testRunner
+  androidTestCompile presentationTestDependencies.testRules
+
+  androidTestCompile presentationTestDependencies.mockito
+  androidTestCompile presentationTestDependencies.dexmakerMockito
+  androidTestCompile presentationTestDependencies.dexmaker
+
+  androidTestCompile presentationTestDependencies.espresso
+  androidTestApt presentationTestDependencies.daggerCompiler
+  androidTestCompile presentationTestDependencies.dagger
+
+  androidTestCompile presentationTestDependencies.okhttpIdlingRes
+  androidTestCompile presentationTestDependencies.retrofitMock
+  androidTestCompile presentationTestDependencies.mockWebServer
+}
+
+/*
+Resolves dependency versions across test and production APKs, specifically, transitive
+dependencies. This is required since Espresso internally has a dependency on support-annotations.
+*/
+configurations.all {
+  resolutionStrategy.force dependencyResolution.findBugs
+  resolutionStrategy.force dependencyResolution.guava
+  resolutionStrategy.force dependencyResolution.supportAnnotations
+  resolutionStrategy.force dependencyResolution.supportV4
+}
+
+/*
+All direct/transitive dependencies shared between your test and production APKs need to be
+excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
+excluding these dependencies from your test configuration will result in an dex pre-verifier error
+at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
+*/
+configurations.compile.dependencies.each { compileDependency ->
+  println "Excluding compile dependency: ${compileDependency.getName()}"
+  configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+    configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+  }
+}

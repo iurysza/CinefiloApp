@@ -1,4 +1,8 @@
 apply plugin: 'java'
+//noinspection GroovyUnusedAssignment
+sourceCompatibility = 1.7
+//noinspection GroovyUnusedAssignment
+targetCompatibility = 1.7
 
 configurations {
   provided
@@ -12,19 +16,9 @@ sourceSets {
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   def domainDependencies = rootProject.ext.domainDependencies
-  //timber
-//  compile 'com.jakewharton.timber:timber:4.1.2'
   provided domainDependencies.javaxAnnotation
   compile domainDependencies.javaxInject
   compile domainDependencies.rxJava
-  //Lombok - Data types with annotations
-  compile "org.projectlombok:lombok:1.12.6"
-
-  //
-//  testCompile domainTestDependencies.junit
-//  testCompile domainTestDependencies.mockito
-//  testCompile domainTestDependencies.assertj
+  compile domainDependencies.lombok
 }
 
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"

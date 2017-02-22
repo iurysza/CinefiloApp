@@ -1,6 +1,6 @@
 package site.iurysouza.cinefilo.domain.watchmedialist;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import lombok.Data;
 import lombok.experimental.Builder;
@@ -12,18 +12,17 @@ import lombok.experimental.Builder;
 @Builder
 public class MediaFilter {
 
-  //initialize default data
-  public static final int START_YEAR = 1990;
+  public static final int DEFAULT_STARTING_YEAR = 1990;
   public static final int DEFAULT_RATING_SCORE = 6;
 
-  private Integer startDate = START_YEAR;
-  private Integer endDate = new Date().getYear();
-  private Integer minScore = DEFAULT_RATING_SCORE;
-  private SortingMethod sortBy = null;
-  private List<Integer> genderList = null;
+  private Integer startDate;
+  private Integer endDate;
+  private Integer minScore;
+  private SortingMethod sortBy;
+  private List<Integer> genderList;
 
-  MediaFilter(int startDate, int endDate, int minScore, List<Integer> genderList,
-      SortingMethod sortBy) {
+  private MediaFilter(int startDate, int endDate, int minScore, List<Integer> genderList,
+                      SortingMethod sortBy) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.minScore = minScore;
@@ -35,12 +34,10 @@ public class MediaFilter {
     return new MediaFilterBuilder();
   }
 
-
-
   public static class MediaFilterBuilder {
-    private int startDate = START_YEAR;
-    private int endDate = new Date().getYear();
-    private Integer minScore = 6;
+    private Integer startDate = DEFAULT_STARTING_YEAR;
+    private Integer endDate = Calendar.getInstance().get(Calendar.YEAR) + 1000;
+    private Integer minScore = DEFAULT_RATING_SCORE;
     private SortingMethod sortBy = null;
     private List<Integer> genderList = null;
 
@@ -88,14 +85,14 @@ public class MediaFilter {
 
     public String toString() {
       return "MediaFilter.MediaFilterBuilder(startDate="
-          + this.startDate
-          + ", endDate="
-          + this.endDate
-          + ", minScore="
-          + this.minScore
-          + ", genderList="
-          + this.genderList
-          + ")";
+              + this.startDate
+              + ", endDate="
+              + this.endDate
+              + ", minScore="
+              + this.minScore
+              + ", genderList="
+              + this.genderList
+              + ")";
     }
   }
 }

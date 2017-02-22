@@ -10,6 +10,7 @@ import site.iurysouza.cinefilo.domain.moviedetail.MovieDetail;
 import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
 import site.iurysouza.cinefilo.model.data.moviedetail.storage.ICloudMovieDetailDataSource;
 import site.iurysouza.cinefilo.model.data.moviedetail.storage.ILocalDetailDataSource;
+import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.DEFAULT_QUERY;
@@ -24,8 +25,8 @@ public class MovieDetailRepository implements IMovieDetailRepository {
 
   @Inject
   public MovieDetailRepository(
-      ILocalDetailDataSource localDetailDataSource,
-      ICloudMovieDetailDataSource cloudMovieDetailDataSource) {
+          ILocalDetailDataSource localDetailDataSource,
+          ICloudMovieDetailDataSource cloudMovieDetailDataSource) {
 
     this.localDetailDataSource = localDetailDataSource;
     this.cloudMovieDetailDataSource = cloudMovieDetailDataSource;
@@ -35,33 +36,33 @@ public class MovieDetailRepository implements IMovieDetailRepository {
   public Observable<MovieDetail> getMovieById(int movieId) {
 
     Observable<RealmMovie> movieFromLocalSource =
-        localDetailDataSource
-            .getMovieById(movieId)
-            .subscribeOn(Schedulers.computation());
+            localDetailDataSource
+                    .getMovieById(movieId)
+                    .subscribeOn(Schedulers.computation());
 
     Observable<RealmMovie> cloudFromLocalSource =
-        getNowPlayingFromApi(movieId);
+            getMovieDetailFromApi(movieId);
 
     return Observable.concat(movieFromLocalSource, cloudFromLocalSource)
-        .first(realmMovie -> realmMovie != null)
-        .map(RealmMovie::mapToValueMedia);
+            .first(realmMovie -> realmMovie != null)
+            .map(RealmMovie::mapToValueMedia);
   }
 
-  @NonNull private Observable<RealmMovie> getNowPlayingFromApi(int movieId) {
+  @NonNull private Observable<RealmMovie> getMovieDetailFromApi(int movieId) {
     return cloudMovieDetailDataSource
-        .getMovieById(movieId)
-        .map(movie -> {
-          RealmMovie realmMovie = RealmMovie.valueOf(movie, DEFAULT_QUERY);
-          localDetailDataSource.storeMovie(realmMovie);
-          return realmMovie;
-        });
+            .getMovieById(movieId)
+            .map(movie -> {
+              RealmMovie realmMovie = RealmMovie.valueOf(movie, DEFAULT_QUERY);
+              localDetailDataSource.storeMovie(realmMovie);
+              return realmMovie;
+            });
   }
 
   @NonNull @Override
   public Observable<List<WatchMedia>> getMoviesSimilarTo(int movieId, int page) {
     return cloudMovieDetailDataSource
-        .getMoviesSimilarTo(movieId, page)
-        .subscribeOn(Schedulers.io())
-        .map(RealmMovie::valueOfMovieList);
+            .getMoviesSimilarTo(movieId, page)
+            .subscribeOn(Schedulers.io())
+            .map(Movie::valueOfMovieList);
   }
 }

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<site.iurysouza.cinefilo.presentation.medialist.MediaItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:padding="16dp"
+    >
+
+
+  <android.support.v7.widget.CardView
+      android:id="@+id/movie_item_card"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/movie_card_item_height"
+      android:layout_gravity="center"
+      android:layout_marginBottom="4dp"
+      android:transitionName="@string/detail_card_transition"
+      android:layout_marginTop="32dp"
+      card_view:cardCornerRadius="@dimen/default_card_radius"
+      card_view:cardElevation="@dimen/base_card_elevation"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="136dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        >
+
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:weightSum="10"
+          android:layout_height="wrap_content"
+          >
+
+        <TextView
+            android:id="@+id/movie_item_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize = "end"
+            android:transitionName="@string/media_title_transition"
+            android:layout_weight="10"
+            android:textColor="@color/colorMovieTitle"
+            android:textSize="@dimen/title_text_size"
+            tools:text="Star Wars - The return of the last jedi"
+            />
+
+        <TextView
+            android:id="@+id/movie_item_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:textColor="@color/colorMovieTitle"
+            android:textSize="@dimen/standard_text_size"
+            tools:text="(1994)"
+            />
+
+      </LinearLayout>
+
+      <RatingBar
+          android:id="@+id/movie_item_rating"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="4dp"
+          android:numStars="5"
+          android:theme="@style/RatingBar"
+          style="@style/Base.Widget.AppCompat.RatingBar.Small"
+          />
+
+      <TextView
+          android:id="@+id/movie_item_overview_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="2dp"
+          android:ellipsize="end"
+          android:maxLines="3"
+          android:scrollHorizontally="true"
+          android:textColor="@color/colorMovieTitle"
+          android:textSize="@dimen/overview_text_size"
+          tools:text="A rather long movie description can take up a lot of space wich we do not want to actually happen atta all"
+          />
+    </LinearLayout>
+  </android.support.v7.widget.CardView>
+
+
+  <android.support.v7.widget.CardView
+      android:id="@+id/movie_item_picture_card"
+      android:layout_width="@dimen/movie_picture_card_width"
+      android:layout_height="@dimen/movie_picture_card_height"
+      android:layout_marginLeft="16dp"
+      android:layout_marginTop="16dp"
+      card_view:cardCornerRadius="@dimen/small_card_radius"
+      android:transitionName="@string/poster_card_transition"
+      card_view:cardElevation="@dimen/mid_card_elevation"
+      >
+
+    <ImageView
+        android:id="@+id/movie_item_picture_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder"
+        />
+  </android.support.v7.widget.CardView>
+
+  <android.support.v7.widget.CardView
+      android:id="@+id/movie_item_genre"
+      android:layout_width="60dp"
+      android:layout_height="18dp"
+      android:layout_marginLeft="95dp"
+      android:transitionName="@string/detail_genre_transition"
+      android:layout_marginTop="38dp"
+      card_view:cardBackgroundColor="@color/colorGenreView"
+      card_view:cardCornerRadius="@dimen/small_card_radius"
+      card_view:cardElevation="@dimen/mid_card_elevation"
+      >
+
+    <TextView
+        android:id="@+id/movie_item_genre_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="GENRE"
+        android:textAllCaps="true"
+        android:textColor="@color/colorGenreText"
+        android:textSize="@dimen/small_text_size"
+        />
+  </android.support.v7.widget.CardView>
+</site.iurysouza.cinefilo.presentation.medialist.MediaItemView>
