@@ -17,7 +17,6 @@ public enum SortingMethod {
   private String sortMethod;
 
   SortingMethod(String sortMethod) {
-
     this.sortMethod = sortMethod;
   }
 

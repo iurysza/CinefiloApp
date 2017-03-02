@@ -21,7 +21,6 @@ android {
     minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
     targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
     versionCode globalConfiguration.getAt("androidVersionCode")
-    versionCode globalConfiguration.getAt("androidVersionCode")
     renderscriptTargetApi globalConfiguration.getAt("renderScriptApiVersion")
     testInstrumentationRunner globalConfiguration.getAt("testInstrumentationRunner")
     renderscriptSupportModeEnabled true
@@ -42,7 +41,7 @@ android {
 
   buildTypes {
     release {
-      minifyEnabled false
+      minifyEnabled true
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
