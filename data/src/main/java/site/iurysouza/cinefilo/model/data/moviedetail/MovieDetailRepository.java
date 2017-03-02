@@ -33,7 +33,7 @@ public class MovieDetailRepository implements IMovieDetailRepository {
   }
 
   @Override
-  public Observable<MovieDetail> getMovieById(int movieId) {
+  public Observable<MovieDetail> getMovieById(int movieId, String apiKey) {
 
     Observable<RealmMovie> movieFromLocalSource =
             localDetailDataSource
@@ -41,16 +41,16 @@ public class MovieDetailRepository implements IMovieDetailRepository {
                     .subscribeOn(Schedulers.computation());
 
     Observable<RealmMovie> cloudFromLocalSource =
-            getMovieDetailFromApi(movieId);
+            getMovieDetailFromApi(movieId,apiKey);
 
     return Observable.concat(movieFromLocalSource, cloudFromLocalSource)
             .first(realmMovie -> realmMovie != null)
             .map(RealmMovie::mapToValueMedia);
   }
 
-  @NonNull private Observable<RealmMovie> getMovieDetailFromApi(int movieId) {
+  @NonNull private Observable<RealmMovie> getMovieDetailFromApi(int movieId, String apiKey) {
     return cloudMovieDetailDataSource
-            .getMovieById(movieId)
+            .getMovieById(movieId,apiKey)
             .map(movie -> {
               RealmMovie realmMovie = RealmMovie.valueOf(movie, DEFAULT_QUERY);
               localDetailDataSource.storeMovie(realmMovie);
@@ -59,9 +59,9 @@ public class MovieDetailRepository implements IMovieDetailRepository {
   }
 
   @NonNull @Override
-  public Observable<List<WatchMedia>> getMoviesSimilarTo(int movieId, int page) {
+  public Observable<List<WatchMedia>> getMoviesSimilarTo(int movieId, int page, String apiKey) {
     return cloudMovieDetailDataSource
-            .getMoviesSimilarTo(movieId, page)
+            .getMoviesSimilarTo(movieId, page,apiKey)
             .subscribeOn(Schedulers.io())
             .map(Movie::valueOfMovieList);
   }

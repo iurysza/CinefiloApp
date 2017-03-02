@@ -3,13 +3,11 @@ package site.iurysouza.cinefilo.domain.watchmedialist;
 import java.util.Calendar;
 import java.util.List;
 import lombok.Data;
-import lombok.experimental.Builder;
 
 /**
  * Created by Iury Souza on 22/01/2017.
  */
 @Data
-@Builder
 public class MediaFilter {
 
   public static final int DEFAULT_STARTING_YEAR = 1990;
@@ -21,8 +19,13 @@ public class MediaFilter {
   private SortingMethod sortBy;
   private List<Integer> genderList;
 
-  private MediaFilter(int startDate, int endDate, int minScore, List<Integer> genderList,
-                      SortingMethod sortBy) {
+  private MediaFilter(
+      int startDate,
+      int endDate,
+      int minScore,
+      List<Integer> genderList,
+      SortingMethod sortBy
+  ) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.minScore = minScore;
@@ -36,13 +39,10 @@ public class MediaFilter {
 
   public static class MediaFilterBuilder {
     private Integer startDate = DEFAULT_STARTING_YEAR;
-    private Integer endDate = Calendar.getInstance().get(Calendar.YEAR) + 1000;
+    private Integer endDate = Calendar.getInstance().get(Calendar.YEAR);
     private Integer minScore = DEFAULT_RATING_SCORE;
     private SortingMethod sortBy = null;
     private List<Integer> genderList = null;
-
-    MediaFilterBuilder() {
-    }
 
     public MediaFilter.MediaFilterBuilder startDate(Integer startDate) {
       if (startDate != null) {
@@ -85,14 +85,14 @@ public class MediaFilter {
 
     public String toString() {
       return "MediaFilter.MediaFilterBuilder(startDate="
-              + this.startDate
-              + ", endDate="
-              + this.endDate
-              + ", minScore="
-              + this.minScore
-              + ", genderList="
-              + this.genderList
-              + ")";
+          + this.startDate
+          + ", endDate="
+          + this.endDate
+          + ", minScore="
+          + this.minScore
+          + ", genderList="
+          + this.genderList
+          + ")";
     }
   }
 }

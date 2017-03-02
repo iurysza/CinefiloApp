@@ -12,18 +12,18 @@ public class Constants {
   public static final String GENRE_JSON_PATH =
       "D://Development/Android/Projects/Cinefilo/app/src/main/res/cinefilo_genre_list.json";
 
-  public class MOVIE_DB_API {
+  public static class MOVIE_DB_API {
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
     public static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w500";
     public static final String BASE_BACKDROP_URL = "http://image.tmdb.org/t/p/w720";
-    public static final String API_KEY = "7ea8abd52d3a0236a7ae2d2c0d986483";
+    public static final String API_KEY = "API_KEY";
+    public static final String KEY_ALIAS = "KEY_ALIAS";
   }
 
   public class Media {
     public static final int REC_MEDIA = 0;
     public static final int POP_MEDIA = 1;
     public static final int TOP_MEDIA = 2;
-    public static final int PAGE_SIZE = 20;
     public static final long MIN_VOTE_COUNT = 100;
     public static final double MIN_VOTE_AVG = 5;
   }

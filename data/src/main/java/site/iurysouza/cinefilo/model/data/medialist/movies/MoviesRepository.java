@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.model.data.medialist;
+package site.iurysouza.cinefilo.model.data.medialist.movies;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,55 +33,55 @@ public class MoviesRepository implements WatchMediaRepository {
 
   @Inject
   public MoviesRepository(ILocalMovieDataSource localDataStore,
-                          ICloudMovieDataSource cloudDataStore) {
+      ICloudMovieDataSource cloudDataStore) {
     this.localDataStore = localDataStore;
     this.cloudDataStore = cloudDataStore;
   }
 
   @Override
-  public Observable<List<WatchMedia>> getMostPopular(int page, boolean forceRemote) {
+  public Observable<List<WatchMedia>> getMostPopular(int page, boolean forceRemote, String apiKey) {
     boolean firstPageWasLoadedFromLocalStorage = page == INVALID_PAGE && forceRemote;
 
     if (firstPageWasLoadedFromLocalStorage) {
       int nextPageSize = getNextPageFor(MOST_POPULAR_LIST);
-      getMostPopular(nextPageSize, true);
+      return getMostPopular(nextPageSize, true, apiKey);
     }
 
     return queryLocalAndRemoteData(getMostPopularFromRealm(forceRemote),
-            getMostPopularFromApi(page, MOST_POPULAR_LIST));
+        getMostPopularFromApi(page, MOST_POPULAR_LIST, apiKey));
   }
 
   @Override
   public Observable<List<WatchMedia>> getByGenre(int genreId) {
     return cloudDataStore.getByGenre(genreId)
-            .subscribeOn(Schedulers.io())
-            .map(realmMoviesResults -> valueOf(realmMoviesResults.getMovieList()));
+        .subscribeOn(Schedulers.io())
+        .map(realmMoviesResults -> valueOf(realmMoviesResults.getMovieList()));
   }
 
   @Override
-  public Observable<List<WatchMedia>> getTopRated(int page, boolean forceRemote) {
+  public Observable<List<WatchMedia>> getTopRated(int page, boolean forceRemote, String apiKey) {
     boolean firstPageWasLoadedFromLocalStorage = page == INVALID_PAGE && forceRemote;
 
     if (firstPageWasLoadedFromLocalStorage) {
       int nextPageSize = getNextPageFor(TOP_RATED_LIST);
-      getTopRated(nextPageSize, true);
+      return getTopRated(nextPageSize, true, apiKey);
     }
 
     return queryLocalAndRemoteData(getTopRatedFromRealm(forceRemote),
-            getTopRatedFromApi(page, TOP_RATED_LIST));
+        getTopRatedFromApi(page, TOP_RATED_LIST, apiKey));
   }
 
   @Override
-  public Observable<List<WatchMedia>> getNowPlaying(int page, boolean forceRemote) {
+  public Observable<List<WatchMedia>> getNowPlaying(int page, boolean forceRemote, String apiKey) {
     boolean firstPageWasLoadedFromLocalStorage = page == INVALID_PAGE && forceRemote;
 
     if (firstPageWasLoadedFromLocalStorage) {
       int nextPageSize = getNextPageFor(NOW_PLAYING_LIST);
-      getNowPlaying(nextPageSize, true);
+      return getNowPlaying(nextPageSize, true, apiKey);
     }
 
     return queryLocalAndRemoteData(getNowPlayingFromRealm(forceRemote),
-            getNowPlayingFromApi(page, NOW_PLAYING_LIST));
+        getNowPlayingFromApi(page, NOW_PLAYING_LIST, apiKey));
   }
 
   private int getNextPageFor(int listId) {
@@ -89,71 +89,72 @@ public class MoviesRepository implements WatchMediaRepository {
     return ++lastPageLoaded;
   }
 
-  private Observable<List<WatchMedia>> queryLocalAndRemoteData(Observable<List<WatchMedia>> localObservable,
-                                                               Observable<List<WatchMedia>> cloudObservable) {
+  private Observable<List<WatchMedia>> queryLocalAndRemoteData(
+      Observable<List<WatchMedia>> localObservable,
+      Observable<List<WatchMedia>> cloudObservable) {
 
     return Observable.concat(localObservable, cloudObservable)
-            .takeFirst(watchMedias -> !watchMedias.isEmpty());
+        .takeFirst(watchMedias -> !watchMedias.isEmpty());
   }
 
   @NonNull
-  private Observable<List<WatchMedia>> getNowPlayingFromApi(int page, int pageId) {
+  private Observable<List<WatchMedia>> getNowPlayingFromApi(int page, int pageId, String apiKey) {
     return cloudDataStore
-            .getNowPlayingMovies(page)
-            .map(realmMoviesResults -> {
-              List<WatchMedia> watchMedias = valueOf(realmMoviesResults.getMovieList());
-              localDataStore.storeMoviesAndCurrentPageInRealm(realmMoviesResults, pageId);
-              return watchMedias;
-            });
+        .getNowPlayingMovies(page, apiKey)
+        .map(realmMoviesResults -> {
+          List<WatchMedia> watchMedias = valueOf(realmMoviesResults.getMovieList());
+          localDataStore.storeMoviesAndCurrentPageInRealm(realmMoviesResults, pageId);
+          return watchMedias;
+        });
   }
 
   @Override
-  public Observable<List<WatchMedia>> getFilteredBy(int page, MediaFilter mediaFilter) {
+  public Observable<List<WatchMedia>> getFilteredBy(int page, MediaFilter mediaFilter,
+      String apiKey) {
     return cloudDataStore
-            .getFilteredMovies(page, mediaFilter)
-            .map(MovieResults::getMovieList)
-            .map(Movie::valueOfMovieList)
-            .onErrorResumeNext(e -> {
-              return Observable.just(Collections.emptyList());
-            });
+        .getFilteredMovies(page, mediaFilter,apiKey)
+        .map(MovieResults::getMovieList)
+        .map(Movie::valueOfMovieList)
+        .onErrorResumeNext(e -> {
+          return Observable.just(Collections.emptyList());
+        });
   }
 
   @NonNull
-  private Observable<List<WatchMedia>> getTopRatedFromApi(int page, int pageId) {
+  private Observable<List<WatchMedia>> getTopRatedFromApi(int page, int pageId, String apiKey) {
     return cloudDataStore
-            .getTopRatedMovies(page)
-            .map(realmMoviesResults -> {
-              List<WatchMedia> watchMedias = valueOf(realmMoviesResults.getMovieList());
-              localDataStore.storeMoviesAndCurrentPageInRealm(realmMoviesResults, pageId);
-              return watchMedias;
-            });
+        .getTopRatedMovies(page, apiKey)
+        .map(realmMoviesResults -> {
+          List<WatchMedia> watchMedias = valueOf(realmMoviesResults.getMovieList());
+          localDataStore.storeMoviesAndCurrentPageInRealm(realmMoviesResults, pageId);
+          return watchMedias;
+        });
   }
 
   @NonNull
-  private Observable<List<WatchMedia>> getMostPopularFromApi(int page, int pageId) {
+  private Observable<List<WatchMedia>> getMostPopularFromApi(int page, int pageId, String apiKey) {
     return cloudDataStore
-            .getMostPopularMovies(page)
-            .map(realmMoviesResults -> {
-              List<WatchMedia> watchMedias = valueOf(realmMoviesResults.getMovieList());
-              localDataStore.storeMoviesAndCurrentPageInRealm(realmMoviesResults, pageId);
-              return watchMedias;
-            });
+        .getMostPopularMovies(page, apiKey)
+        .map(realmMoviesResults -> {
+          List<WatchMedia> watchMedias = valueOf(realmMoviesResults.getMovieList());
+          localDataStore.storeMoviesAndCurrentPageInRealm(realmMoviesResults, pageId);
+          return watchMedias;
+        });
   }
 
   @NonNull
   private Observable<List<WatchMedia>> getNowPlayingFromRealm(boolean forceRemote) {
     return forceRemote ? Observable.just(Collections.emptyList())
-            : Observable
+        : Observable
             .fromCallable(localDataStore::getNowPlayingMovies)
             .map(RealmMovie::valueOf)
             .onErrorResumeNext(e -> Observable.just(Collections.emptyList()));
   }
 
-
   @NonNull
   private Observable<List<WatchMedia>> getTopRatedFromRealm(boolean forceRemote) {
     return forceRemote ? Observable.just(Collections.emptyList())
-            : Observable
+        : Observable
             .fromCallable(localDataStore::getTopRatedMovies)
             .map(RealmMovie::valueOf)
             .onErrorResumeNext(e -> Observable.just(Collections.emptyList()));
@@ -162,11 +163,9 @@ public class MoviesRepository implements WatchMediaRepository {
   @NonNull
   private Observable<List<WatchMedia>> getMostPopularFromRealm(boolean forceRemote) {
     return forceRemote ? Observable.just(Collections.emptyList())
-            : Observable
+        : Observable
             .fromCallable(localDataStore::getMostPopularMovies)
             .map(RealmMovie::valueOf)
             .onErrorResumeNext(e -> Observable.just(Collections.emptyList()));
   }
-
-
 }

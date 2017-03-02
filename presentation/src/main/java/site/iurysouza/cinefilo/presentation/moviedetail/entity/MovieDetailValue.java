@@ -14,6 +14,9 @@ import site.iurysouza.cinefilo.model.entities.realm.RealmProductionCompany;
 import site.iurysouza.cinefilo.model.entities.realm.RealmProductionCountry;
 import site.iurysouza.cinefilo.model.entities.realm.RealmSpokenLanguage;
 
+import static site.iurysouza.cinefilo.util.MappingUtils.getIntValueSafely;
+import static site.iurysouza.cinefilo.util.MappingUtils.isEmptyString;
+
 /**
  * Created by Iury Souza on 31/01/2017.
  */
@@ -27,11 +30,11 @@ public abstract class MovieDetailValue implements Parcelable {
   public static MovieDetailValue mapToValueMedia(RealmMovie movie) {
     HashMap<String, Integer> detailGenres = new HashMap<>();
     for (RealmGenre genre : movie.getGenreList()) {
-      detailGenres.put(genre.getName(), genre.getId().intValue());
+      detailGenres.put(genre.getName(), getIntValueSafely(genre.getId()));
     }
     HashMap<String, Integer> detailProdComp = new HashMap<>();
     for (RealmProductionCompany prodComp : movie.getProductionCompanyList()) {
-      detailProdComp.put(prodComp.getName(), prodComp.getId().intValue());
+      detailProdComp.put(prodComp.getName(), getIntValueSafely(prodComp.getId()));
     }
     HashMap<String, String> detailProdCountry = new HashMap<>();
     for (RealmProductionCountry prodCountry : movie.getProductionCountryList()) {
@@ -43,7 +46,7 @@ public abstract class MovieDetailValue implements Parcelable {
       spokenLanguage.put(spokenLang.getName(), spokenLang.getIso31661());
     }
 
-    if (movie.getBackdropPath().isEmpty()) {
+    if (isEmptyString(movie.getBackdropPath())) {
       movie.setBackdropPath(movie.getPosterPath());
     }
 

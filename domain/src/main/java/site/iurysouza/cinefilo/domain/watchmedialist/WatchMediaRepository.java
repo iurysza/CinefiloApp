@@ -9,14 +9,14 @@ import rx.Observable;
 
 public interface WatchMediaRepository {
 
-  Observable<List<WatchMedia>> getMostPopular(int page, boolean forceRemote);
+  Observable<List<WatchMedia>> getMostPopular(int page, boolean forceRemote, String apiKey);
 
   Observable<List<WatchMedia>> getByGenre(int genreId);
 
-  Observable<List<WatchMedia>> getTopRated(int page, boolean forceRemote);
+  Observable<List<WatchMedia>> getTopRated(int page, boolean forceRemote, String apiKey);
 
-  Observable<List<WatchMedia>> getNowPlaying(int page, boolean forceRemote);
+  Observable<List<WatchMedia>> getNowPlaying(int page, boolean forceRemote, String apiKey);
 
 
-  Observable<List<WatchMedia>> getFilteredBy(int page, MediaFilter mediaFilter);
+  Observable<List<WatchMedia>> getFilteredBy(int page, MediaFilter mediaFilter, String apiKey);
 }

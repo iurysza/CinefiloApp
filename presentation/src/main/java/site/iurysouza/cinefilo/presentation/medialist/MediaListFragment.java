@@ -25,13 +25,13 @@ import javax.inject.Inject;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.domain.watchmedialist.MediaFilter;
 import site.iurysouza.cinefilo.domain.watchmedialist.MoviesWatchMediaListUseCase;
 import site.iurysouza.cinefilo.domain.watchmedialist.SeriesWatchMediaListUseCase;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.base.BaseFragment;
 import site.iurysouza.cinefilo.presentation.main.FilterEvent;
 import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.domain.watchmedialist.MediaFilter;
 import site.iurysouza.cinefilo.util.Utils;
 import timber.log.Timber;
 
@@ -46,8 +46,7 @@ import static site.iurysouza.cinefilo.util.Constants.Media.TOP_MEDIA;
  */
 
 public class MediaListFragment extends BaseFragment
-    implements MediaView
-{
+    implements MediaView {
 
   public static final int INVALID_PAGE = -1;
   private static final String LIST_TYPE = "LIST_TYPE";
@@ -57,16 +56,24 @@ public class MediaListFragment extends BaseFragment
 
   private final MediaPresenter mediaPresenter = new MediaPresenter();
 
-  @Inject MoviesWatchMediaListUseCase moviesUseCase;
-  @Inject SeriesWatchMediaListUseCase seriesUseCase;
+  @Inject
+  MoviesWatchMediaListUseCase moviesUseCase;
+  @Inject
+  SeriesWatchMediaListUseCase seriesUseCase;
 
-  @BindView(R.id.container_movie_list) FrameLayout container;
-  @BindView(R.id.movie_list_progressImage) AVLoadingIndicatorView loadingPlaceHolder;
-  @BindView(R.id.movie_list_recyclerview) SuperRecyclerView movieList;
+  @BindView(R.id.container_movie_list)
+  FrameLayout container;
+  @BindView(R.id.movie_list_progressImage)
+  AVLoadingIndicatorView loadingPlaceHolder;
+  @BindView(R.id.movie_list_recyclerview)
+  SuperRecyclerView movieList;
   FloatingActionButton fabFilter;
-  @BindView(R.id.empty_list_layout) RelativeLayout emptyListLayout;
-  @BindView(R.id.empty_list_background_image) ImageView warningCharacterImage;
-  @BindView(R.id.empty_list_background_text) TextView warningCharacterQuote;
+  @BindView(R.id.empty_list_layout)
+  RelativeLayout emptyListLayout;
+  @BindView(R.id.empty_list_background_image)
+  ImageView warningCharacterImage;
+  @BindView(R.id.empty_list_background_text)
+  TextView warningCharacterQuote;
   private LinearLayoutManager layoutManger;
 
   private int listType;
@@ -82,7 +89,8 @@ public class MediaListFragment extends BaseFragment
     return moviesFragment;
   }
 
-  @Nullable @Override
+  @Nullable
+  @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.media_list_fragment, container, false);
@@ -136,7 +144,8 @@ public class MediaListFragment extends BaseFragment
     movieList.getRecyclerView().addOnScrollListener(createFabScrollBehavior());
   }
 
-  @NonNull private RecyclerView.OnScrollListener createFabScrollBehavior() {
+  @NonNull
+  private RecyclerView.OnScrollListener createFabScrollBehavior() {
     return new RecyclerView.OnScrollListener() {
 
       @Override
@@ -153,13 +162,11 @@ public class MediaListFragment extends BaseFragment
         }
         super.onScrollStateChanged(recyclerView, newState);
       }
-
-
     };
-
   }
 
-  @NonNull private OnMoreListener createOnMoreListener() {
+  @NonNull
+  private OnMoreListener createOnMoreListener() {
     return (overallItemsCount, itemsBeforeMore, maxLastVisiblePosition) -> {
       currentPage++;
       if (overallItemsCount > currentPage * PAGE_SIZE && filter == null) {
@@ -183,7 +190,8 @@ public class MediaListFragment extends BaseFragment
     };
   }
 
-  @Override public void showMoreProgress() {
+  @Override
+  public void showMoreProgress() {
     movieList.showMoreProgress();
   }
 
@@ -202,32 +210,37 @@ public class MediaListFragment extends BaseFragment
     }
   }
 
-  @Override public void onDestroyView() {
+  @Override
+  public void onDestroyView() {
     super.onDestroyView();
     mediaPresenter.dettachView();
     appInstance.releaseMediaListComponent();
   }
 
-  @Override public void showLoadingIndicator() {
+  @Override
+  public void showLoadingIndicator() {
     movieList.setVisibility(View.GONE);
     loadingPlaceHolder.show();
     Timber.e("Loading");
   }
 
-  @Override public void hideLoadingIndicator() {
+  @Override
+  public void hideLoadingIndicator() {
     movieList.setVisibility(View.VISIBLE);
     movieList.hideMoreProgress();
     loadingPlaceHolder.hide();
     Timber.e("Finished Loading");
   }
 
-  @Override public void showErrorIndicator() {
+  @Override
+  public void showErrorIndicator() {
     Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
     movieList.setLoadingMore(false);
     Timber.e("Error");
   }
 
-  @Override public void sendToListView(List<WatchMediaValue> watchMediaValuesList) {
+  @Override
+  public void sendToListView(List<WatchMediaValue> watchMediaValuesList) {
     mediaAdapter.addAllMedia(watchMediaValuesList);
     if (watchMediaValuesList.isEmpty() && mediaAdapter.getItemCount() == 0) {
       showEmptyListWarning();
@@ -249,7 +262,8 @@ public class MediaListFragment extends BaseFragment
     emptyListLayout.setVisibility(View.VISIBLE);
   }
 
-  @Override protected void setupFragmentComponent() {
+  @Override
+  protected void setupFragmentComponent() {
     appInstance.createMediaListComponent((BaseActivity) getActivity()).inject(this);
   }
 

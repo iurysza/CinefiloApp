@@ -3,7 +3,7 @@ package site.iurysouza.cinefilo.model.data.medialist.series.storage;
 import javax.inject.Inject;
 
 import rx.Observable;
-import site.iurysouza.cinefilo.model.data.medialist.services.SeriesService;
+import site.iurysouza.cinefilo.model.data.medialist.series.services.SeriesService;
 import site.iurysouza.cinefilo.model.entities.realm.RealmSeriesResults;
 import site.iurysouza.cinefilo.util.Constants;
 

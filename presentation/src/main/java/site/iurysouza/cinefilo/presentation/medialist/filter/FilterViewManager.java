@@ -12,18 +12,22 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+
+import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
-import java.util.ArrayList;
-import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 import mehdi.sakout.fancybuttons.FancyButton;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.domain.watchmedialist.MediaFilter;
 import site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod;
@@ -206,14 +210,18 @@ public class FilterViewManager {
     hideFilterView();
     changeFabColor();
     if (wasFilterAdded()) {
-      mEndDate = null;
-      mStartDate = null;
-      mMinScore = MediaFilter.DEFAULT_RATING_SCORE;
-      selectedGenreList = null;
-      mSortBy = null;
+      resetFilterState();
       wasFilterAdded();
       EventBus.getDefault().post(new FilterEvent(null));
     }
+  }
+
+  private void resetFilterState() {
+    mEndDate = null;
+    mStartDate = null;
+    mMinScore = MediaFilter.DEFAULT_RATING_SCORE;
+    selectedGenreList = null;
+    mSortBy = null;
   }
 
   private void applyFilters() {

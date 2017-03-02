@@ -32,19 +32,23 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.flaviofaria.kenburnsview.KenBurnsView;
+import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.flaviofaria.kenburnsview.KenBurnsView;
-import com.squareup.picasso.Picasso;
-import java.util.HashMap;
-import java.util.List;
-import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
-import site.iurysouza.cinefilo.presentation.moviedetail.similarmovies.SimilarMoviesAdapter;
-import site.iurysouza.cinefilo.presentation.moviedetail.entity.MovieDetailValue;
 import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.moviedetail.entity.MovieDetailValue;
+import site.iurysouza.cinefilo.presentation.moviedetail.similarmovies.SimilarMoviesAdapter;
 import site.iurysouza.cinefilo.util.ImageUtils;
 import site.iurysouza.cinefilo.util.Utils;
 import timber.log.Timber;
@@ -242,7 +246,7 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
 
   @Override public void updateMovieData(MovieDetailValue movieDetailValue) {
     Timber.e("MOVIE DETAIL LOADED: %s", movieDetailValue);
-    String runTime = String.valueOf(movieDetailValue.runTime().intValue()) + " min";
+    String runTime = movieDetailValue.runTime() + " min";
     mediaDetailPlaytime.setText(runTime);
 
     String substring = getGenreListAsString(movieDetailValue);

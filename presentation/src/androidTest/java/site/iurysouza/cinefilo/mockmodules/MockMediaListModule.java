@@ -1,20 +1,18 @@
 package site.iurysouza.cinefilo.mockmodules;
 
 import site.iurysouza.cinefilo.di.modules.MediaListModule;
-import site.iurysouza.cinefilo.domain.watchmedialist.MoviesWatchMediaListUseCase;
-import site.iurysouza.cinefilo.domain.watchmedialist.SeriesWatchMediaListUseCase;
-import site.iurysouza.cinefilo.model.data.medialist.MoviesRepository;
+import site.iurysouza.cinefilo.model.data.medialist.movies.MoviesRepository;
+import site.iurysouza.cinefilo.model.data.medialist.movies.services.MovieService;
 import site.iurysouza.cinefilo.model.data.medialist.movies.storage.CloudMovieDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.movies.storage.ICloudMovieDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.movies.storage.ILocalMovieDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.movies.storage.LocalMovieDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.series.SeriesRepository;
+import site.iurysouza.cinefilo.model.data.medialist.series.services.SeriesService;
 import site.iurysouza.cinefilo.model.data.medialist.series.storage.CloudSeriesDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.series.storage.ICloudSeriesDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.series.storage.ILocalSeriesDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.series.storage.LocalSeriesDataSource;
-import site.iurysouza.cinefilo.model.data.medialist.services.MovieService;
-import site.iurysouza.cinefilo.model.data.medialist.services.SeriesService;
 
 import static org.mockito.Mockito.mock;
 
@@ -51,11 +49,11 @@ public class MockMediaListModule extends MediaListModule {
     return new SeriesRepository(localSeriesDataSource, cloudSeriesDataSource);
   }
 
-  @Override public MoviesWatchMediaListUseCase providesMovieUseCase(MoviesRepository dataRepository) {
-    return new MoviesWatchMediaListUseCase(dataRepository);
-  }
-
-  @Override public SeriesWatchMediaListUseCase providesSeriesUseCase(SeriesRepository dataRepository) {
-    return new SeriesWatchMediaListUseCase(dataRepository);
-  }
+  //@Override public MoviesWatchMediaListUseCase providesMovieUseCase(MoviesRepository dataRepository) {
+  //  return new MoviesWatchMediaListUseCase(dataRepository, apiKey);
+  //}
+  //
+  //@Override public SeriesWatchMediaListUseCase providesSeriesUseCase(SeriesRepository dataRepository) {
+  //  return new SeriesWatchMediaListUseCase(dataRepository, apiKey);
+  //}
 }

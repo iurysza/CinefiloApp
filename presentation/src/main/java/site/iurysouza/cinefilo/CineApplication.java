@@ -49,6 +49,7 @@ public class CineApplication extends Application {
     });
   }
 
+
   private void initTimber() {
     Timber.plant(new Timber.DebugTree() {
       @Override protected String createStackElementTag(StackTraceElement element) {

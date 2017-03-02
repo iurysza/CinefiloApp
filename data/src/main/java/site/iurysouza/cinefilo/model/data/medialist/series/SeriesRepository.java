@@ -40,12 +40,12 @@ public class SeriesRepository implements WatchMediaRepository {
   }
 
   @Override
-  public Observable<List<WatchMedia>> getMostPopular(int page, boolean forceRemote) {
+  public Observable<List<WatchMedia>> getMostPopular(int page, boolean forceRemote, String apiKey) {
     boolean firstPageWasLoadedFromLocalStorage = page == INVALID_PAGE && forceRemote;
 
     if (firstPageWasLoadedFromLocalStorage) {
       int nextPageSize = getNextPageFor(MOST_POPULAR_LIST);
-      getMostPopular(nextPageSize, true);
+      getMostPopular(nextPageSize, true, apiKey);
     }
 
    return queryLocalAndRemoteData(getMostPopularFromRealm(forceRemote),
@@ -54,12 +54,12 @@ public class SeriesRepository implements WatchMediaRepository {
 
 
   @Override
-  public Observable<List<WatchMedia>> getTopRated(int page, boolean forceRemote) {
+  public Observable<List<WatchMedia>> getTopRated(int page, boolean forceRemote, String apiKey) {
     boolean firstPageWasLoadedFromLocalStorage = page == INVALID_PAGE && forceRemote;
 
     if (firstPageWasLoadedFromLocalStorage) {
       int nextPageSize = getNextPageFor(TOP_RATED_LIST);
-      getTopRated(nextPageSize, true);
+      getTopRated(nextPageSize, true, apiKey);
     }
 
     return queryLocalAndRemoteData(getTopRatedFromRealm(forceRemote),
@@ -68,12 +68,12 @@ public class SeriesRepository implements WatchMediaRepository {
   }
 
   @Override
-  public Observable<List<WatchMedia>> getNowPlaying(int page, boolean forceRemote) {
+  public Observable<List<WatchMedia>> getNowPlaying(int page, boolean forceRemote, String apiKey) {
     boolean firstPageWasLoadedFromLocalStorage = page == INVALID_PAGE && forceRemote;
 
     if (firstPageWasLoadedFromLocalStorage) {
       int nextPageSize = getNextPageFor(NOW_PLAYING_LIST);
-      getNowPlaying(nextPageSize, true);
+      getNowPlaying(nextPageSize, true, apiKey);
     }
 
     return queryLocalAndRemoteData(getNowPlayingFromRealm(forceRemote),
@@ -81,7 +81,8 @@ public class SeriesRepository implements WatchMediaRepository {
   }
 
 
-  @Override public Observable<List<WatchMedia>> getFilteredBy(int page, MediaFilter mediaFilter) {
+  @Override public Observable<List<WatchMedia>> getFilteredBy(int page, MediaFilter mediaFilter,
+      String apiKey) {
     return null;
   }
 

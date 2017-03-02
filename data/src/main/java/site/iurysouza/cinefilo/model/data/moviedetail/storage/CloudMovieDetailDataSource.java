@@ -6,7 +6,6 @@ import rx.Observable;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
 import site.iurysouza.cinefilo.model.data.moviedetail.services.MovieDetailService;
-import site.iurysouza.cinefilo.util.Constants;
 
 /**
  * Created by Iury Souza on 31/01/2017.
@@ -20,14 +19,14 @@ public class CloudMovieDetailDataSource implements ICloudMovieDetailDataSource {
   }
 
   @Override
-  public Observable<Movie> getMovieById(int movieId) {
+  public Observable<Movie> getMovieById(int movieId, String apiKey) {
     return detailService
-        .getMovieById(movieId, Constants.MOVIE_DB_API.API_KEY);
+        .getMovieById(movieId, apiKey);
   }
   @Override
-  public Observable<List<Movie>> getMoviesSimilarTo(int movieId, int page) {
+  public Observable<List<Movie>> getMoviesSimilarTo(int movieId, int page, String apiKey) {
     return detailService
-        .getMoviesSimilarTo(movieId, page, Constants.MOVIE_DB_API.API_KEY)
+        .getMoviesSimilarTo(movieId, page, apiKey)
         .map(MovieResults::getMovieList);
   }
 }

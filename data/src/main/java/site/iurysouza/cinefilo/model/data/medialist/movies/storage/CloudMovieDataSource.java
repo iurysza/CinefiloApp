@@ -5,10 +5,9 @@ import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.domain.watchmedialist.MediaFilter;
 import site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod;
+import site.iurysouza.cinefilo.model.data.medialist.movies.services.MovieService;
 import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMoviesResults;
-import site.iurysouza.cinefilo.model.data.medialist.services.MovieService;
-import site.iurysouza.cinefilo.util.Constants;
 
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.GENRE_QUERY;
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.NOW_QUERY;
@@ -27,39 +26,40 @@ public class CloudMovieDataSource implements ICloudMovieDataSource {
     this.movieService = movieService;
   }
   @Override
-  public Observable<RealmMoviesResults> getNowPlayingMovies(int page) {
+  public Observable<RealmMoviesResults> getNowPlayingMovies(int page, String apiKey) {
     return movieService
-        .getNowPlayingMovies(Constants.MOVIE_DB_API.API_KEY, page)
+        .getNowPlayingMovies(apiKey, page)
         .map(movieResults -> RealmMoviesResults.valueOf(movieResults, NOW_QUERY));
   }
 
-@Override  public Observable<RealmMoviesResults> getTopRatedMovies(int page) {
+@Override  public Observable<RealmMoviesResults> getTopRatedMovies(int page, String apiKey) {
     return movieService
-        .getTopRatedMovies(Constants.MOVIE_DB_API.API_KEY, page)
+        .getTopRatedMovies(apiKey, page)
         .map(movieResults -> RealmMoviesResults.valueOf(movieResults, TOP_QUERY));
   }
   @Override
-  public Observable<RealmMoviesResults> getMostPopularMovies(int page) {
+  public Observable<RealmMoviesResults> getMostPopularMovies(int page, String apiKey) {
     return movieService
-        .getMostPopularMovies(Constants.MOVIE_DB_API.API_KEY, page)
+        .getMostPopularMovies(apiKey, page)
         .map(movieResults -> RealmMoviesResults.valueOf(movieResults, POP_QUERY));
   }
   @Override
   public Observable<RealmMoviesResults> getByGenre(int genreId) {
-    return movieService.getMoviesByGenre(genreId, Constants.MOVIE_DB_API.API_KEY)
+    return movieService.getMoviesByGenre(genreId, "")
         .map(movieResults -> RealmMoviesResults.valueOf(movieResults, GENRE_QUERY));
   }
   @Override
-  public Observable<MovieResults> getFilteredMovies(int page, MediaFilter mediaFilter) {
+  public Observable<MovieResults> getFilteredMovies(int page, MediaFilter mediaFilter,
+      String apiKey) {
     int endDate = mediaFilter.getEndDate();
     int startDate = mediaFilter.getStartDate();
-    List<Integer> genderList = mediaFilter.getGenderList();
-    String genreList = getGenreListAsString(genderList);
     int minScore = mediaFilter.getMinScore();
     String sortMethod = getSortingMethod(mediaFilter);
+    List<Integer> genderList = mediaFilter.getGenderList();
+    String genreList = getGenreListAsString(genderList);
 
     return movieService.getFilteredMovies(
-        Constants.MOVIE_DB_API.API_KEY,
+        apiKey,
         page,
         startDate,
         endDate,
@@ -74,16 +74,17 @@ public class CloudMovieDataSource implements ICloudMovieDataSource {
   }
 
   private String getGenreListAsString(List<Integer> genderList) {
-    if (genderList == null) {
+    if (genderList == null || genderList.isEmpty()) {
       return null;
     }
     StringBuilder stringBuilder = new StringBuilder();
     for (Integer gender : genderList) {
       stringBuilder
-          .append(",")
-          .append(String.valueOf(gender));
+          .append(String.valueOf(gender))
+          .append(",");
     }
-    return stringBuilder.toString();
+    String genderStrings = stringBuilder.toString();
+    return genderStrings.substring(0,genderStrings.length()-1);
   }
 
 }

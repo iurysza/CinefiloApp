@@ -13,8 +13,10 @@ import lombok.Data;
 import site.iurysouza.cinefilo.domain.moviedetail.MovieDetail;
 import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
+import site.iurysouza.cinefilo.util.MappingUtils;
 
 import static site.iurysouza.cinefilo.model.entities.pojo.Movie.isMovieInvalid;
+import static site.iurysouza.cinefilo.util.MappingUtils.getIntValueSafely;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -73,22 +75,16 @@ public class RealmMovie implements RealmModel {
     if (isMovieInvalid(movie)) {
       return realmMovie;
     }
-    Long budget = movie.getBudget();
-    Long revenue = movie.getRevenue();
     String backdropPath = movie.getBackdropPath();
-    if (budget == null) {
-      budget = 0L;
-    }
-    if (revenue == null) {
-      revenue = 0L;
-    }
     if (backdropPath == null) {
       movie.setBackdropPath("");
     }
 
-    realmMovie.setId(movie.getId().intValue());
-    realmMovie.setBudget(budget.intValue());
-    realmMovie.setRevenue(revenue.intValue());
+    realmMovie.setId((getIntValueSafely(movie.getId())));
+    realmMovie.setVoteCount(getIntValueSafely(movie.getVoteCount()));
+    realmMovie.setBudget(getIntValueSafely(movie.getBudget()));
+    realmMovie.setRevenue(getIntValueSafely(movie.getRevenue()));
+    realmMovie.setRuntime(getIntValueSafely(movie.getRuntime()));
     realmMovie.setAdult(movie.getAdult());
     realmMovie.setBackdropPath(backdropPath);
     realmMovie.setOriginalTitle(movie.getOriginalTitle());
@@ -96,14 +92,12 @@ public class RealmMovie implements RealmModel {
     realmMovie.setPosterPath(movie.getPosterPath());
     realmMovie.setVoteAverage(movie.getVoteAverage());
     realmMovie.setImdbId(movie.getImdbId());
-    realmMovie.setRuntime(movie.getRuntime().intValue());
     realmMovie.setStatus(movie.getStatus());
     realmMovie.setHomepage(movie.getHomepage());
     realmMovie.setTagline(movie.getTagline());
     realmMovie.setOriginalLanguage(movie.getOriginalLanguage());
     realmMovie.setPopularity(movie.getPopularity());
     realmMovie.setVideo(movie.getVideo());
-    realmMovie.setVoteCount(movie.getVoteCount().intValue());
     realmMovie.setReleaseDate(movie.getReleaseDate());
 
     realmMovie.setSpokenLanguageList(RealmSpokenLanguage.valueOf(movie.getSpokenLanguageList()));
@@ -121,6 +115,7 @@ public class RealmMovie implements RealmModel {
 
     return realmMovie;
   }
+
 
   private static Integer getGenreIdValue(RealmMovie movie) {
     RealmList<RealmInteger> genreIds = movie.getGenreIds();
@@ -169,11 +164,11 @@ public class RealmMovie implements RealmModel {
   public static MovieDetail mapToValueMedia(RealmMovie movie) {
     HashMap<String, Integer> detailGenres = new HashMap<>();
     for (RealmGenre genre : movie.getGenreList()) {
-      detailGenres.put(genre.getName(), genre.getId().intValue());
+      detailGenres.put(genre.getName(), getIntValueSafely(genre.getId()));
     }
     HashMap<String, Integer> detailProdComp = new HashMap<>();
     for (RealmProductionCompany prodComp : movie.getProductionCompanyList()) {
-      detailProdComp.put(prodComp.getName(), prodComp.getId().intValue());
+      detailProdComp.put(prodComp.getName(), getIntValueSafely(prodComp.getId()));
     }
     HashMap<String, String> detailProdCountry = new HashMap<>();
     for (RealmProductionCountry prodCountry : movie.getProductionCountryList()) {
@@ -185,7 +180,7 @@ public class RealmMovie implements RealmModel {
       spokenLanguage.put(spokenLang.getName(), spokenLang.getIso31661());
     }
 
-    if (movie.getBackdropPath().isEmpty()) {
+    if (MappingUtils.isEmptyString(movie.getBackdropPath())) {
       movie.setBackdropPath(movie.getPosterPath());
     }
 
@@ -194,7 +189,7 @@ public class RealmMovie implements RealmModel {
             .adult(movie.getAdult())
             .backdropPath(movie.getBackdropPath())
             .budget(movie.getBudget())
-            .genreIdList(getGenreIdList(movie.genreIds))
+            .genreIdList(getGenreIdList(movie.getGenreIds()))
             .homepage(movie.getHomepage())
             .id(movie.getId())
             .imdbId(movie.getImdbId())

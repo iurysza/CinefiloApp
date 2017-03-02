@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.mock.BehaviorDelegate;
+import site.iurysouza.cinefilo.domain.Decryptor;
 import site.iurysouza.cinefilo.domain.moviedetail.IMovieDetailUseCase;
 import site.iurysouza.cinefilo.domain.moviedetail.MovieDetailUseCase;
 import site.iurysouza.cinefilo.domain.moviedetail.IMovieDetailRepository;
@@ -40,7 +41,7 @@ public class MediaDetailModule {
     return new MovieDetailRepository(localDetailDataSource, cloudMovieDetailDataSource);
   }
 
-  @Provides protected IMovieDetailUseCase movieDetailUseCase(MovieDetailRepository detailRepository) {
-    return new MovieDetailUseCase(detailRepository);
+  @Provides protected IMovieDetailUseCase movieDetailUseCase(MovieDetailRepository detailRepository, Decryptor decryptor) {
+    return new MovieDetailUseCase(detailRepository,decryptor);
   }
 }

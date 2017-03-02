@@ -49,11 +49,8 @@ android {
 }
 
 dependencies {
-  def dataDependencies = rootProject.ext.dataDependencies
-  def dataTestDependencies = rootProject.ext.dataTestDependencies
-
   compile project(path: ':domain')
   compile dataDependencies.gson
   compile dataDependencies.retrofit
-  testCompile 'junit:junit:4.12'
+  testCompile dataTestDependencies.jUnit
 }

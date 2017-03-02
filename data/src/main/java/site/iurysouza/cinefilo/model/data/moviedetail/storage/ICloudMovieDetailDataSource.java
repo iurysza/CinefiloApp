@@ -8,7 +8,7 @@ import site.iurysouza.cinefilo.model.entities.pojo.Movie;
  * Created by Iury Souza on 08/02/2017.
  */
 public interface ICloudMovieDetailDataSource {
-  Observable<Movie> getMovieById(int movieId);
+  Observable<Movie> getMovieById(int movieId, String apiKey);
 
-  Observable<List<Movie>> getMoviesSimilarTo(int movieId, int page);
+  Observable<List<Movie>> getMoviesSimilarTo(int movieId, int page, String apiKey);
 }

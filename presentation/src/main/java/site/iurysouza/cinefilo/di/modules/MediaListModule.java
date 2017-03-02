@@ -3,20 +3,21 @@ package site.iurysouza.cinefilo.di.modules;
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
+import site.iurysouza.cinefilo.domain.Decryptor;
 import site.iurysouza.cinefilo.domain.watchmedialist.MoviesWatchMediaListUseCase;
 import site.iurysouza.cinefilo.domain.watchmedialist.SeriesWatchMediaListUseCase;
-import site.iurysouza.cinefilo.model.data.medialist.MoviesRepository;
+import site.iurysouza.cinefilo.model.data.medialist.movies.MoviesRepository;
+import site.iurysouza.cinefilo.model.data.medialist.movies.services.MovieService;
 import site.iurysouza.cinefilo.model.data.medialist.movies.storage.CloudMovieDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.movies.storage.ICloudMovieDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.movies.storage.ILocalMovieDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.movies.storage.LocalMovieDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.series.SeriesRepository;
+import site.iurysouza.cinefilo.model.data.medialist.series.services.SeriesService;
 import site.iurysouza.cinefilo.model.data.medialist.series.storage.CloudSeriesDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.series.storage.ICloudSeriesDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.series.storage.ILocalSeriesDataSource;
 import site.iurysouza.cinefilo.model.data.medialist.series.storage.LocalSeriesDataSource;
-import site.iurysouza.cinefilo.model.data.medialist.services.MovieService;
-import site.iurysouza.cinefilo.model.data.medialist.services.SeriesService;
 
 /**
  * Created by Iury Souza on 12/10/2016.
@@ -61,11 +62,11 @@ public class MediaListModule {
     return new SeriesRepository(localSeriesDataSource, cloudSeriesDataSource);
   }
 
-  @Provides public MoviesWatchMediaListUseCase providesMovieUseCase(MoviesRepository dataRepository) {
-    return new MoviesWatchMediaListUseCase(dataRepository);
+  @Provides public MoviesWatchMediaListUseCase providesMovieUseCase(MoviesRepository dataRepository, Decryptor decryptor) {
+    return new MoviesWatchMediaListUseCase(dataRepository, decryptor);
   }
 
-  @Provides public SeriesWatchMediaListUseCase providesSeriesUseCase(SeriesRepository dataRepository) {
-    return new SeriesWatchMediaListUseCase(dataRepository);
+  @Provides public SeriesWatchMediaListUseCase providesSeriesUseCase(SeriesRepository dataRepository, Decryptor decryptor) {
+    return new SeriesWatchMediaListUseCase(dataRepository, decryptor);
   }
 }

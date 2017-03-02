@@ -15,7 +15,6 @@ sourceSets {
 }
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
-  def domainDependencies = rootProject.ext.domainDependencies
   provided domainDependencies.javaxAnnotation
   compile domainDependencies.javaxInject
   compile domainDependencies.rxJava

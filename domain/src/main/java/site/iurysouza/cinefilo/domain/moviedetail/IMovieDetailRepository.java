@@ -8,7 +8,7 @@ import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
  * Created by Iury Souza on 14/02/2017.
  */
 public interface IMovieDetailRepository {
-  Observable<MovieDetail> getMovieById(int movieId);
+  Observable<MovieDetail> getMovieById(int movieId, String apiKey);
 
-  Observable<List<WatchMedia>> getMoviesSimilarTo(int movieId, int page);
+  Observable<List<WatchMedia>> getMoviesSimilarTo(int movieId, int page, String apiKey);
 }
