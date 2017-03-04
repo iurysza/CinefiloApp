@@ -6,7 +6,6 @@
   <string name="bottombar_title_series">SERIES</string>
   <string name="bottombar_title_movies">MOVIES</string>
 
-  <!-- TODO: Remove or change this placeholder text -->
   <string name="hello_blank_fragment">Hello blank fragment</string>
   <string name="genre_page_title">Genres</string>
   <string name="filter_page_title">Filters</string>

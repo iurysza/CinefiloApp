@@ -7,22 +7,22 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath "io.realm:realm-gradle-plugin:2.0.2"
+    classpath "io.realm:realm-gradle-plugin:3.0.0"
   }
 }
 
 android {
   def globalConfiguration = rootProject.extensions.getByName("ext")
 
-  compileSdkVersion globalConfiguration.getAt("androidCompileSdkVersion")
-  buildToolsVersion globalConfiguration.getAt("androidBuildToolsVersion")
+  compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
+  buildToolsVersion globalConfiguration["androidBuildToolsVersion"]
 
   defaultConfig {
-    minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
-    targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
-    versionCode globalConfiguration.getAt("androidVersionCode")
-    renderscriptTargetApi globalConfiguration.getAt("renderScriptApiVersion")
-    testInstrumentationRunner globalConfiguration.getAt("testInstrumentationRunner")
+    minSdkVersion globalConfiguration["androidMinSdkVersion"]
+    targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
+    versionCode globalConfiguration["androidVersionCode"]
+    renderscriptTargetApi globalConfiguration["renderScriptApiVersion"]
+    testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
     renderscriptSupportModeEnabled true
     multiDexEnabled true
   }
@@ -41,7 +41,7 @@ android {
 
   buildTypes {
     release {
-      minifyEnabled true
+      minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
