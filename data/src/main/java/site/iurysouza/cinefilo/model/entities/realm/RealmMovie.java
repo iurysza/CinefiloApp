@@ -11,7 +11,7 @@ import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 import lombok.Data;
 import site.iurysouza.cinefilo.domain.moviedetail.MovieDetail;
-import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
+import site.iurysouza.cinefilo.domain.medialist.WatchMedia;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 import site.iurysouza.cinefilo.util.MappingUtils;
 

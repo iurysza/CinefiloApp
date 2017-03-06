@@ -14,7 +14,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.domain.Decryptor;
-import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
+import site.iurysouza.cinefilo.domain.medialist.WatchMedia;
 
 /**
  * Created by Iury Souza on 31/01/2017.

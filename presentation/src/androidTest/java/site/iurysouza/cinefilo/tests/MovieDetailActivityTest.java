@@ -20,7 +20,7 @@ import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.components.CineTestComponent;
-import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
+import site.iurysouza.cinefilo.domain.medialist.WatchMedia;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
 import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.moviedetail.MovieDetailActivity;

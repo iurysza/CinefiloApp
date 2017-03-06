@@ -9,7 +9,7 @@ import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 import lombok.Data;
-import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
+import site.iurysouza.cinefilo.domain.medialist.WatchMedia;
 import site.iurysouza.cinefilo.model.entities.pojo.Series;
 
 import static site.iurysouza.cinefilo.util.MappingUtils.isEmptyString;

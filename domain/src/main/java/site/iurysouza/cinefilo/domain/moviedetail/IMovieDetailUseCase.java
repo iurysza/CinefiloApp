@@ -2,7 +2,7 @@ package site.iurysouza.cinefilo.domain.moviedetail;
 
 import java.util.List;
 import rx.Observable;
-import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
+import site.iurysouza.cinefilo.domain.medialist.WatchMedia;
 
 /**
  * Created by Iury Souza on 14/02/2017.

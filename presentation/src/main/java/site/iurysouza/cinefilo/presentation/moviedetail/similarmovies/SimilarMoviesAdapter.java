@@ -100,10 +100,10 @@ public class SimilarMoviesAdapter
 
     private void openDetailActivityWithSharedElements(WatchMediaValue movie, Context context) {
       Intent startIntent = MovieDetailActivity.getStartIntentFromSimMovies(context, movie);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        View statusBar = ((BaseActivity) context).findViewById(android.R.id.statusBarBackground);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && statusBar !=null) {
         String posterTransition = context.getResources().getString(R.string.poster_card_transition);
         Pair<View, String> posterPair = new android.util.Pair<>(moviePoster, posterTransition);
-        View statusBar = ((BaseActivity) context).findViewById(android.R.id.statusBarBackground);
         Pair<View, String> statusBarPair =
             Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);
         ActivityOptions options = ActivityOptions

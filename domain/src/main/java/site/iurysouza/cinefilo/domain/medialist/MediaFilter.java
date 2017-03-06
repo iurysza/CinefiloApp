@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.domain.watchmedialist;
+package site.iurysouza.cinefilo.domain.medialist;
 
 import java.util.Calendar;
 import java.util.List;

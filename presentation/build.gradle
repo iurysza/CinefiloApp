@@ -2,6 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
+def proguardDir = "${rootProject.projectDir}/buildsystem/proguard/"
+def keystorePropertiesFile = rootProject.file('/buildsystem/keystore.properties')
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 
 android {
   compileSdkVersion androidCompileSdkVersion
@@ -18,125 +23,152 @@ android {
     testInstrumentationRunner androidTestRunner
   }
 
-  buildTypes {
-    release {
-      minifyEnabled true
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+  signingConfigs {
+    config {
+      keyAlias keystoreProperties['keyAlias']
+      keyPassword keystoreProperties['keyPassword']
+      storeFile file(keystoreProperties['storeFile'])
+      storePassword keystoreProperties['storePassword']
     }
-    debug{
-      minifyEnabled false
-      buildConfigField "String", "API_KEY", apiKey
+
+    buildTypes {
+      release {
+        signingConfig signingConfigs.config
+        buildConfigField "String", "API_KEY", apiKey
+        minifyEnabled true
+        shrinkResources true
+        proguardFile "${proguardDir}gson.pro"
+        proguardFile "${proguardDir}eventbus-3.pro"
+        proguardFile "${proguardDir}google-play-services.pro"
+        proguardFile "${proguardDir}guava.pro"
+        proguardFile "${proguardDir}joda-time-android.pro"
+        proguardFile "${proguardDir}retrolambda.pro"
+        proguardFile "${proguardDir}square-picasso.pro"
+        proguardFile "${proguardDir}square-okhttp3.pro"
+        proguardFile "${proguardDir}square-retrofit2.pro"
+        proguardFile "${proguardDir}support-design.pro"
+        proguardFile "${proguardDir}support-v7-appcompat.pro"
+        proguardFile "${proguardDir}rules-proguard-release.pro"
+        proguardFile getDefaultProguardFile('proguard-android.txt')
+      }
+      debug {
+        minifyEnabled false
+        shrinkResources false
+        buildConfigField "String", "API_KEY", apiKey
+        proguardFile "${proguardDir}rules-proguard-debug.pro"
+        proguardFile getDefaultProguardFile('proguard-android.txt')
+      }
+    }
+
+    compileOptions {
+      sourceCompatibility JavaVersion.VERSION_1_8
+      targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    testOptions.unitTests.all {
+      testLogging {
+        events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+      }
     }
   }
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+  dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(path: ':domain')
+    compile project(path: ':data')
+
+    compile presentationDependencies.appCompat
+    compile presentationDependencies.design
+    compile presentationDependencies.cardView
+    compile presentationDependencies.recyclerView
+    compile presentationDependencies.palette
+
+    compile presentationDependencies.dagger
+    apt presentationDependencies.daggerCompiler
+
+    provided presentationDependencies.autoValue
+    apt presentationDependencies.autoValue
+    apt presentationDependencies.autoValueParcel
+
+    compile presentationDependencies.butterKnife
+    apt presentationDependencies.butterKnifeCompiler
+
+    compile presentationDependencies.jodaTime
+    compile presentationDependencies.eventBus
+    compile presentationDependencies.rxAndroid
+    compile presentationDependencies.rxJava
+
+    compile presentationDependencies.picasso
+    compile presentationDependencies.timber
+
+    compile presentationDependencies.retrofitGson
+    compile presentationDependencies.retrofitRxAdapter
+    compile presentationDependencies.retrofitMock
+    provided presentationDependencies.javaxAnnotation
+    compile presentationDependencies.okHttp
+    compile presentationDependencies.okHttpInterceptor
+    compile presentationDependencies.mockWebServer
+
+    compile presentationDependencies.avi
+    compile presentationDependencies.spaceNavView
+    compile presentationDependencies.kenBurnsView
+    compile presentationDependencies.circleIndicator
+    compile presentationDependencies.circleImageView
+    compile presentationDependencies.fancyButtons
+    compile presentationDependencies.fabToolbar
+    compile presentationDependencies.multiSlider
+
+    compile presentationDependencies.superRecyclerView
+    compile presentationDependencies.fragNav
+
+    compile presentationDependencies.stetho
+    compile presentationDependencies.stethoOkhttp
+    compile presentationDependencies.stethoRealm
+
+    //Dependencies for unit tests
+    testCompile presentationTestDependencies.jUnit
+    testCompile presentationTestDependencies.mockito
+    testCompile presentationTestDependencies.hamcrest
+
+    //UI Testing dependencies.
+    androidTestCompile presentationTestDependencies.testingSupportLib
+    androidTestCompile presentationTestDependencies.testRunner
+    androidTestCompile presentationTestDependencies.testRules
+
+    androidTestCompile presentationTestDependencies.mockito
+    androidTestCompile presentationTestDependencies.dexmakerMockito
+    androidTestCompile presentationTestDependencies.dexmaker
+
+    androidTestCompile presentationTestDependencies.espresso
+    androidTestApt presentationTestDependencies.daggerCompiler
+    androidTestCompile presentationTestDependencies.dagger
+
+    androidTestCompile presentationTestDependencies.okhttpIdlingRes
+    androidTestCompile presentationTestDependencies.retrofitMock
+    androidTestCompile presentationTestDependencies.mockWebServer
   }
 
-  testOptions.unitTests.all {
-    testLogging {
-      events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
-    }
-  }
-}
-
-dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile project(path: ':domain')
-  compile project(path: ':data')
-
-  compile presentationDependencies.appCompat
-  compile presentationDependencies.design
-  compile presentationDependencies.cardView
-  compile presentationDependencies.recyclerView
-  compile presentationDependencies.palette
-
-  compile presentationDependencies.dagger
-  apt presentationDependencies.daggerCompiler
-
-  provided presentationDependencies.autoValue
-  apt presentationDependencies.autoValue
-  apt presentationDependencies.autoValueParcel
-
-  compile presentationDependencies.butterKnife
-  apt presentationDependencies.butterKnifeCompiler
-
-  compile presentationDependencies.jodaTime
-  compile presentationDependencies.eventBus
-  compile presentationDependencies.rxAndroid
-  compile presentationDependencies.rxJava
-
-  compile presentationDependencies.picasso
-  compile presentationDependencies.timber
-
-  compile presentationDependencies.retrofitGson
-  compile presentationDependencies.retrofitRxAdapter
-  compile presentationDependencies.retrofitMock
-  provided presentationDependencies.javaxAnnotation
-  compile presentationDependencies.okHttp
-  compile presentationDependencies.okHttpInterceptor
-  compile presentationDependencies.mockWebServer
-
-  compile presentationDependencies.avi
-  compile presentationDependencies.spaceNavView
-  compile presentationDependencies.kenBurnsView
-  compile presentationDependencies.circleIndicator
-  compile presentationDependencies.circleImageView
-  compile presentationDependencies.fancyButtons
-  compile presentationDependencies.fabToolbar
-  compile presentationDependencies.multiSlider
-
-  compile presentationDependencies.superRecyclerView
-  compile presentationDependencies.fragNav
-
-  compile presentationDependencies.stetho
-  compile presentationDependencies.stethoOkhttp
-  compile presentationDependencies.stethoRealm
-
-//Dependencies for unit tests
-  testCompile presentationTestDependencies.jUnit
-  testCompile presentationTestDependencies.mockito
-  testCompile presentationTestDependencies.hamcrest
-
-//UI Testing dependencies.
-  androidTestCompile presentationTestDependencies.testingSupportLib
-  androidTestCompile presentationTestDependencies.testRunner
-  androidTestCompile presentationTestDependencies.testRules
-
-  androidTestCompile presentationTestDependencies.mockito
-  androidTestCompile presentationTestDependencies.dexmakerMockito
-  androidTestCompile presentationTestDependencies.dexmaker
-
-  androidTestCompile presentationTestDependencies.espresso
-  androidTestApt presentationTestDependencies.daggerCompiler
-  androidTestCompile presentationTestDependencies.dagger
-
-  androidTestCompile presentationTestDependencies.okhttpIdlingRes
-  androidTestCompile presentationTestDependencies.retrofitMock
-  androidTestCompile presentationTestDependencies.mockWebServer
-}
-
-/*
+  /*
 Resolves dependency versions across test and production APKs, specifically, transitive
 dependencies. This is required since Espresso internally has a dependency on support-annotations.
 */
-configurations.all {
-  resolutionStrategy.force dependencyResolution.findBugs
-  resolutionStrategy.force dependencyResolution.guava
-  resolutionStrategy.force dependencyResolution.supportAnnotations
-  resolutionStrategy.force dependencyResolution.supportV4
-}
+  configurations.all {
+    resolutionStrategy.force dependencyResolution.findBugs
+    resolutionStrategy.force dependencyResolution.guava
+    resolutionStrategy.force dependencyResolution.supportAnnotations
+    resolutionStrategy.force dependencyResolution.supportV4
+  }
 
-/*
+  /*
 All direct/transitive dependencies shared between your test and production APKs need to be
 excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
 excluding these dependencies from your test configuration will result in an dex pre-verifier error
 at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
 */
-configurations.compile.dependencies.each { compileDependency ->
-  println "Excluding compile dependency: ${compileDependency.getName()}"
-  configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
-    configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+  configurations.compile.dependencies.each { compileDependency ->
+    println "Excluding compile dependency: ${compileDependency.getName()}"
+    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+      configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+    }
   }
 }

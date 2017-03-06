@@ -7,7 +7,7 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 import site.iurysouza.cinefilo.domain.moviedetail.IMovieDetailRepository;
 import site.iurysouza.cinefilo.domain.moviedetail.MovieDetail;
-import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
+import site.iurysouza.cinefilo.domain.medialist.WatchMedia;
 import site.iurysouza.cinefilo.model.data.moviedetail.storage.ICloudMovieDetailDataSource;
 import site.iurysouza.cinefilo.model.data.moviedetail.storage.ILocalDetailDataSource;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;

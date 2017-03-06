@@ -102,74 +102,78 @@ public class DetailStyleManager {
 
   private void createPalleteFrom(Bitmap bitmap) {
     if (bitmap != null && !bitmap.isRecycled()) {
-      Palette.from(bitmap).generate(palette -> {
-        int defaultColor = 0x000000;
-        int dominantColor = palette.getDominantColor(defaultColor);
-        Palette.Swatch dominantSwatch = palette.getDominantSwatch();
-        int titleTextColor;
-        if (dominantSwatch != null) {
-          titleTextColor = dominantSwatch.getTitleTextColor();
-        } else {
-          titleTextColor = Color.BLACK;
-        }
+      Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+        @Override public void onGenerated(Palette palette) {
+          int defaultColor = 0x000000;
+          int dominantColor = palette.getDominantColor(defaultColor);
+          Palette.Swatch dominantSwatch = palette.getDominantSwatch();
+          int titleTextColor;
+          if (dominantSwatch != null) {
+            titleTextColor = dominantSwatch.getTitleTextColor();
+          } else {
+            titleTextColor = Color.BLACK;
+          }
 
-        Palette.Swatch lightMutedSwatch = palette.getLightMutedSwatch();
-        int tabDefaultTextColor;
-        int tabSelectedTextColor;
-        if (lightMutedSwatch != null) {
-          tabDefaultTextColor = lightMutedSwatch.getTitleTextColor();
-          tabSelectedTextColor = lightMutedSwatch.getBodyTextColor();
-        } else {
-          tabDefaultTextColor = Color.GRAY;
-          tabSelectedTextColor = Color.BLACK;
+          Palette.Swatch lightMutedSwatch = palette.getLightMutedSwatch();
+          int tabDefaultTextColor;
+          int tabSelectedTextColor;
+          if (lightMutedSwatch != null) {
+            tabDefaultTextColor = lightMutedSwatch.getTitleTextColor();
+            tabSelectedTextColor = lightMutedSwatch.getBodyTextColor();
+          } else {
+            tabDefaultTextColor = Color.GRAY;
+            tabSelectedTextColor = Color.BLACK;
+          }
+          collapsingToolbarLayout.setContentScrimColor(dominantColor);
+          collapsingToolbarLayout.setStatusBarScrimColor(dominantColor);
+          collapsingToolbarLayout.setBackgroundColor(dominantColor);
+          toolbar.setTitleTextColor(titleTextColor);
+          tabLayout.setTabTextColors(tabDefaultTextColor, tabSelectedTextColor);
+          tabLayout.setSelectedTabIndicatorColor(dominantColor);
         }
-        collapsingToolbarLayout.setContentScrimColor(dominantColor);
-        collapsingToolbarLayout.setStatusBarScrimColor(dominantColor);
-        collapsingToolbarLayout.setBackgroundColor(dominantColor);
-        toolbar.setTitleTextColor(titleTextColor);
-        tabLayout.setTabTextColors(tabDefaultTextColor, tabSelectedTextColor);
-        tabLayout.setSelectedTabIndicatorColor(dominantColor);
       });
     }
   }
 
   private void revealBackDrop(Bitmap bitmap) {
-    kenBurnsView.post(() -> {
-      int x = collapsingToolbarLayout.getRight() / 2;
-      int y = collapsingToolbarLayout.getBottom();
+    kenBurnsView.post(new Runnable() {
+      @Override public void run() {
+        int x = collapsingToolbarLayout.getRight() / 2;
+        int y = collapsingToolbarLayout.getBottom();
 
-      int startRadius = 0;
-      int endRadius = (int) Math.hypot(appBarLayout.getWidth(), appBarLayout.getHeight());
+        int startRadius = 0;
+        int endRadius = (int) Math.hypot(appBarLayout.getWidth(), appBarLayout.getHeight());
 
-      Animator anim = ViewAnimationUtils.createCircularReveal(
-          kenBurnsView,
-          x,
-          y,
-          startRadius,
-          endRadius);
+        Animator anim = ViewAnimationUtils.createCircularReveal(
+            kenBurnsView,
+            x,
+            y,
+            startRadius,
+            endRadius);
 
-      kenBurnsView.setVisibility(View.VISIBLE);
-      anim.setStartDelay(REVEAL_DELAY);
-      anim
-          .setDuration(REVEAL_DURATION)
-          .addListener(new Animator.AnimatorListener() {
-            @Override public void onAnimationStart(Animator animation) {
-              kenBurnsView.setImageBitmap(bitmap);
-            }
+        kenBurnsView.setVisibility(View.VISIBLE);
+        anim.setStartDelay(REVEAL_DELAY);
+        anim
+            .setDuration(REVEAL_DURATION)
+            .addListener(new Animator.AnimatorListener() {
+              @Override public void onAnimationStart(Animator animation) {
+                kenBurnsView.setImageBitmap(bitmap);
+              }
 
-            @Override public void onAnimationEnd(Animator animation) {
+              @Override public void onAnimationEnd(Animator animation) {
 
-            }
+              }
 
-            @Override public void onAnimationCancel(Animator animation) {
+              @Override public void onAnimationCancel(Animator animation) {
 
-            }
+              }
 
-            @Override public void onAnimationRepeat(Animator animation) {
+              @Override public void onAnimationRepeat(Animator animation) {
 
-            }
-          });
-      anim.start();
+              }
+            });
+        anim.start();
+      }
     });
   }
 }

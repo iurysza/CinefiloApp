@@ -11,16 +11,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import io.apptik.widget.MultiSlider;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod;
+import site.iurysouza.cinefilo.domain.medialist.SortingMethod;
 
-import static site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod.ALPHABETIC_BOTTOM;
-import static site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod.ALPHABETIC_TOP;
-import static site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod.DATE_BOTTOM;
-import static site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod.DATE_TOP;
-import static site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod.POPULAR_BOTTOM;
-import static site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod.POPULAR_TOP;
-import static site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod.RATING_BOTTOM;
-import static site.iurysouza.cinefilo.domain.watchmedialist.SortingMethod.RATING_TOP;
+import static site.iurysouza.cinefilo.domain.medialist.SortingMethod.ALPHABETIC_BOTTOM;
+import static site.iurysouza.cinefilo.domain.medialist.SortingMethod.ALPHABETIC_TOP;
+import static site.iurysouza.cinefilo.domain.medialist.SortingMethod.DATE_BOTTOM;
+import static site.iurysouza.cinefilo.domain.medialist.SortingMethod.DATE_TOP;
+import static site.iurysouza.cinefilo.domain.medialist.SortingMethod.POPULAR_BOTTOM;
+import static site.iurysouza.cinefilo.domain.medialist.SortingMethod.POPULAR_TOP;
+import static site.iurysouza.cinefilo.domain.medialist.SortingMethod.RATING_BOTTOM;
+import static site.iurysouza.cinefilo.domain.medialist.SortingMethod.RATING_TOP;
 
 /**
  * Created by Iury Souza on 20/01/2017.

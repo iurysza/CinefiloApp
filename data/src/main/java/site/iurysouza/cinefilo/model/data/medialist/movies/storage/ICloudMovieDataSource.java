@@ -1,7 +1,7 @@
 package site.iurysouza.cinefilo.model.data.medialist.movies.storage;
 
 import rx.Observable;
-import site.iurysouza.cinefilo.domain.watchmedialist.MediaFilter;
+import site.iurysouza.cinefilo.domain.medialist.MediaFilter;
 import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMoviesResults;
 

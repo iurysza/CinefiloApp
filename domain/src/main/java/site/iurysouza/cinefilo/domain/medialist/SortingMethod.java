@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.domain.watchmedialist;
+package site.iurysouza.cinefilo.domain.medialist;
 
 /**
  * Created by Iury Souza on 25/01/2017.

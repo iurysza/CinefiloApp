@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.domain.watchmedialist;
+package site.iurysouza.cinefilo.domain.medialist;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -19,15 +19,15 @@ import site.iurysouza.cinefilo.domain.Decryptor;
  * Created by Iury Souza on 09/11/2016.
  */
 
-public class SeriesWatchMediaListUseCase implements WatchMediaListUseCase {
+public class MoviesWatchMediaListUseCase implements WatchMediaListUseCase {
 
   private static final int FIRST_PAGE = 1;
-  private WatchMediaRepository seriesRepository;
+  private WatchMediaRepository movieRepository;
   private String apiKey="";
 
   @Inject
-  public SeriesWatchMediaListUseCase(WatchMediaRepository seriesRepository, Decryptor decryptor) {
-    this.seriesRepository = seriesRepository;
+  public MoviesWatchMediaListUseCase(WatchMediaRepository movieRepository, Decryptor decryptor) {
+    this.movieRepository = movieRepository;
     try {
       this.apiKey = decryptor.decryptData();
     } catch (
@@ -46,42 +46,43 @@ public class SeriesWatchMediaListUseCase implements WatchMediaListUseCase {
     }
   }
 
-  @Override public Observable<List<WatchMedia>> getMediaByGender(int gender) {
-    return null;
-  }
-
   @Override
   public Observable<List<WatchMedia>> getMostPopular() {
-
-    return seriesRepository.getMostPopular(FIRST_PAGE, false, apiKey);
+    return movieRepository.getMostPopular(FIRST_PAGE, false, apiKey);
   }
 
   @Override
   public Observable<List<WatchMedia>> getNextPopular(int nextPage) {
-    return seriesRepository.getMostPopular(nextPage, false, apiKey);
+    return movieRepository.getMostPopular(nextPage, true, apiKey);
   }
 
   @Override
   public Observable<List<WatchMedia>> getTopRated() {
-    return seriesRepository.getTopRated(FIRST_PAGE, false, apiKey);
+    return movieRepository.getTopRated(FIRST_PAGE, false, apiKey);
   }
 
-  @Override public Observable<List<WatchMedia>> getNextTopRated(int nextPage) {
-    return seriesRepository.getTopRated(nextPage, true, apiKey);
+  @Override
+  public Observable<List<WatchMedia>> getNextTopRated(int nextPage) {
+    return movieRepository.getTopRated(nextPage, true, apiKey);
   }
 
   @Override
   public Observable<List<WatchMedia>> getFilteredMedia(int page, MediaFilter mediaFilter) {
-    return null;
+    return movieRepository
+        .getFilteredBy(page, mediaFilter,apiKey);
   }
 
   @Override
   public Observable<List<WatchMedia>> getNowPlaying() {
-    return seriesRepository.getNowPlaying(FIRST_PAGE, false, apiKey);
+    return movieRepository.getNowPlaying(FIRST_PAGE, false, apiKey);
+  }
+
+  @Override public Observable<List<WatchMedia>> getMediaByGender(int gender) {
+    return movieRepository.getByGenre(gender);
   }
 
   @Override
   public Observable<List<WatchMedia>> getNextNowPlaying(int nextPage) {
-    return seriesRepository.getNowPlaying(nextPage, true, apiKey);
+    return movieRepository.getNowPlaying(nextPage, true, apiKey);
   }
 }

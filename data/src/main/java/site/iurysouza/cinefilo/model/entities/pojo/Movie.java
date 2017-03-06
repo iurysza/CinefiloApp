@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Builder;
-import site.iurysouza.cinefilo.domain.watchmedialist.WatchMedia;
+import site.iurysouza.cinefilo.domain.medialist.WatchMedia;
 
 import static site.iurysouza.cinefilo.util.MappingUtils.isEmptyString;
 import static site.iurysouza.cinefilo.util.MappingUtils.isInvalid;

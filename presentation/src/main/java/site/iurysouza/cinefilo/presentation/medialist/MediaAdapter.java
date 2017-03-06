@@ -19,7 +19,7 @@ import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.moviedetail.MovieDetailActivity;
 import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.domain.watchmedialist.MediaFilter;
+import site.iurysouza.cinefilo.domain.medialist.MediaFilter;
 
 /**
  * Created by Iury Souza on 15/12/2016.

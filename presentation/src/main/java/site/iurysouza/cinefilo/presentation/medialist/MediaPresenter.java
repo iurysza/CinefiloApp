@@ -4,12 +4,12 @@ import java.util.List;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import site.iurysouza.cinefilo.domain.watchmedialist.MoviesWatchMediaListUseCase;
-import site.iurysouza.cinefilo.domain.watchmedialist.SeriesWatchMediaListUseCase;
-import site.iurysouza.cinefilo.domain.watchmedialist.WatchMediaListUseCase;
+import site.iurysouza.cinefilo.domain.medialist.MoviesWatchMediaListUseCase;
+import site.iurysouza.cinefilo.domain.medialist.SeriesWatchMediaListUseCase;
+import site.iurysouza.cinefilo.domain.medialist.WatchMediaListUseCase;
 import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
 import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
-import site.iurysouza.cinefilo.domain.watchmedialist.MediaFilter;
+import site.iurysouza.cinefilo.domain.medialist.MediaFilter;
 import site.iurysouza.cinefilo.util.CineSubscriber;
 import site.iurysouza.cinefilo.util.Utils;
 
