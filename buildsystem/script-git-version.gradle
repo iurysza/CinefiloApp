@@ -7,6 +7,7 @@ buildscript {
   }
 }
 
+import org.ajoberstar.grgit.Grgit
 
 ext {
   git = Grgit.open(currentDir: projectDir)

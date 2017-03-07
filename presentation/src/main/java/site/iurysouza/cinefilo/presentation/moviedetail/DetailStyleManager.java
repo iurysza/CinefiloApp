@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
@@ -12,12 +11,12 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.flaviofaria.kenburnsview.KenBurnsView;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import lombok.experimental.Builder;
 import site.iurysouza.cinefilo.util.ImageUtils;
-import timber.log.Timber;
 
 /**
  * Created by Iury Souza on 02/02/2017.
@@ -35,7 +34,6 @@ public class DetailStyleManager {
   private KenBurnsView kenBurnsView;
   private AppBarLayout appBarLayout;
   private TabLayout tabLayout;
-  private Target loadtarget;
 
   @Builder
   public DetailStyleManager(
@@ -59,45 +57,32 @@ public class DetailStyleManager {
   }
 
   void loadBitmapAndCreateColorPallete() {
-    Target posterTarget = new Target() {
-      @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-        createPalleteFrom(bitmap);
-      }
-
-      @Override public void onBitmapFailed(Drawable errorDrawable) {
-
-      }
-
-      @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
-
+    SimpleTarget posterTarget = new SimpleTarget<Bitmap>() {
+      @Override
+      public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+        createPalleteFrom(resource);
       }
     };
 
-    Picasso
+
+    SimpleTarget backDropTarget = new SimpleTarget<Bitmap>() {
+      @Override
+      public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+        revealBackDrop(resource);
+      }
+    };
+
+    Glide
         .with(context)
         .load(ImageUtils.getPosterUrl(posterPath))
+        .asBitmap()
         .into(posterTarget);
 
-    if (loadtarget == null) {
-      loadtarget = new Target() {
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-          revealBackDrop(bitmap);
-        }
-
-        @Override public void onBitmapFailed(Drawable errorDrawable) {
-          Timber.e("Failed to loadBackdrop image");
-        }
-
-        @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
-        }
-      };
-    }
-
-    Picasso
+    Glide
         .with(context)
         .load(ImageUtils.getPosterUrl(backDropPath))
-        .into(loadtarget);
+        .asBitmap()
+        .into(backDropTarget);
   }
 
   private void createPalleteFrom(Bitmap bitmap) {

@@ -18,7 +18,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.malinskiy.superrecyclerview.OnMoreListener;
 import com.malinskiy.superrecyclerview.SuperRecyclerView;
-import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
 import java.util.List;
 import javax.inject.Inject;
@@ -138,7 +137,7 @@ public class MediaListFragment extends BaseFragment
     movieList.getRecyclerView().setHasFixedSize(false);
     layoutManger = new LinearLayoutManager(getContext());
     movieList.setLayoutManager(layoutManger);
-    mediaAdapter = new MediaAdapter(Picasso.with(getContext()));
+    mediaAdapter = new MediaAdapter();
     movieList.setAdapter(mediaAdapter);
     movieList.setupMoreListener(createOnMoreListener(), MIN_ITEMS_THRESHOLD);
     movieList.getRecyclerView().addOnScrollListener(createFabScrollBehavior());

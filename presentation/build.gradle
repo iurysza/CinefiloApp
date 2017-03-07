@@ -111,7 +111,7 @@ android {
     compile presentationDependencies.rxAndroid
     compile presentationDependencies.rxJava
 
-    compile presentationDependencies.picasso
+    compile presentationDependencies.glide
     compile presentationDependencies.timber
 
     compile presentationDependencies.retrofitGson

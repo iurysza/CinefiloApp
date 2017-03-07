@@ -10,7 +10,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import org.joda.time.DateTime;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
@@ -44,12 +44,13 @@ public final class MediaItemView extends FrameLayout {
     ButterKnife.bind(this);
   }
 
-  public void bindTo(WatchMediaValue media, Picasso picasso) {
+  public void bindTo(WatchMediaValue media) {
     String posterPath = media.posterPath();
     if (posterPath != null) {
       String posterUrl = ImageUtils.getPosterUrl(posterPath);
-      picasso.load(posterUrl)
-          .fit()
+      Glide.with(getContext())
+          .load(posterUrl)
+          .centerCrop()
           .placeholder(R.drawable.placeholder)
           .into(movieImage);
     }

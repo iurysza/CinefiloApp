@@ -11,15 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.presentation.base.BaseActivity;
-import site.iurysouza.cinefilo.presentation.moviedetail.MovieDetailActivity;
-import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.domain.medialist.MediaFilter;
+import site.iurysouza.cinefilo.presentation.base.BaseActivity;
+import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
+import site.iurysouza.cinefilo.presentation.moviedetail.MovieDetailActivity;
 
 /**
  * Created by Iury Souza on 15/12/2016.
@@ -27,11 +26,9 @@ import site.iurysouza.cinefilo.domain.medialist.MediaFilter;
 
 class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
 
-  private final Picasso picasso;
   private List<WatchMediaValue> mediaValueList = Collections.emptyList();
 
-  MediaAdapter(Picasso picasso) {
-    this.picasso = picasso;
+  MediaAdapter() {
     setHasStableIds(true);
   }
 
@@ -160,7 +157,7 @@ class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
     }
 
     void bindTo(WatchMediaValue movie) {
-      itemView.bindTo(movie, picasso);
+      itemView.bindTo(movie);
     }
   }
 }

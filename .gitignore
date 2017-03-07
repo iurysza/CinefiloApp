@@ -30,6 +30,6 @@ captures/
 
 # Keystore files
 *.jks
+/data/gradle.properties
 /gradle.properties
-data/libs/
-domain/libs/
+/.idea/

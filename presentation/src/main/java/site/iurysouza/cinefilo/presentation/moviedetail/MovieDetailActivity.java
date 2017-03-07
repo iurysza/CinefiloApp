@@ -32,18 +32,14 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.flaviofaria.kenburnsview.KenBurnsView;
-import com.squareup.picasso.Picasso;
-
-import java.util.HashMap;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.bumptech.glide.Glide;
+import com.flaviofaria.kenburnsview.KenBurnsView;
+import java.util.HashMap;
+import java.util.List;
+import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
@@ -229,9 +225,9 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
     String posterPath = watchMedia.posterPath();
     String name = watchMedia.name();
     String posterUrl = ImageUtils.getPosterUrl(posterPath);
-    Picasso.with(this)
+    Glide.with(this)
         .load(posterUrl)
-        .fit()
+        .fitCenter()
         .placeholder(R.drawable.placeholder)
         .into(mediaDetailPictureImageview);
 

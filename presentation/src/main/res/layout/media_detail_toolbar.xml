@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        app:contentScrim="?attr/colorPrimary"
+        app:contentScrim="@color/appLightBlack"
         app:expandedTitleGravity="center"
         app:expandedTitleMarginEnd="64dp"
         app:layout_collapseMode="parallax"

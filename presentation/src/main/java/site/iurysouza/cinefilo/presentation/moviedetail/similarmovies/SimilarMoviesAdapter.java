@@ -16,12 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 import site.iurysouza.cinefilo.R;
-import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
+import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.moviedetail.MovieDetailActivity;
+import site.iurysouza.cinefilo.util.ImageUtils;
 
 /**
  * Created by Iury Souza on 03/02/2017.
@@ -87,11 +89,16 @@ public class SimilarMoviesAdapter
       ItemColorManager
           .builder()
           .context(context)
-          .imageView(moviePoster)
           .overlay(movieOverlay)
           .posterPath(watchMediaValue.posterPath())
           .build()
           .loadBitmapAndCreateColorPallete();
+
+      Glide
+          .with(context)
+          .load(ImageUtils.getPosterUrl(watchMediaValue.posterPath()))
+          .placeholder(R.drawable.placeholder)
+          .into(moviePoster);
     }
 
     void onItemSelected() {
@@ -100,10 +107,10 @@ public class SimilarMoviesAdapter
 
     private void openDetailActivityWithSharedElements(WatchMediaValue movie, Context context) {
       Intent startIntent = MovieDetailActivity.getStartIntentFromSimMovies(context, movie);
-        View statusBar = ((BaseActivity) context).findViewById(android.R.id.statusBarBackground);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && statusBar !=null) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ) {
         String posterTransition = context.getResources().getString(R.string.poster_card_transition);
         Pair<View, String> posterPair = new android.util.Pair<>(moviePoster, posterTransition);
+        View statusBar = ((BaseActivity) context).findViewById(android.R.id.statusBarBackground);
         Pair<View, String> statusBarPair =
             Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);
         ActivityOptions options = ActivityOptions
