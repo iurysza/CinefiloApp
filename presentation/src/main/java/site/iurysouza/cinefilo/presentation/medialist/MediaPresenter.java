@@ -19,7 +19,7 @@ import static site.iurysouza.cinefilo.util.Utils.safelyUnsubscribe;
  * Created by Iury Souza on 12/10/2016.
  */
 
-public class MediaPresenter extends BasePresenter<MediaView> {
+class MediaPresenter extends BasePresenter<MediaView> {
   private WatchMediaListUseCase watchMediaListUseCase;
   private Subscription nowPlayingSubscription;
   private Subscription topRatedSubscription;
