@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
+apply from: "$project.rootDir/buildsystem/script-git-version.gradle"
 
 def proguardDir = "${rootProject.projectDir}/buildsystem/proguard/"
 def keystorePropertiesFile = rootProject.file('/buildsystem/keystore.properties')
@@ -15,13 +16,13 @@ android {
   defaultConfig {
     minSdkVersion androidMinSdkVersion
     targetSdkVersion androidTargetSdkVersion
-    applicationId androidApplicationId
-    versionCode androidVersionCode
     renderscriptSupportModeEnabled true
     multiDexEnabled true
     renderscriptTargetApi renderScriptApiVersion
     testInstrumentationRunner androidTestRunner
   }
+
+
 
   signingConfigs {
     config {
@@ -29,6 +30,18 @@ android {
       keyPassword keystoreProperties['keyPassword']
       storeFile file(keystoreProperties['storeFile'])
       storePassword keystoreProperties['storePassword']
+    }
+
+    productFlavors {
+      dev {
+        versionCode gitVersionCodeTime
+        versionName gitVersionName
+      }
+
+      prod {
+        versionCode gitVersionCode
+        versionName gitVersionName
+      }
     }
 
     buildTypes {

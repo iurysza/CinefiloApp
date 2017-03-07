@@ -12,19 +12,12 @@ buildscript {
 }
 
 android {
-  def globalConfiguration = rootProject.extensions.getByName("ext")
-
-  compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
-  buildToolsVersion globalConfiguration["androidBuildToolsVersion"]
+  compileSdkVersion androidCompileSdkVersion
+  buildToolsVersion androidBuildToolsVersion
 
   defaultConfig {
-    minSdkVersion globalConfiguration["androidMinSdkVersion"]
-    targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
-    versionCode globalConfiguration["androidVersionCode"]
-    renderscriptTargetApi globalConfiguration["renderScriptApiVersion"]
-    testInstrumentationRunner globalConfiguration["testInstrumentationRunner"]
-    renderscriptSupportModeEnabled true
-    multiDexEnabled true
+    minSdkVersion androidMinSdkVersion
+    targetSdkVersion androidTargetSdkVersion
   }
 
   compileOptions {
