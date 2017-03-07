@@ -1,0 +1,23 @@
+apply plugin: 'java'
+//noinspection GroovyUnusedAssignment
+sourceCompatibility = 1.7
+//noinspection GroovyUnusedAssignment
+targetCompatibility = 1.7
+
+configurations {
+  provided
+}
+
+sourceSets {
+  main {
+    compileClasspath += configurations.provided
+  }
+}
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  provided domainDependencies.javaxAnnotation
+  compile domainDependencies.javaxInject
+  compile domainDependencies.rxJava
+  compile domainDependencies.lombok
+}
+
