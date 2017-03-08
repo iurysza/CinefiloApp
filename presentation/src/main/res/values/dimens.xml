@@ -1,0 +1,30 @@
+<resources>
+  <!-- Default screen margins, per the Android Design guidelines. -->
+  <dimen name="activity_horizontal_margin">16dp</dimen>
+  <dimen name="activity_vertical_margin">16dp</dimen>
+  <dimen name="fab_margin">16dp</dimen>
+
+  <!--MOVIE ITEM DIMEN-->
+  <dimen name="base_card_elevation">2dp</dimen>
+  <dimen name="mid_card_elevation">4dp</dimen>
+  <dimen name="high_card_elevation">6dp</dimen>
+
+  <dimen name="movie_picture_card_width">110dp</dimen>
+  <dimen name="media_picture_detail_card_width">125dp</dimen>
+  <dimen name="media_picture_detail_card_height">181dp</dimen>
+  <dimen name="movie_picture_card_height">150dp</dimen>
+  <dimen name="movie_card_item_height">150dp</dimen>
+  <dimen name="detail_appbar_size">260dp</dimen>
+
+  <dimen name="default_card_radius">4dp</dimen>
+  <dimen name="small_card_radius">2dp</dimen>
+
+  <dimen name="small_text_size">9sp</dimen>
+  <dimen name="title_text_size">18sp</dimen>
+  <!--<dimen name="fab_toolbar_hide_duration">350</dimen>-->
+  <dimen name="standard_text_size">14sp</dimen>
+  <dimen name="bigger_text_size">16sp</dimen>
+  <dimen name="overview_text_size">12sp</dimen>
+  <dimen name="genre_item_margin">4dp</dimen>
+  <dimen name="filter_viewpager_size">360dp</dimen>
+</resources>

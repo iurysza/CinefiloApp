@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:id="@+id/overview_page_root"
+    android:orientation="vertical"
+    >
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/overview_page_tagline"
+      android:gravity="center_horizontal"
+      android:padding="8dp"
+      android:textSize="@dimen/bigger_text_size"
+      tools:text="'Everything that has a beggining, has an end.'"
+      android:textStyle="italic"
+      android:textColor="@color/appGrey"
+      />
+
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Sinopsys:"
+      android:paddingLeft="4dp"
+      android:textColor="@color/appLightBlack"
+      />
+
+  <TextView
+      android:id="@+id/overview_page_overview"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="4dp"
+      android:textSize="@dimen/standard_text_size"
+      tools:text="Lynch discovers he is a descendant of the secret Assassins society through unlocked genetic memories that allow him to relive the adventures of his ancestor, Aguilar, in 15th Century Spain. After gaining incredible knowledge and skills he’s poised to take on the oppressive Knights Templar in the present day."
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      android:orientation="horizontal"
+      android:id="@+id/overview_page_budget_container"
+      android:padding="4dp"
+      >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Budget: "
+        android:textColor="@color/appLightBlack"
+        />
+
+    <TextView
+        android:id="@+id/overview_page_budget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="$1080000"
+        android:textSize="@dimen/standard_text_size"
+        />
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      android:id="@+id/overview_page_revenue_container"
+      android:orientation="horizontal"
+      android:padding="4dp"
+      >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+          android:text="Revenue: "
+        android:textColor="@color/appLightBlack"
+        />
+
+
+    <TextView
+        android:id="@+id/overview_page_revenue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="35000"
+        android:textSize="@dimen/standard_text_size"
+        />
+
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      android:orientation="horizontal"
+      android:id="@+id/overview_page_language_container"
+      android:paddingTop="4dp"
+      android:paddingLeft="4dp"
+      android:paddingBottom="12dp"
+      >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Languages: "
+        android:textColor="@color/appLightBlack"
+        />
+
+    <TextView
+        android:id="@+id/overview_page_original_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="English"
+        android:textSize="@dimen/standard_text_size"
+        />
+
+  </LinearLayout>
+</LinearLayout>
