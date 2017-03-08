@@ -69,6 +69,8 @@ public class Movie {
   private List<ProductionCountry> productionCountryList;
   @SerializedName("spoken_languages")
   private List<SpokenLanguage> spokenLanguageList;
+  @SerializedName("videos")
+  private Videos videos;
 
   public static WatchMedia valueOf(Movie movie) {
     Integer genreValue = getGenreIdValue(movie);

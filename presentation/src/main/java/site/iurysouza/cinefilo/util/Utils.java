@@ -1,5 +1,6 @@
 package site.iurysouza.cinefilo.util;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,9 +43,16 @@ public class Utils {
     return month + ", " + (cal.get(Calendar.YEAR));
   }
 
-  public static boolean isEmptyString( final String s ) {
+  public static boolean isEmptyString(final String s) {
     // Null-safe, short-circuit evaluation.
     return s == null || s.trim().isEmpty();
   }
 
+  public static Uri getWebIntentUri(String id) {
+    return Uri.parse("http://www.youtube.com/watch?v=" + id);
+  }
+
+  public static Uri getappIntentUri(String id) {
+    return Uri.parse("vnd.youtube:" + id);
+  }
 }

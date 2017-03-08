@@ -5,4 +5,6 @@ package site.iurysouza.cinefilo.model.entities.pojo;
  */
 
 public class MovieWithVideos {
+  Movie movie;
+  String trailerUrl;
 }

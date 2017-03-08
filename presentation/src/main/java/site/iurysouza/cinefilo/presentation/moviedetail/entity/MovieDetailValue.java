@@ -51,32 +51,33 @@ public abstract class MovieDetailValue implements Parcelable {
     }
 
     return MovieDetailValue
-            .builder()
-            .adult(movie.getAdult())
-            .backdropPath(movie.getBackdropPath())
-            .budget(movie.getBudget())
-            .homePage(movie.getHomepage())
-            .id(movie.getId())
-            .imdbId(movie.getImdbId())
-            .originalLanguage(movie.getOriginalLanguage())
-            .originalTitle(movie.getOriginalTitle())
-            .overview(movie.getOverview())
-            .popularity(movie.getPopularity())
-            .posterPath(movie.getPosterPath())
-            .releaseDate(movie.getReleaseDate())
-            .revenue(movie.getRevenue())
-            .runTime(movie.getRuntime())
-            .status(movie.getStatus())
-            .tagLine(movie.getTagline())
-            .title(movie.getTitle())
-            .video(movie.getVideo())
-            .voteAverage(movie.getVoteAverage())
-            .voteCount(movie.getVoteCount())
-            .spokenLanguageList(spokenLanguage)
-            .genreList(detailGenres)
-            .productionCompanyList(detailProdComp)
-            .productionCountryList(detailProdCountry)
-            .build();
+        .builder()
+        .adult(movie.getAdult())
+        .backdropPath(movie.getBackdropPath())
+        .budget(movie.getBudget())
+        .homePage(movie.getHomepage())
+        .id(movie.getId())
+        .imdbId(movie.getImdbId())
+        .originalLanguage(movie.getOriginalLanguage())
+        .originalTitle(movie.getOriginalTitle())
+        .overview(movie.getOverview())
+        .popularity(movie.getPopularity())
+        .posterPath(movie.getPosterPath())
+        .releaseDate(movie.getReleaseDate())
+        .revenue(movie.getRevenue())
+        .runTime(movie.getRuntime())
+        .status(movie.getStatus())
+        .tagLine(movie.getTagline())
+        .title(movie.getTitle())
+        .video(movie.getVideo())
+        .voteAverage(movie.getVoteAverage())
+        .voteCount(movie.getVoteCount())
+        .trailerUrlId(movie.getTrailerUrlId())
+        .spokenLanguageList(spokenLanguage)
+        .genreList(detailGenres)
+        .productionCompanyList(detailProdComp)
+        .productionCountryList(detailProdCountry)
+        .build();
   }
 
   public static MovieDetailValue mapToValueMedia(MovieDetail movie) {
@@ -84,32 +85,33 @@ public abstract class MovieDetailValue implements Parcelable {
       movie.setBackdropPath(movie.getPosterPath());
     }
     return MovieDetailValue
-            .builder()
-            .adult(movie.getAdult())
-            .backdropPath(movie.getBackdropPath())
-            .budget(movie.getBudget())
-            .homePage(movie.getHomepage())
-            .id(movie.getId())
-            .imdbId(movie.getImdbId())
-            .originalLanguage(movie.getOriginalLanguage())
-            .originalTitle(movie.getOriginalTitle())
-            .overview(movie.getOverview())
-            .popularity(movie.getPopularity())
-            .posterPath(movie.getPosterPath())
-            .releaseDate(movie.getReleaseDate())
-            .revenue(movie.getRevenue())
-            .runTime(movie.getRuntime())
-            .status(movie.getStatus())
-            .tagLine(movie.getTagline())
-            .title(movie.getTitle())
-            .video(movie.getVideo())
-            .voteAverage(movie.getVoteAverage())
-            .voteCount(movie.getVoteCount())
-            .spokenLanguageList(movie.getSpokenLanguageList())
-            .genreList(movie.getGenreList())
-            .productionCompanyList(movie.getProductionCompanyList())
-            .productionCountryList(movie.getProductionCountryList())
-            .build();
+        .builder()
+        .adult(movie.getAdult())
+        .backdropPath(movie.getBackdropPath())
+        .budget(movie.getBudget())
+        .homePage(movie.getHomepage())
+        .id(movie.getId())
+        .imdbId(movie.getImdbId())
+        .originalLanguage(movie.getOriginalLanguage())
+        .originalTitle(movie.getOriginalTitle())
+        .overview(movie.getOverview())
+        .popularity(movie.getPopularity())
+        .posterPath(movie.getPosterPath())
+        .releaseDate(movie.getReleaseDate())
+        .revenue(movie.getRevenue())
+        .runTime(movie.getRuntime())
+        .status(movie.getStatus())
+        .tagLine(movie.getTagline())
+        .title(movie.getTitle())
+        .video(movie.getVideo())
+        .voteAverage(movie.getVoteAverage())
+        .voteCount(movie.getVoteCount())
+        .spokenLanguageList(movie.getSpokenLanguageList())
+        .genreList(movie.getGenreList())
+        .trailerUrlId(movie.getTrailerId())
+        .productionCompanyList(movie.getProductionCompanyList())
+        .productionCountryList(movie.getProductionCountryList())
+        .build();
   }
 
   public static List<MovieDetailValue> mapToValueMedia(List<RealmMovie> movieList) {
@@ -130,6 +132,8 @@ public abstract class MovieDetailValue implements Parcelable {
   public abstract Double voteAverage();
 
   public abstract String overview();
+
+  public abstract String trailerUrlId();
 
   public abstract Date releaseDate();
 
@@ -204,6 +208,8 @@ public abstract class MovieDetailValue implements Parcelable {
     abstract Builder tagLine(String tagline);
 
     abstract Builder homePage(String homePage);
+
+    abstract Builder trailerUrlId(String trailerUrlId);
 
     abstract Builder popularity(Double popularity);
 

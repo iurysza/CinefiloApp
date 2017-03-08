@@ -33,6 +33,7 @@ public class MovieDetail {
   private Boolean video;
   private Double voteAverage;
   private Integer voteCount;
+  private String trailerId;
   private HashMap<String, Integer> productionCompanyList;
   private HashMap<String, String> productionCountryList;
   private HashMap<String, String> spokenLanguageList;

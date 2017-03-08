@@ -1,18 +1,19 @@
 package site.iurysouza.cinefilo.model.entities.realm;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import lombok.Data;
-import site.iurysouza.cinefilo.domain.moviedetail.MovieDetail;
 import site.iurysouza.cinefilo.domain.medialist.WatchMedia;
+import site.iurysouza.cinefilo.domain.moviedetail.MovieDetail;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
+import site.iurysouza.cinefilo.model.entities.pojo.Result;
+import site.iurysouza.cinefilo.model.entities.pojo.Videos;
 import site.iurysouza.cinefilo.util.MappingUtils;
 
 import static site.iurysouza.cinefilo.model.entities.pojo.Movie.isMovieInvalid;
@@ -62,6 +63,7 @@ public class RealmMovie implements RealmModel {
   private Boolean video;
   private Integer voteCount;
   private Long queryDate;
+  private String trailerUrlId;
 
   private RealmList<RealmInteger> genreIds = new RealmList<>();
   private RealmList<RealmGenre> genreList = new RealmList<>();
@@ -79,6 +81,8 @@ public class RealmMovie implements RealmModel {
     if (backdropPath == null) {
       movie.setBackdropPath("");
     }
+
+
 
     realmMovie.setId((getIntValueSafely(movie.getId())));
     realmMovie.setVoteCount(getIntValueSafely(movie.getVoteCount()));
@@ -99,12 +103,12 @@ public class RealmMovie implements RealmModel {
     realmMovie.setPopularity(movie.getPopularity());
     realmMovie.setVideo(movie.getVideo());
     realmMovie.setReleaseDate(movie.getReleaseDate());
-
+    realmMovie.setTrailerUrlId(getTrailerIdSafely(movie));
     realmMovie.setSpokenLanguageList(RealmSpokenLanguage.valueOf(movie.getSpokenLanguageList()));
     realmMovie.setProductionCompanyList(
-            RealmProductionCompany.valueOf(movie.getProductionCompanyList()));
+        RealmProductionCompany.valueOf(movie.getProductionCompanyList()));
     realmMovie.setProductionCountryList(
-            RealmProductionCountry.valueOf(movie.getProductionCountryList()));
+        RealmProductionCountry.valueOf(movie.getProductionCountryList()));
     realmMovie.setGenreIds(RealmInteger.map(movie.getGenreIds()));
     realmMovie.setGenreList(RealmGenre.valueOf(movie.getGenreList()));
     realmMovie.setQueryDate(System.currentTimeMillis());
@@ -116,6 +120,18 @@ public class RealmMovie implements RealmModel {
     return realmMovie;
   }
 
+  private static String getTrailerIdSafely(Movie movie) {
+    String trailerId= "";
+    Videos videos = movie.getVideos();
+    List<Result> results;
+    if (videos != null) {
+      results = videos.getResults();
+      if (results != null && !results.isEmpty()) {
+        trailerId = results.get(0).getKey();
+      }
+    }
+    return trailerId;
+  }
 
   private static Integer getGenreIdValue(RealmMovie movie) {
     RealmList<RealmInteger> genreIds = movie.getGenreIds();
@@ -137,16 +153,16 @@ public class RealmMovie implements RealmModel {
   public static WatchMedia valueOf(RealmMovie movie) {
     Integer genreValue = getGenreIdValue(movie);
     return WatchMedia
-            .builder()
-            .id(movie.getId())
-            .voteAverage(movie.getVoteAverage())
-            .overview(movie.getOverview())
-            .releaseDate(movie.getReleaseDate())
-            .backdropPath(movie.getBackdropPath())
-            .posterPath(movie.getPosterPath())
-            .name(movie.getOriginalTitle())
-            .genre(genreValue)
-            .build();
+        .builder()
+        .id(movie.getId())
+        .voteAverage(movie.getVoteAverage())
+        .overview(movie.getOverview())
+        .releaseDate(movie.getReleaseDate())
+        .backdropPath(movie.getBackdropPath())
+        .posterPath(movie.getPosterPath())
+        .name(movie.getOriginalTitle())
+        .genre(genreValue)
+        .build();
   }
 
   public static List<WatchMedia> valueOf(List<RealmMovie> movieResults) {
@@ -185,32 +201,33 @@ public class RealmMovie implements RealmModel {
     }
 
     return MovieDetail
-            .builder()
-            .adult(movie.getAdult())
-            .backdropPath(movie.getBackdropPath())
-            .budget(movie.getBudget())
-            .genreIdList(getGenreIdList(movie.getGenreIds()))
-            .homepage(movie.getHomepage())
-            .id(movie.getId())
-            .imdbId(movie.getImdbId())
-            .originalTitle(movie.getOriginalTitle())
-            .originalLanguage(movie.getOriginalLanguage())
-            .overview(movie.getOverview())
-            .posterPath(movie.getPosterPath())
-            .popularity(movie.getPopularity())
-            .releaseDate(movie.getReleaseDate())
-            .revenue(movie.getRevenue())
-            .runtime(movie.getRuntime())
-            .status(movie.getStatus())
-            .tagline(movie.getTagline())
-            .title(movie.getTitle())
-            .video(movie.getVideo())
-            .voteAverage(movie.getVoteAverage())
-            .voteCount(movie.getVoteCount())
-            .spokenLanguageList(spokenLanguage)
-            .genreList(detailGenres)
-            .productionCompanyList(detailProdComp)
-            .productionCountryList(detailProdCountry)
-            .build();
+        .builder()
+        .adult(movie.getAdult())
+        .backdropPath(movie.getBackdropPath())
+        .budget(movie.getBudget())
+        .genreIdList(getGenreIdList(movie.getGenreIds()))
+        .homepage(movie.getHomepage())
+        .id(movie.getId())
+        .imdbId(movie.getImdbId())
+        .originalTitle(movie.getOriginalTitle())
+        .originalLanguage(movie.getOriginalLanguage())
+        .overview(movie.getOverview())
+        .posterPath(movie.getPosterPath())
+        .popularity(movie.getPopularity())
+        .releaseDate(movie.getReleaseDate())
+        .revenue(movie.getRevenue())
+        .runtime(movie.getRuntime())
+        .status(movie.getStatus())
+        .tagline(movie.getTagline())
+        .trailerId(movie.getTrailerUrlId())
+        .title(movie.getTitle())
+        .video(movie.getVideo())
+        .voteAverage(movie.getVoteAverage())
+        .voteCount(movie.getVoteCount())
+        .spokenLanguageList(spokenLanguage)
+        .genreList(detailGenres)
+        .productionCompanyList(detailProdComp)
+        .productionCountryList(detailProdCountry)
+        .build();
   }
 }

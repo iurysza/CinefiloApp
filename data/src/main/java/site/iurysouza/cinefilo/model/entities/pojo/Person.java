@@ -7,7 +7,6 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-@SuppressWarnings("unused")
 public class Person {
     @SerializedName("adult")
     private Boolean adult;

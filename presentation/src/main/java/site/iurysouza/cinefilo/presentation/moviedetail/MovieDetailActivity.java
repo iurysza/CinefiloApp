@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -84,6 +85,7 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
   private MovieDetailPagerAdapter pagerAdapter;
   private SimilarMoviesAdapter adapter;
   private boolean movieLiked = false;
+  private MovieDetailValue movieDetail;
 
   public static Intent getStartIntent(Context context, WatchMediaValue watchMedia) {
     Intent intent = new Intent(context, MovieDetailActivity.class);
@@ -231,6 +233,7 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
         .placeholder(R.drawable.placeholder)
         .into(mediaDetailPictureImageview);
 
+    toolbarDetailMedia.setTitle(watchMedia.name());
     mediaDetailTitleText.setText(name);
     String dateText = Utils.parseDateText(watchMedia.releaseDate());
     mediaDetailDate.setText(dateText);
@@ -245,6 +248,7 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
     String runTime = movieDetailValue.runTime() + " min";
     mediaDetailPlaytime.setText(runTime);
 
+    this.movieDetail = movieDetailValue;
     String substring = getGenreListAsString(movieDetailValue);
     mediaDetailGenreText.setText(substring);
     movieDetailValue.tagLine();
@@ -399,5 +403,14 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
     }
 
     Snackbar.make(mediaDetailCoord, text, Snackbar.LENGTH_SHORT).show();
+  }
+
+  @OnClick(R.id.detail_backdrop_play_btn) public void onClick() {
+    if (movieDetail != null) {
+      String trailerId = movieDetail.trailerUrlId();
+      Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:"+ trailerId));
+      intent.putExtra("VIDEO_ID", trailerId);
+      startActivity(intent);
+    }
   }
 }
