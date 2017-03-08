@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.data.moviedetail.services.MovieDetailService;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
+import site.iurysouza.cinefilo.model.entities.pojo.MovieCredits;
 import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
 
 import static site.iurysouza.cinefilo.model.data.moviedetail.services.MovieDetailService.API_KEY;
@@ -31,10 +32,17 @@ public class CloudMovieDetailDataSource implements ICloudMovieDetailDataSource {
 
     return detailService.getMovieById(movieId, params);
   }
+
   @Override
   public Observable<List<Movie>> getMoviesSimilarTo(int movieId, int page, String apiKey) {
     return detailService
         .getMoviesSimilarTo(movieId, page, apiKey)
         .map(MovieResults::getMovieList);
+  }
+
+  @Override
+  public Observable<MovieCredits> getMovieCredits(int movieId, String apiKey) {
+    return detailService
+        .getMovieCredits(movieId, apiKey);
   }
 }

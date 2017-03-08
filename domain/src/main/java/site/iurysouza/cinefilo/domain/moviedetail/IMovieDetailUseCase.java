@@ -11,4 +11,6 @@ public interface IMovieDetailUseCase {
   Observable<MovieDetail> getMovieById(int movieId);
 
   Observable<List<WatchMedia>> geMoviesSimilarTo(int movieId);
+
+  Observable<Credits> getMoviesCredits(int movieId);
 }

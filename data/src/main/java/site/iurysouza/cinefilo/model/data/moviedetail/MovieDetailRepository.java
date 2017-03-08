@@ -5,12 +5,14 @@ import javax.inject.Inject;
 import lombok.NonNull;
 import rx.Observable;
 import rx.schedulers.Schedulers;
+import site.iurysouza.cinefilo.domain.medialist.WatchMedia;
+import site.iurysouza.cinefilo.domain.moviedetail.Credits;
 import site.iurysouza.cinefilo.domain.moviedetail.IMovieDetailRepository;
 import site.iurysouza.cinefilo.domain.moviedetail.MovieDetail;
-import site.iurysouza.cinefilo.domain.medialist.WatchMedia;
 import site.iurysouza.cinefilo.model.data.moviedetail.storage.ICloudMovieDetailDataSource;
 import site.iurysouza.cinefilo.model.data.moviedetail.storage.ILocalDetailDataSource;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
+import site.iurysouza.cinefilo.model.entities.pojo.MovieCredits;
 import site.iurysouza.cinefilo.model.entities.realm.RealmMovie;
 
 import static site.iurysouza.cinefilo.model.entities.realm.RealmMovie.DEFAULT_QUERY;
@@ -64,5 +66,13 @@ public class MovieDetailRepository implements IMovieDetailRepository {
             .getMoviesSimilarTo(movieId, page,apiKey)
             .subscribeOn(Schedulers.io())
             .map(Movie::valueOfMovieList);
+  }
+
+  @NonNull
+  @Override
+  public Observable<Credits> getMoviesCredits(int movieId, String apiKey) {
+    return cloudMovieDetailDataSource
+        .getMovieCredits(movieId, apiKey)
+        .map(MovieCredits::valueOf);
   }
 }

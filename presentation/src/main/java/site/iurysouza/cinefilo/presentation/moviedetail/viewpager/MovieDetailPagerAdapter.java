@@ -1,10 +1,12 @@
-package site.iurysouza.cinefilo.presentation.moviedetail;
+package site.iurysouza.cinefilo.presentation.moviedetail.viewpager;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.transition.Fade;
 import android.support.transition.TransitionManager;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +18,14 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Set;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.domain.moviedetail.Credits;
 import site.iurysouza.cinefilo.presentation.moviedetail.entity.MovieDetailValue;
 
 /**
  * Created by Iury Souza on 31/01/2017.
  */
 
-class MovieDetailPagerAdapter extends PagerAdapter {
+public class MovieDetailPagerAdapter extends PagerAdapter {
 
   private Context context;
   private TextView overviewText;
@@ -34,17 +37,10 @@ class MovieDetailPagerAdapter extends PagerAdapter {
   private LinearLayout budgetContainer;
   private LinearLayout revContainer;
   private LinearLayout overviewRoot;
-  //@BindView(R.id.overview_page_overview) TextView overviewText;
-  //@BindView(R.id.overview_page_budget) TextView budgetText;
-  //@BindView(R.id.overview_page_original_language)TextView languageText;
-  //@BindView(R.id.overview_page_tagline)TextView tagLineText;
-  //@BindView(R.id.overview_page_language_container)LinearLayout langContainer;
-  //@BindView(R.id.overview_page_budget_container)LinearLayout budgetContainer;
-  //@BindView(R.id.overview_page_revenue_container)LinearLayout revContainer;
-  //@BindView(R.id.overview_page_root)LinearLayout overviewRoot;
-  //@BindView(R.id.overview_page_revenue) TextView revenueText;
+  private TextView castTitleText;
+  private RecyclerView castList;
 
-  MovieDetailPagerAdapter(Context context) {
+  public MovieDetailPagerAdapter(Context context) {
     this.context = context;
   }
 
@@ -88,6 +84,8 @@ class MovieDetailPagerAdapter extends PagerAdapter {
   }
 
   private void bindPeopleLayout(ViewGroup layout) {
+    castTitleText = (TextView) layout.findViewById(R.id.cast_page_title);
+    castList = (RecyclerView) layout.findViewById(R.id.cast_page_list);
   }
 
   private void bindOverviewLayout(ViewGroup layout) {
@@ -102,7 +100,7 @@ class MovieDetailPagerAdapter extends PagerAdapter {
     tagLineText = (TextView) layout.findViewById(R.id.overview_page_tagline);
   }
 
-  void updateOverViewPage(MovieDetailValue movieDetailValue) {
+  public void updateOverViewPage(MovieDetailValue movieDetailValue) {
     Integer revenue = movieDetailValue.revenue();
     Integer budget = movieDetailValue.budget();
 
@@ -153,5 +151,11 @@ class MovieDetailPagerAdapter extends PagerAdapter {
     symbols.setGroupingSeparator(' ');
     formatter.setDecimalFormatSymbols(symbols);
     return "$ " + formatter.format(value);
+  }
+
+  public void updateCreditsPage(Credits credits) {
+    castList.setLayoutManager(new GridLayoutManager(context, 3));
+    CastAdapter castAdapter = new CastAdapter(context, credits.getCast());
+    castList.setAdapter(castAdapter);
   }
 }

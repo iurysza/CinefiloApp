@@ -15,7 +15,8 @@ public class Constants {
   public static class MOVIE_DB_API {
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
     public static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w500";
-    public static final String BASE_BACKDROP_URL = "http://image.tmdb.org/t/p/w720";
+    public static final String BASE_BACKDROP_URL = "http://image.tmdb.org/t/p/w600//";
+    public static final String BASE_PROFILE_URL = "http://image.tmdb.org/t/p/w300//";
     public static final String API_KEY = "API_KEY";
     public static final String KEY_ALIAS = "KEY_ALIAS";
   }

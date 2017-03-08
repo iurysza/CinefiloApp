@@ -22,7 +22,7 @@
       app:tabSelectedTextColor="@color/appLightBlack"
       android:layout_height="wrap_content" />
 
-  <site.iurysouza.cinefilo.presentation.moviedetail.WrappingViewPager
+  <site.iurysouza.cinefilo.presentation.moviedetail.viewpager.WrappingViewPager
       android:id="@+id/media_detail_viewpager"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.moviedetail;
+package site.iurysouza.cinefilo.presentation.moviedetail.viewpager;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;

@@ -1,4 +1,4 @@
-package site.iurysouza.cinefilo.presentation.moviedetail;
+package site.iurysouza.cinefilo.presentation.moviedetail.viewpager;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

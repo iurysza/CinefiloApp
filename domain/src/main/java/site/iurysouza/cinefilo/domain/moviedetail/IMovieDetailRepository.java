@@ -1,6 +1,7 @@
 package site.iurysouza.cinefilo.domain.moviedetail;
 
 import java.util.List;
+import lombok.NonNull;
 import rx.Observable;
 import site.iurysouza.cinefilo.domain.medialist.WatchMedia;
 
@@ -11,4 +12,6 @@ public interface IMovieDetailRepository {
   Observable<MovieDetail> getMovieById(int movieId, String apiKey);
 
   Observable<List<WatchMedia>> getMoviesSimilarTo(int movieId, int page, String apiKey);
+
+  @NonNull Observable<Credits> getMoviesCredits(int movieId, String apiKey);
 }

@@ -7,6 +7,7 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 import site.iurysouza.cinefilo.model.entities.pojo.Movie;
+import site.iurysouza.cinefilo.model.entities.pojo.MovieCredits;
 import site.iurysouza.cinefilo.model.entities.pojo.MovieResults;
 
 /**
@@ -20,6 +21,11 @@ public interface MovieDetailService {
   Observable<Movie> getMovieById(
       @Path("movie_id") int movieId,
       @QueryMap Map<String, String> params);
+
+  @GET("movie/{movie_id}/credits")
+  Observable<MovieCredits> getMovieCredits(
+      @Path("movie_id") int movieId,
+      @Query("api_key") String apiKey);
 
   @GET("movie/{movie_id}/similar")
   Observable<MovieResults> getMoviesSimilarTo(

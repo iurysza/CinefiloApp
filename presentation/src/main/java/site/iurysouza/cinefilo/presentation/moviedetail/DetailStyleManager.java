@@ -80,7 +80,7 @@ public class DetailStyleManager {
 
     Glide
         .with(context)
-        .load(ImageUtils.getPosterUrl(backDropPath))
+        .load(ImageUtils.getBackDropUrl(backDropPath))
         .asBitmap()
         .into(backDropTarget);
   }

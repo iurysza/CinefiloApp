@@ -42,10 +42,13 @@ import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
 import site.iurysouza.cinefilo.R;
+import site.iurysouza.cinefilo.domain.moviedetail.Credits;
 import site.iurysouza.cinefilo.presentation.base.BaseActivity;
 import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
 import site.iurysouza.cinefilo.presentation.moviedetail.entity.MovieDetailValue;
 import site.iurysouza.cinefilo.presentation.moviedetail.similarmovies.SimilarMoviesAdapter;
+import site.iurysouza.cinefilo.presentation.moviedetail.viewpager.MovieDetailPagerAdapter;
+import site.iurysouza.cinefilo.presentation.moviedetail.viewpager.WrappingViewPager;
 import site.iurysouza.cinefilo.util.ImageUtils;
 import site.iurysouza.cinefilo.util.Utils;
 import timber.log.Timber;
@@ -142,6 +145,7 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
     bindViewToData(watchMedia);
     presenter.getMovieDetailById(movieId);
     presenter.getMoviesSimilarTo(movieId);
+    presenter.getMovieCredits(movieId);
   }
 
   private void setTransitionToViews() {
@@ -286,6 +290,10 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailView
   @Override public void showSimilarMovies(List<WatchMediaValue> mediaValues) {
     Timber.e("Similar movies arrived: %s", mediaValues.size());
     adapter.addSimilarMovies(mediaValues);
+  }
+
+  @Override public void onMovieCreditsLoaded(Credits credits) {
+    pagerAdapter.updateCreditsPage(credits);
   }
 
   @Override public void showErrorWarning() {

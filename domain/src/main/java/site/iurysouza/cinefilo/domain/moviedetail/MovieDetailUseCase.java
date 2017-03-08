@@ -55,4 +55,8 @@ public class MovieDetailUseCase implements IMovieDetailUseCase {
     return detailRepository
         .getMoviesSimilarTo(movieId, FIRST_PAGE,apiKey);
   }
+  @Override
+  public Observable<Credits> getMoviesCredits(int movieId) {
+    return detailRepository.getMoviesCredits(movieId, apiKey);
+  }
 }

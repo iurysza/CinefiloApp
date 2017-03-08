@@ -18,7 +18,11 @@ public class ImageUtils {
   }
 
   public static String getBackDropUrl(String url) {
-    return Constants.MOVIE_DB_API.BASE_IMAGE_URL + url;
+    return Constants.MOVIE_DB_API.BASE_BACKDROP_URL + url;
+  }
+
+  public static String getProfileUrl(String url) {
+    return Constants.MOVIE_DB_API.BASE_PROFILE_URL + url;
   }
 
   private static Drawable changeDrawableColor(Context context, @DrawableRes int drawableId,

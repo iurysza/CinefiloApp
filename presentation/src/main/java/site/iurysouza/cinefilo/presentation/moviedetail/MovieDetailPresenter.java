@@ -4,6 +4,7 @@ import java.util.List;
 import javax.inject.Inject;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
+import site.iurysouza.cinefilo.domain.moviedetail.Credits;
 import site.iurysouza.cinefilo.domain.moviedetail.MovieDetailUseCase;
 import site.iurysouza.cinefilo.presentation.base.mvp.BasePresenter;
 import site.iurysouza.cinefilo.presentation.medialist.entity.WatchMediaValue;
@@ -55,6 +56,23 @@ public class MovieDetailPresenter extends BasePresenter<MovieDetailView> {
           @Override public void onNext(List<WatchMediaValue> mediaValueList) {
             super.onNext(mediaValueList);
             getBaseView().showSimilarMovies(mediaValueList);
+          }
+
+          @Override public void onError(Throwable e) {
+            super.onError(e);
+            getBaseView().showErrorWarning();
+          }
+        }));
+  }
+
+
+  void getMovieCredits(int movieId) {
+    subscription.add(useCase.getMoviesCredits(movieId)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new CineSubscriber<Credits>() {
+          @Override public void onNext(Credits credits) {
+            super.onNext(credits);
+            getBaseView().onMovieCreditsLoaded(credits);
           }
 
           @Override public void onError(Throwable e) {
