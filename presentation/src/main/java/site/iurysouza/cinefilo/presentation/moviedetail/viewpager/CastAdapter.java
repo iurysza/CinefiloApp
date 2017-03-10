@@ -64,6 +64,8 @@ class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastHolder> {
       Glide
           .with(context)
           .load(ImageUtils.getProfileUrl(cast.getProfilePath()))
+      .dontAnimate()
+          .placeholder(R.drawable.ic_avatar_placeholder)
           .centerCrop()
           .into(castItemPicture);
     }
